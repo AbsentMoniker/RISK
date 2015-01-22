@@ -1,0 +1,36 @@
+init:
+    pretty pattern?
+    choose number of players
+select:
+    while open territories remain:
+        player selects one territory
+        next player
+deploy:
+    while players have troops remaining:
+        player places troop
+        next player
+
+    while more than one player exists:
+reinforce:
+        player receives reinforcements for territories and continents
+        player may trade cards for more reinforcements
+        while player has reinforcements:
+            player places troop
+attack:
+        until player ends turn:
+            player selects source
+            player selects target
+battle:
+            until source is empty, target is empty, or player ends attack
+                player does battle
+            player chooses number to move into target
+move:
+        player may make move:
+            player selects source
+            player selects destination
+            player chooses number to move into target
+        next player
+gameover:
+    celebrate?
+    start new game
+
