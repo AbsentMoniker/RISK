@@ -16,18 +16,21 @@ reinforce:
         player may trade cards for more reinforcements
         while player has reinforcements:
             player places troop
-attack:
+attack1:
         until player ends turn:
             player selects source
+attack2:
             player selects target
 battle:
             until source is empty, target is empty, or player ends attack
                 player does battle
             player chooses number to move into target
-move:
+move1:
         player may make move:
             player selects source
+move2:
             player selects destination
+move3:
             player chooses number to move into target
         player receives card
         next player
