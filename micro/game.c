@@ -9,12 +9,14 @@
 
 // Global variables
 int numPlayers;
+int firstPlayer;
 int currentPlayer;
 int source;
 int destination;
 int attackerDice[3];
 int defenderDice[2];
 int nextCardTroops;
+int numTroops;
 
 // Game variables that don't need to be exposed to the IO systems
 State state;
@@ -37,6 +39,7 @@ void initializeGame()
     
     state = INIT;
     territoriesRemaining = NUM_TERRITORIES;
+    updateText();
 }
 
 void gameInput(Input input)
@@ -65,6 +68,58 @@ void gameInput(Input input)
             moveTroopsNumber(input); break;
         case GAMEOVER:
             // TODO: do something here 
+            break;
+        default:
+            ; // panic!
+    }
+    updateText();
+}
+
+void updateText()
+{
+    switch(state)
+    {
+        case INIT:
+            setTextDisplay(0, "Num. players:");
+            setTextDisplay(1, "%d", numPlayers);
+            break;
+        case SELECT:
+            setTextDisplay(0, "Choose territory");
+            setTextDisplay(1, "%d left", territoriesRemaining);
+            break;
+        case DEPLOY:
+            setTextDisplay(0, "Ply %d deploy", currentPlayer);
+            setTextDisplay(1, "%d troops left", numTroops);
+            break;
+        case REINFORCE:
+            setTextDisplay(0, "Ply %d deploy", currentPlayer);
+            setTextDisplay(1, "%d troops left", numTroops);
+            break;
+        case ATTACK1:
+            setTextDisplay(0, "Choose attacker");
+            setTextDisplay(1, "or end turn");
+            break;
+        case ATTACK2:
+            setTextDisplay(0, "Choose target");
+            setTextDisplay(1, "");
+            break;
+        case BATTLE:
+            setTextDisplay(0, "Battle or retreat");
+            setTextDisplay(1, "");
+            break;
+        case MOVE1:
+            setTextDisplay(0, "Make free move");
+            setTextDisplay(1, "or end turn");
+            break;
+        case MOVE2:
+            setTextDisplay(0, "Choose");
+            setTextDisplay(1, "destination");
+            break;
+        case MOVE3:
+            setTextDisplay(0, "Number to move");
+            setTextDisplay(1, "");
+            break;
+        case GAMEOVER:
             break;
         default:
             ; // panic!
@@ -523,4 +578,8 @@ int isNeighbor(int territory1, int territory2)
         }
     }
     return 0;
+}
+
+void doBattle(int territoryA, int territoryD)
+{
 }

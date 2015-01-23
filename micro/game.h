@@ -40,6 +40,7 @@ extern int numTroops;
 void initializeGame();
 
 void gameInput(Input input);
+void updateText();
 
 void choosePlayers(Input input);
 void selectTerritories(Input input);

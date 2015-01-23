@@ -7,5 +7,6 @@
 // ECE 477 Group 2, Spring 2015
 
 int randint(int min, int max);
+void setTextDisplay(int line, const char * format, ...);
 
 #endif

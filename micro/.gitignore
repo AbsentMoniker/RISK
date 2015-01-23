@@ -1,2 +1,6 @@
 # Vim swap files
 .*.swp
+# binaries
+*.o
+gui/*.o
+gui/risk
