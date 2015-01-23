@@ -7,7 +7,7 @@
 // ECE 477 Group 2, Spring 2015
 
 #include "territory.h"
-#define MAX_PLAYERS 5
+#define MAX_PLAYERS 6
 
 // TODO: this is a simple map for debugging. Plug in the real map at some point.
 #define T_ZEROLAND  0
@@ -22,5 +22,9 @@
 
 extern Territory territories[NUM_TERRITORIES];
 
+#define NUM_EXCHANGE_VALUES 22
+extern int cardExchangeValues[NUM_EXCHANGE_VALUES];
+
+extern int initialTroops[MAX_PLAYERS + 1];
 
 #endif

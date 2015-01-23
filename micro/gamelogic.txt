@@ -29,6 +29,7 @@ move:
             player selects source
             player selects destination
             player chooses number to move into target
+        player receives card
         next player
 gameover:
     celebrate?

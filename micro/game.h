@@ -23,6 +23,7 @@ typedef enum
 } Input;
 
 extern int numPlayers;
+extern int firstPlayer;
 extern int currentPlayer;
 
 extern int selectedTerritorySource;
@@ -32,6 +33,7 @@ extern int attackerDice[3];
 extern int defenderDice[2];
 
 extern int nextCardTroops;
+extern int troopsRemaining;
 
 void initializeGame();
 

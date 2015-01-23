@@ -21,6 +21,8 @@ int territoriesRemaining;
 
 void initializeGame()
 {
+    numPlayers = 2;
+    firstPlayer = 0;
     currentPlayer = 0;
     selectedTerritorySource = -1;
     selectedTerritoryDestination = -1;
@@ -30,6 +32,7 @@ void initializeGame()
     defenderDice[0] = 0;
     defenderDice[1] = 0;
     nextCardTroops = 4;
+    troopsRemaining = 0;
     
     state = INIT;
     territoriesRemaining = NUM_TERRITORIES;
@@ -63,10 +66,63 @@ void gameInput(Input input)
 
 void choosePlayers(Input input)
 {
+    if(input == NEXT && numPlayers < MAX_PLAYERS)
+        numPlayers += 1;
+    else if(input == PREVIOUS && numPlayers > 2)
+        numPlayers -= 1;
+    else if(input == ADVANCE)
+    {
+        state = SELECT;
+        firstPlayer = 0; // TODO: make this random
+        currentPlayer = firstPlayer;
+        troopsRemaining = initialTroops[numPlayers];
+    }
 }
 
 void selectTerritories(Input input)
 {
+    if(input == NEXT)
+    {
+        if(selectedTerritoryDestination == NUM_TERRITORIES - 1)
+            selectedTerritoryDestination = -1;
+
+        do
+        {
+            selectedTerritoryDestination += 1;
+        } while(territories[selectedTerritoryDestination].owner != -1);
+    }
+    else if(input == PREVIOUS)
+    {
+        if(selectedTerritoryDestination <= 0)
+            selectedTerritoryDestination = NUM_TERRITORIES;
+
+        do
+        {
+            selectedTerritoryDestination -= 1;
+        } while(territories[selectedTerritoryDestination].owner != -1);
+    }
+    else if(input == ADVANCE)
+    {
+        if(selectedTerritoryDestination == -1)
+            return;
+
+        territories[selectedTerritoryDestination].owner = currentPlayer;
+        territories[selectedTerritoryDestination].troops = 1;
+        selectedTerritoryDestination = -1;
+
+        currentPlayer += 1;
+        if(currentPlayer == NUM_PLAYERS)
+            currentPlayer = 0;
+
+        territoriesRemaining -= 1;
+        if(currentPlayer == firstPlayer)
+            troopsRemaining -= 1;
+
+        if(territoriesRemaining == 0)
+        {
+            state = DEPLOY;
+        }
+    }
 }
 
 void deployTroops(Input input)
