@@ -5,6 +5,10 @@
 // ECE 477 Group 2, Spring 2015
 
 #include "game.h"
+#include "types.h"
+#include "territory.h"
+#include "gamedata.h"
+#include "io.h"
 #include "util.h"
 
 // Global variables
@@ -283,7 +287,7 @@ void declareAttack(Input input)
             else
                 source += 1;
         } while(territories[source].owner != currentPlayer ||
-                !canAttack(source));
+                !predAttackSource(source));
     }
     else if(input == PREVIOUS)
     {
@@ -294,7 +298,7 @@ void declareAttack(Input input)
             else
                 source -= 1;
         } while(territories[source].owner != currentPlayer ||
-                !canAttack(source));
+                !predAttackSource(source));
     }
     else if(input == ADVANCE)
     {
@@ -552,34 +556,4 @@ int computeReinforcements(int player)
     return max(3, territoriesHeld / 3);
 }
 
-int canAttack(int territory)
-{
-    if(territories[territory].troops == 1)
-        return 0;
-    for(int i = 0; i < MAX_NEIGHBORS; i++)
-    {
-        if(territories[territory].neighbors[i] != -1 &&
-                territories[territories[territory].neighbors[i]].owner !=
-                territories[territory].owner)
-        {
-            return 1;
-        }
-    }
-    return 0;
-}
 
-int isNeighbor(int territory1, int territory2)
-{
-    for(int i = 0; i < MAX_NEIGHBORS; i++)
-    {
-        if(territories[territory1].neighbors[i] == territory2)
-        {
-            return 1;
-        }
-    }
-    return 0;
-}
-
-void doBattle(int territoryA, int territoryD)
-{
-}

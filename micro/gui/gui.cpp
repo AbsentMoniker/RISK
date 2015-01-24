@@ -1,6 +1,9 @@
 #include <SFML/Graphics.hpp>
 extern "C" {
 #include "../game.h"
+#include "../gamedata.h"
+#include "../types.h"
+#include "../territory.h"
 #include "../io.h"
 }
 

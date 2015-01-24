@@ -6,7 +6,7 @@
 // Part of R.I.S.K
 // ECE 477 Group 2, Spring 2015
 
-#include "territory.h"
+#include "types.h"
 #define MAX_PLAYERS 6
 
 // TODO: this is a simple map for debugging. Plug in the real map at some point.

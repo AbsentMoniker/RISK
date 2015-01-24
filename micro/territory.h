@@ -6,20 +6,17 @@
 // Part of R.I.S.K
 // ECE 477 Group 2, Spring 2015
 
-typedef enum
-{
-    INFANTRY, CAVALRY, ARTILLERY, WILD,
-} CardType;
+// Various helper functions
+int isNeighbor(int territory1, int territory2);
+void doBattle(int territoryA, int territoryD);
 
-#define MAX_NEIGHBORS 6
-typedef struct
-{
-    const char * name;
-    const int neighbors[MAX_NEIGHBORS];
-    const CardType cardtype;
-
-    int owner;
-    int troops;
-} Territory;
+// Predicates used to cycle through territories for some purpose
+int predUnowned(int territory);
+int predOwnedCurrent(int territory);
+int predOwnerOther(int territory);
+int predAttackSource(int territory);
+int predAttackTarget(int territory);
+int predMoveSource(int territory);
+int predMoveTarget(int territory);
 
 #endif
