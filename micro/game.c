@@ -88,7 +88,7 @@ void updateText()
             setTextDisplay(1, "%d", numPlayers);
             break;
         case SELECT:
-            setTextDisplay(0, "Choose territory");
+            setTextDisplay(0, "Pick territory");
             setTextDisplay(1, "%d left", territoriesRemaining);
             break;
         case DEPLOY:
@@ -96,7 +96,7 @@ void updateText()
             setTextDisplay(1, "%d troops left", numTroops);
             break;
         case REINFORCE:
-            setTextDisplay(0, "Ply %d deploy", currentPlayer);
+            setTextDisplay(0, "Reinforcements", currentPlayer);
             setTextDisplay(1, "%d troops left", numTroops);
             break;
         case ATTACK1:
@@ -108,8 +108,8 @@ void updateText()
             setTextDisplay(1, "");
             break;
         case BATTLE:
-            setTextDisplay(0, "Battle or retreat");
-            setTextDisplay(1, "");
+            setTextDisplay(0, "Battle or");
+            setTextDisplay(1, "retreat");
             break;
         case MOVE1:
             setTextDisplay(0, "Make free move");
