@@ -1,5 +1,5 @@
-CFLAGS=-std=c99 
-CXXFLAGS=-std=c++11
+CFLAGS=-std=c99 -Wall
+CXXFLAGS=-std=c++11 -Wall
 OBJ= gui.o ../game.o ../gamedata.o ../territory.o
 
 risk: $(OBJ)

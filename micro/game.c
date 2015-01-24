@@ -10,41 +10,20 @@
 #include "gamedata.h"
 #include "io.h"
 #include "util.h"
-
 // Global variables
 int numPlayers;
-int firstPlayer;
 int currentPlayer;
 int source;
 int destination;
 int attackerDice[3];
 int defenderDice[2];
 int nextCardTroops;
-int numTroops;
 
 // Game variables that don't need to be exposed to the IO systems
 State state;
+int firstPlayer;
 int territoriesRemaining;
-
-void initializeGame()
-{
-    numPlayers = 2;
-    firstPlayer = 0;
-    currentPlayer = 0;
-    source = -1;
-    destination = -1;
-    attackerDice[0] = 0;
-    attackerDice[1] = 0;
-    attackerDice[2] = 0;
-    defenderDice[0] = 0;
-    defenderDice[1] = 0;
-    nextCardTroops = 4;
-    numTroops = 0;
-    
-    state = INIT;
-    territoriesRemaining = NUM_TERRITORIES;
-    updateText();
-}
+int numTroops;
 
 void gameInput(Input input)
 {
@@ -64,6 +43,8 @@ void gameInput(Input input)
             declareAttackTarget(input); break;
         case BATTLE:
             resolveBattle(input); break;
+        case CONQUER:
+            conquerTerritory(input); break;
         case MOVE1:
             moveTroops(input); break;
         case MOVE2:
@@ -111,6 +92,10 @@ void updateText()
             setTextDisplay(0, "Battle or");
             setTextDisplay(1, "retreat");
             break;
+        case CONQUER:
+            setTextDisplay(0, "Move troops to");
+            setTextDisplay(1, "target");
+            break;
         case MOVE1:
             setTextDisplay(0, "Make free move");
             setTextDisplay(1, "or end turn");
@@ -137,24 +122,15 @@ void choosePlayers(Input input)
     else if(input == PREVIOUS && numPlayers > 2)
         numPlayers -= 1;
     else if(input == ADVANCE)
-    {
-        state = SELECT;
-        firstPlayer = 0; // TODO: make this random
-        currentPlayer = firstPlayer;
-        numTroops = initialTroops[numPlayers];
-    }
+        changeState(SELECT);
 }
 
 void selectTerritories(Input input)
 {
     if(input == NEXT)
-    {
         moveSelection(0, 1, predUnowned);
-    }
     else if(input == PREVIOUS)
-    {
         moveSelection(0, -1, predUnowned);
-    }
     else if(input == ADVANCE)
     {
         if(destination == -1)
@@ -173,22 +149,16 @@ void selectTerritories(Input input)
             numTroops -= 1;
 
         if(territoriesRemaining == 0)
-        {
-            state = DEPLOY;
-        }
+            changeState(DEPLOY);
     }
 }
 
 void deployTroops(Input input)
 {
     if(input == NEXT)
-    {
         moveSelection(0, 1, predOwnedCurrent);
-    }
     else if(input == PREVIOUS)
-    {
         moveSelection(0, -1, predOwnedCurrent);
-    }
     else if(input == ADVANCE)
     {
         if(destination == -1)
@@ -205,24 +175,16 @@ void deployTroops(Input input)
             numTroops -= 1;
 
         if(numTroops == 0)
-        {
-            // The game is afoot...
-            state = REINFORCE;
-            numTroops = computeReinforcements(currentPlayer);
-        }
+            changeState(REINFORCE);
     }
 }
 
 void reinforce(Input input)
 {
     if(input == NEXT)
-    {
         moveSelection(0, 1, predOwnedCurrent);
-    }
     else if(input == PREVIOUS)
-    {
         moveSelection(0, -1, predOwnedCurrent);
-    }
     else if(input == ADVANCE)
     {
         if(destination == -1)
@@ -232,103 +194,66 @@ void reinforce(Input input)
         numTroops -= 1;
 
         if(numTroops == 0)
-        {
-            state = ATTACK1;
-            source = -1;
-            destination = -1;
-        }
+            changeState(ATTACK1);
     }
 }
 
 void declareAttack(Input input)
 {
     if(input == NEXT)
-    {
         moveSelection(1, 1, predAttackSource);
-    }
     else if(input == PREVIOUS)
-    {
         moveSelection(1, -1, predAttackSource);
-    }
     else if(input == ADVANCE)
     {
         if(source == -1)
             return;
-
-        state = ATTACK2;
-        destination = -1;
+        changeState(ATTACK2);
     }
     else if(input == CANCEL)
-    {
-        state = MOVE1;
-        source = -1;
-        destination = -1;
-    }
-
+        changeState(MOVE1);
 }
 void declareAttackTarget(Input input)
 {
     if(input == NEXT)
-    {
         moveSelection(0, 1, predAttackTarget);
-    }
     else if(input == PREVIOUS)
-    {
         moveSelection(0, -1, predAttackTarget);
-    }
     else if(input == ADVANCE)
     {
         if(destination == -1)
             return;
-
-        state = BATTLE;
+        changeState(BATTLE);
     }
     else if(input == CANCEL)
-    {
-        destination = -1;
-        state = ATTACK1;
-    }
+        changeState(ATTACK1);
 }
 
 void resolveBattle(Input input)
 {
-    static int mintroops;
     if(input == ADVANCE)
     {
-        if(territories[destination].owner != currentPlayer)
+        doBattle(source, destination);
+
+        if(territories[source].troops == 1)
+            changeState(ATTACK1);
+        else if(territories[destination].troops == 0)
         {
-            doBattle(source, destination);
-            if(territories[source].troops == 1)
-            {
-                state = ATTACK1;
-                source = -1;
-                destination = -1;
-            }
-            if(territories[destination].troops == 0)
-            {
-                territories[destination].owner = currentPlayer;
-                mintroops = min(3, territories[source].troops - 1);
-                territories[source].troops -= mintroops;
-                territories[destination].troops += mintroops;
-            }
-        }
-        else
-        {
-            state = ATTACK1;
-            source = -1;
-            destination = -1;
+            territories[destination].owner = currentPlayer;
+            numTroops = min(3, territories[source].troops - 1);
+            territories[destination].troops = 
+                territories[source].troops - 1;
+            territories[source].troops = 1;
+            changeState(CONQUER);
         }
     }
     else if(input == CANCEL)
-    {
-        if(territories[destination].owner != currentPlayer)
-        {
-            state = ATTACK1;
-            source = -1;
-            destination = -1;
-        }
-    }
-    else if(input == NEXT)
+        changeState(ATTACK1);
+      
+}
+void conquerTerritory(Input input)
+{
+    if(input == NEXT)
     {
         if(territories[destination].owner == currentPlayer &&
                 territories[source].troops > 1)
@@ -340,31 +265,28 @@ void resolveBattle(Input input)
     else if(input == PREVIOUS)
     {
         if(territories[destination].owner == currentPlayer &&
-                territories[destination].troops > mintroops)
+                territories[destination].troops > numTroops)
         {
             territories[destination].troops -= 1;
             territories[source].troops += 1;
         }
-    }            
+    }      
+    else if(input == ADVANCE)
+        changeState(ATTACK1);
 }
+
 
 void moveTroops(Input input)
 {
     if(input == NEXT)
-    {
         moveSelection(1, 1, predMoveSource);
-    }
     else if(input == PREVIOUS)
-    {
         moveSelection(1, -1, predMoveSource);
-    }
     else if(input == ADVANCE)
     {
         if(source == -1)
             return;
-
-        state = MOVE2;
-        destination = -1;
+        changeState(MOVE2);
     }
     else if(input == CANCEL)
     {
@@ -375,35 +297,23 @@ void moveTroops(Input input)
                 currentPlayer = 0;
         } while(!playerLiving(currentPlayer));
 
-        state = REINFORCE;
-        numTroops = computeReinforcements(currentPlayer);
-        source = -1;
-        destination = -1;
+        changeState(REINFORCE);
     }
 }
 void moveTroopsTarget(Input input)
 {
     if(input == NEXT)
-    {
         moveSelection(0, 1, predMoveTarget);
-    }
     else if(input == PREVIOUS)
-    {
         moveSelection(0, -1, predMoveTarget);
-    }
     else if(input == ADVANCE)
     {
         if(destination == -1)
             return;
-        numTroops = territories[source].troops;
-
-        state = MOVE3;
+        changeState(MOVE3);
     }
     else if(input == CANCEL)
-    {
-        destination = -1;
-        state = MOVE1;
-    }
+        changeState(MOVE1);
 }
 void moveTroopsNumber(Input input)
 {
@@ -431,19 +341,15 @@ void moveTroopsNumber(Input input)
             if(currentPlayer == numPlayers)
                 currentPlayer = 0;
         } while(!playerLiving(currentPlayer));
-
-        state = REINFORCE;
-        numTroops = computeReinforcements(currentPlayer);
-        source = -1;
-        destination = -1;
+        
+        changeState(REINFORCE);
     }
     else if(input == CANCEL)
     {
         territories[destination].troops -= 
             numTroops - territories[source].troops;
         territories[source].troops = numTroops;
-
-        state = MOVE2;
+        changeState(MOVE2);
     }
 }
 
@@ -466,6 +372,44 @@ void moveSelection(int movesource, int direction, int (*predicate)(int))
     }
     // Couldn't find a valid territory, so make sure nothing is selected
     *p = -1; 
+}
+
+void changeState(State newstate)
+{
+    state = newstate;
+
+    if(state == INIT)
+    {
+        numPlayers = 2;
+        nextCardTroops = 4;
+    }
+
+    if(state == SELECT)
+    {
+        territoriesRemaining = NUM_TERRITORIES;
+        firstPlayer = randint(0, numPlayers - 1);
+        currentPlayer = firstPlayer;
+    }
+
+    if(state != BATTLE && state != CONQUER && state != MOVE3)
+    {
+        destination = -1;
+        if(state != ATTACK2 && state != MOVE2)
+            source = -1;
+    }
+
+    if(state != ATTACK1 && state != BATTLE && state != CONQUER)
+    {
+        attackerDice[0] = attackerDice[1] = attackerDice[2] = -1;
+        defenderDice[0] = defenderDice[1] = -1;
+    }
+    
+    if(state == SELECT)
+        numTroops = initialTroops[numPlayers];
+    else if(state == REINFORCE)
+        numTroops = computeReinforcements(currentPlayer);
+    else if(state == MOVE3)
+        numTroops = territories[source].troops;
 }
 
 int playerLiving(int player)

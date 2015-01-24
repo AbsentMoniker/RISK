@@ -9,7 +9,6 @@
 #include "types.h"
 
 extern int numPlayers;
-extern int firstPlayer;
 extern int currentPlayer;
 
 extern int source;
@@ -19,9 +18,6 @@ extern int attackerDice[3];
 extern int defenderDice[2];
 
 extern int nextCardTroops;
-extern int numTroops;
-
-void initializeGame();
 
 void gameInput(Input input);
 void updateText();
@@ -33,11 +29,13 @@ void reinforce(Input input);
 void declareAttack(Input input);
 void declareAttackTarget(Input input);
 void resolveBattle(Input input);
+void conquerTerritory(Input input);
 void moveTroops(Input input);
 void moveTroopsTarget(Input input);
 void moveTroopsNumber(Input input);
 
 void moveSelection(int movesource, int direction, int (*predicate)(int));
+void changeState(State state);
 
 int playerLiving(int player);
 int computeReinforcements(int player);

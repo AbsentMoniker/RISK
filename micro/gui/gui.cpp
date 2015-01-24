@@ -135,7 +135,8 @@ int main()
     }
 
     sf::RenderWindow window(sf::VideoMode(800, 600), "RISK prototype");
-    initializeGame();
+    changeState(INIT);
+    updateText();
     while(window.isOpen())
     {
         sf::Event ev;

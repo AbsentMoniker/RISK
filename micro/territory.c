@@ -28,25 +28,15 @@ void doBattle(int tA, int tD)
     int attackers = min(3, territories[tA].troops - 1);
     int defenders = min(2, territories[tD].troops);
     attackerDice[0] = randint(1,6);     
-    attackerDice[1] = randint(1,6);     
-    attackerDice[2] = randint(1,6);     
+    attackerDice[1] = attackers > 1? randint(1,6) : -1;
+    attackerDice[2] = attackers > 2? randint(1,6) : -1;
     defenderDice[0] = randint(1,6);     
-    defenderDice[1] = randint(1,6);     
+    defenderDice[1] = defenders > 1? randint(1,6) : -1;
 
-    // sort as many dice as we need
-    if(attackers > 1)
-    {
-        SORT(attackerDice[0], attackerDice[1]);
-        if(attackers > 2)
-        {
-            SORT(attackerDice[0], attackerDice[2]);
-            SORT(attackerDice[1], attackerDice[2]);
-        }
-    }
-    if(defenders > 1)
-    {
-        SORT(defenderDice[0], defenderDice[1]);
-    }
+    SORT(attackerDice[0], attackerDice[1]);
+    SORT(attackerDice[0], attackerDice[2]);
+    SORT(attackerDice[1], attackerDice[2]);
+    SORT(defenderDice[0], defenderDice[1]);
 
     // Kill some troops
     if(attackerDice[0] > defenderDice[0])
