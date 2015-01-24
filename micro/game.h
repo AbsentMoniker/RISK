@@ -37,6 +37,7 @@ void moveTroops(Input input);
 void moveTroopsTarget(Input input);
 void moveTroopsNumber(Input input);
 
+void moveSelection(int movesource, int direction, int (*predicate)(int));
 
 int playerLiving(int player);
 int computeReinforcements(int player);

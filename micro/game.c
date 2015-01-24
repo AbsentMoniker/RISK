@@ -149,23 +149,11 @@ void selectTerritories(Input input)
 {
     if(input == NEXT)
     {
-        do
-        {
-            if(destination == NUM_TERRITORIES - 1)
-                destination = 0;
-            else
-                destination += 1;
-        } while(territories[destination].owner != -1);
+        moveSelection(0, 1, predUnowned);
     }
     else if(input == PREVIOUS)
     {
-        do
-        {
-            if(destination <= 0)
-                destination = NUM_TERRITORIES - 1;
-            else
-                destination -= 1;
-        } while(territories[destination].owner != -1);
+        moveSelection(0, -1, predUnowned);
     }
     else if(input == ADVANCE)
     {
@@ -195,23 +183,11 @@ void deployTroops(Input input)
 {
     if(input == NEXT)
     {
-        do
-        {
-            if(destination == NUM_TERRITORIES - 1)
-                destination = 0;
-            else
-                destination += 1;
-        } while(territories[destination].owner != currentPlayer);
+        moveSelection(0, 1, predOwnedCurrent);
     }
     else if(input == PREVIOUS)
     {
-        do
-        {
-            if(destination <= 0)
-                destination = NUM_TERRITORIES - 1;
-            else
-                destination -= 1;
-        } while(territories[destination].owner != currentPlayer);
+        moveSelection(0, -1, predOwnedCurrent);
     }
     else if(input == ADVANCE)
     {
@@ -241,23 +217,11 @@ void reinforce(Input input)
 {
     if(input == NEXT)
     {
-        do
-        {
-            if(destination == NUM_TERRITORIES - 1)
-                destination = 0;
-            else
-                destination += 1;
-        } while(territories[destination].owner != currentPlayer);
+        moveSelection(0, 1, predOwnedCurrent);
     }
     else if(input == PREVIOUS)
     {
-        do
-        {
-            if(destination <= 0)
-                destination = NUM_TERRITORIES - 1;
-            else
-                destination -= 1;
-        } while(territories[destination].owner != currentPlayer);
+        moveSelection(0, -1, predOwnedCurrent);
     }
     else if(input == ADVANCE)
     {
@@ -280,25 +244,11 @@ void declareAttack(Input input)
 {
     if(input == NEXT)
     {
-        do
-        {
-            if(source == NUM_TERRITORIES - 1)
-                source = 0;
-            else
-                source += 1;
-        } while(territories[source].owner != currentPlayer ||
-                !predAttackSource(source));
+        moveSelection(1, 1, predAttackSource);
     }
     else if(input == PREVIOUS)
     {
-        do
-        {
-            if(source <= 0)
-                source = NUM_TERRITORIES - 1;
-            else
-                source -= 1;
-        } while(territories[source].owner != currentPlayer ||
-                !predAttackSource(source));
+        moveSelection(1, -1, predAttackSource);
     }
     else if(input == ADVANCE)
     {
@@ -320,25 +270,11 @@ void declareAttackTarget(Input input)
 {
     if(input == NEXT)
     {
-        do
-        {
-            if(destination == NUM_TERRITORIES - 1)
-                destination = 0;
-            else
-                destination += 1;
-        } while(territories[destination].owner == currentPlayer ||
-                !isNeighbor(source, destination));
+        moveSelection(0, 1, predAttackTarget);
     }
     else if(input == PREVIOUS)
     {
-        do
-        {
-            if(destination <= 0)
-                destination = NUM_TERRITORIES - 1;
-            else
-                destination -= 1;
-        } while(territories[destination].owner == currentPlayer ||
-                !isNeighbor(source, destination));
+        moveSelection(0, -1, predAttackTarget);
     }
     else if(input == ADVANCE)
     {
@@ -416,25 +352,11 @@ void moveTroops(Input input)
 {
     if(input == NEXT)
     {
-        do
-        {
-            if(source == NUM_TERRITORIES - 1)
-                source = 0;
-            else
-                source += 1;
-        } while(territories[source].owner != currentPlayer ||
-                territories[source].troops == 1);
+        moveSelection(1, 1, predMoveSource);
     }
     else if(input == PREVIOUS)
     {
-        do
-        {
-            if(source <= 0)
-                source = NUM_TERRITORIES - 1;
-            else
-                source -= 1;
-        } while(territories[source].owner != currentPlayer ||
-                territories[source].troops == 1);
+        moveSelection(1, -1, predMoveSource);
     }
     else if(input == ADVANCE)
     {
@@ -463,25 +385,11 @@ void moveTroopsTarget(Input input)
 {
     if(input == NEXT)
     {
-        do
-        {
-            if(destination == NUM_TERRITORIES - 1)
-                destination = 0;
-            else
-                destination += 1;
-        } while(territories[destination].owner != currentPlayer ||
-                !isNeighbor(source, destination));
+        moveSelection(0, 1, predMoveTarget);
     }
     else if(input == PREVIOUS)
     {
-        do
-        {
-            if(destination <= 0)
-                destination = NUM_TERRITORIES - 1;
-            else
-                destination -= 1;
-        } while(territories[destination].owner != currentPlayer ||
-                !isNeighbor(source, destination));
+        moveSelection(0, -1, predMoveTarget);
     }
     else if(input == ADVANCE)
     {
@@ -531,10 +439,30 @@ void moveTroopsNumber(Input input)
     }
     else if(input == CANCEL)
     {
-        territories[destination].troops -= numTroops - territories[source].troops;
+        territories[destination].troops -= 
+            numTroops - territories[source].troops;
         territories[source].troops = numTroops;
 
         state = MOVE2;
+    }
+}
+
+void moveSelection(int movesource, int direction, int (*predicate)(int))
+{
+    int * p = (movesource? &source : &destination);
+
+    int tries = 0;
+    while(tries < NUM_TERRITORIES)
+    {
+        *p += direction;
+        if(*p < 0)
+            *p = NUM_TERRITORIES - 1;
+        else if(*p >= NUM_TERRITORIES)
+            *p = 0;
+
+        tries++;
+        if(predicate(*p))
+            break;
     }
 }
 
