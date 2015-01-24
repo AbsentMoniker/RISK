@@ -8,6 +8,7 @@
 #include "game.h"
 #include "types.h"
 #include "util.h"
+#include "io.h"
 #include "gamedata.h"
 
 int isNeighbor(int t1, int t2)
@@ -49,15 +50,15 @@ void doBattle(int tA, int tD)
 
     // Kill some troops
     if(attackerDice[0] > defenderDice[0])
-        territories[dT].troops -= 1;
+        territories[tD].troops -= 1;
     else
-        territories[aT].troops -= 1;
+        territories[tA].troops -= 1;
     if(attackers > 1 && defenders > 1)
     {
         if(attackerDice[1] > defenderDice[1])
-            territories[dT].troops -= 1;
+            territories[tD].troops -= 1;
         else
-            territories[aT].troops -= 1;
+            territories[tA].troops -= 1;
     }
 }
 

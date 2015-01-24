@@ -113,7 +113,16 @@ void drawText(sf::RenderWindow & win)
     line.setString(textdisplay[1]);
     line.setPosition(sf::Vector2f(20, 50));
     win.draw(line);
+}
 
+void drawDie(sf::RenderWindow & win, int d, int x, int y)
+{
+    if(d < 0)
+        return;
+    sf::Text num(std::to_string(d), font, 24);
+    num.setColor(sf::Color::Red);
+    num.setPosition(x,y);
+    win.draw(num);
 }
 
 int main()
@@ -149,6 +158,11 @@ int main()
         window.clear();
         drawMap(window);
         drawText(window);
+        drawDie(window, attackerDice[0], 200, 40);
+        drawDie(window, attackerDice[1], 200, 80);
+        drawDie(window, attackerDice[2], 200, 120);
+        drawDie(window, defenderDice[0], 240, 40);
+        drawDie(window, defenderDice[1], 240, 80);
         window.display();
 
         if(blinkclock.getElapsedTime() > sf::milliseconds(250))
