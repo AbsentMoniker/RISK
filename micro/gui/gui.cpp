@@ -10,28 +10,38 @@ extern "C" {
 #include <cstdio>
 #include <cstring>
 #include <cstdarg>
+#include <random>
+#include <ctime>
 
-char textdisplay[2][17] = {{'\0'},{'\0'}};
+std::mt19937 rng;
+
+// Implement the io functions needed by io.h
 extern "C" {
-void setTextDisplay(int line, const char * format, ...)
-{
-    va_list args;
-    va_start(args, format);
-    char str[16];
-    vsnprintf(str, 16, format, args);
-    va_end(args);
+    char textdisplay[2][17] = {{'\0'},{'\0'}};
+    void setTextDisplay(int line, const char * format, ...)
+    {
+        va_list args;
+        va_start(args, format);
+        char str[16];
+        vsnprintf(str, 16, format, args);
+        va_end(args);
 
-    if(line == 0)
-    {
-        strncpy(textdisplay[0], "                ", 16);
-        strncpy(textdisplay[0], str, 16);
+        if(line == 0)
+        {
+            strncpy(textdisplay[0], "                ", 16);
+            strncpy(textdisplay[0], str, 16);
+        }
+        else if(line == 1)
+        {
+            strncpy(textdisplay[1], "                ", 16);
+            strncpy(textdisplay[1], str, 16);
+        }
     }
-    else if(line == 1)
+
+    int randint(int min, int max)
     {
-        strncpy(textdisplay[1], "                ", 16);
-        strncpy(textdisplay[1], str, 16);
+        return std::uniform_int_distribution<int>(min, max)(rng);
     }
-}
 }
 
 
@@ -108,6 +118,7 @@ void drawText(sf::RenderWindow & win)
 
 int main()
 {
+    rng.seed(time(0));
     if(!font.loadFromFile("DroidSansMono.ttf"))
     {
         printf("can't load font\n");

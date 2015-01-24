@@ -462,8 +462,10 @@ void moveSelection(int movesource, int direction, int (*predicate)(int))
 
         tries++;
         if(predicate(*p))
-            break;
+            return;
     }
+    // Couldn't find a valid territory, so make sure nothing is selected
+    *p = -1; 
 }
 
 int playerLiving(int player)

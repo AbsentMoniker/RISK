@@ -21,11 +21,44 @@ int isNeighbor(int t1, int t2)
     }
     return 0;
 }
+#define SORT(a,b) do{if(a < b) {int tmp = a; a = b; b = tmp; }}while(0)
 void doBattle(int tA, int tD)
 {
     int attackers = min(3, territories[tA].troops - 1);
     int defenders = min(2, territories[tD].troops);
-    
+    attackerDice[0] = randint(1,6);     
+    attackerDice[1] = randint(1,6);     
+    attackerDice[2] = randint(1,6);     
+    defenderDice[0] = randint(1,6);     
+    defenderDice[1] = randint(1,6);     
+
+    // sort as many dice as we need
+    if(attackers > 1)
+    {
+        SORT(attackerDice[0], attackerDice[1]);
+        if(attackers > 2)
+        {
+            SORT(attackerDice[0], attackerDice[2]);
+            SORT(attackerDice[1], attackerDice[2]);
+        }
+    }
+    if(defenders > 1)
+    {
+        SORT(defenderDice[0], defenderDice[1]);
+    }
+
+    // Kill some troops
+    if(attackerDice[0] > defenderDice[0])
+        territories[dT].troops -= 1;
+    else
+        territories[aT].troops -= 1;
+    if(attackers > 1 && defenders > 1)
+    {
+        if(attackerDice[1] > defenderDice[1])
+            territories[dT].troops -= 1;
+        else
+            territories[aT].troops -= 1;
+    }
 }
 
 int predUnowned(int t)
@@ -83,6 +116,8 @@ int predMoveSource(int t)
 }
 int predMoveTarget(int t)
 {
+    if(t == source)
+        return 0;
     if(territories[t].owner != currentPlayer)
         return 0;
     if(!isNeighbor(source, t))
