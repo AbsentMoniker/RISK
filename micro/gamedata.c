@@ -26,6 +26,12 @@ Territory territories[NUM_TERRITORIES] =
         -1, 0},
 };
 
+Continent continents[NUM_CONTINENTS] = 
+{
+    { "Northland", T_ZEROLAND, 4, 4},
+    { "Southland", T_FOURLAND, 4, 4},
+};
+
 int cardExchangeValues[NUM_EXCHANGE_VALUES] = 
 { 4, 6, 8, 10, 12, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85,
     90, 95};

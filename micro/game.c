@@ -423,11 +423,23 @@ int playerLiving(int player)
 int computeReinforcements(int player)
 {
     int territoriesHeld = 0;
+    int bonus = 0;
+
     for(int i = 0; i < NUM_TERRITORIES; i++)
         if(territories[i].owner == player)
             territoriesHeld += 1;
-    // TODO: continents
-    return max(3, territoriesHeld / 3);
+
+    for(int i = 0; i < NUM_CONTINENTS; i++)
+    {
+        int j;
+        for(j = 0; j < continents[i].members; j++)
+        {
+            if(territories[j+continents[i].firstmember].owner != player)
+                break;
+        }
+        if(j == continents[i].members)
+            bonus += continents[i].value;
+    }
+
+    return bonus + max(3, territoriesHeld / 3);
 }
-
-

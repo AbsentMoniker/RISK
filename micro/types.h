@@ -40,4 +40,13 @@ typedef struct
     int owner;
     int troops;
 } Territory;
+
+// Continent structure
+typedef struct
+{
+    const char * name;
+    const int firstmember;
+    const int members;
+    const int value;
+} Continent;
 #endif

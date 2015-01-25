@@ -22,6 +22,9 @@
 
 extern Territory territories[NUM_TERRITORIES];
 
+#define NUM_CONTINENTS 2
+extern Continent continents[NUM_CONTINENTS];
+
 #define NUM_EXCHANGE_VALUES 22
 extern int cardExchangeValues[NUM_EXCHANGE_VALUES];
 
