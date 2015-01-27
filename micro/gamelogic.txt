@@ -24,6 +24,7 @@ attack2:
 battle:
             until source is empty, target is empty, or player ends attack
                 player does battle
+conquer:
             player chooses number to move into target
 move1:
         player may make move:
