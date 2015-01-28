@@ -5,36 +5,64 @@
 // ECE 477 Group 2, Spring 2015
 
 #include "gamedata.h"
-
 Territory territories[NUM_TERRITORIES] =
 {
-    { "Zeroland",     { T_ONELAND, T_SEVENLAND, -1, -1, -1, -1},  INFANTRY,
-        -1, 0},
-    { "Oneland",      { T_TWOLAND, T_ZEROLAND, -1, -1, -1, -1},   INFANTRY,
-        -1, 0},
-    { "Twoland",      { T_THREELAND, T_ONELAND, -1, -1, -1, -1},  INFANTRY,
-        -1, 0},
-    { "Threeland",    { T_FOURLAND, T_TWOLAND, -1, -1, -1, -1},   INFANTRY,
-        -1, 0},
-    { "Fourland",     { T_FIVELAND, T_THREELAND, -1, -1, -1, -1}, INFANTRY,
-        -1, 0},
-    { "Fiveland",     { T_SIXLAND, T_FOURLAND, -1, -1, -1, -1},   INFANTRY,
-        -1, 0},
-    { "Sixland",      { T_SEVENLAND, T_FIVELAND, -1, -1, -1, -1}, INFANTRY,
-        -1, 0},
-    { "Sevenland",    { T_ZEROLAND, T_SIXLAND, -1, -1, -1, -1},   INFANTRY,
-        -1, 0},
+    {  .name="Alaska",                 .neighbors={ T_NORTHWEST, T_ALBERTA, T_KAMCHATKA, -1, -1, -1},                                             .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
+    {  .name="Northwest Territory",    .neighbors={ T_ALASKA, T_ALBERTA, T_ONTARIO, T_GREENLAND, -1, -1},                                         .cardtype=CAVALRY,    .owner=-1,  .troops=0 },
+    {  .name="Greenland",              .neighbors={ T_NORTHWEST, T_ONTARIO, T_QUEBEC, T_ICELAND, -1, -1},                                         .cardtype=CAVALRY,    .owner=-1,  .troops=0 },
+    {  .name="Alberta",                .neighbors={ T_ALASKA, T_NORTHWEST, T_ONTARIO, T_QUEBEC, T_WESTERN_UNITED_STATES, -1},                     .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
+    {  .name="Ontario",                .neighbors={ T_NORTHWEST, T_GREENLAND, T_QUEBEC, T_WESTERN_UNITED_STATES, T_EASTERN_UNITED_STATES, -1},    .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
+    {  .name="Quebec",                 .neighbors={ T_ONTARIO, T_GREENLAND, T_EASTERN_UNITED_STATES, -1, -1, -1},                                 .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
+    {  .name="Western United States",  .neighbors={ T_ALBERTA, T_ONTARIO, T_EASTERN_UNITED_STATES, T_MEXICO, -1, -1},                             .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
+    {  .name="Eastern United States",  .neighbors={ T_WESTERN_UNITED_STATES, T_ONTARIO, T_QUEBEC, T_MEXICO, -1, -1},                              .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
+    {  .name="Mexico",                 .neighbors={ T_WESTERN_UNITED_STATES, T_EASTERN_UNITED_STATES, T_MEXICO, T_VENEZUELA, -1, -1},             .cardtype=INFANTRY,   .owner=-1,  .troops=0 },
+    {  .name="Venezeula",              .neighbors={ T_MEXICO, T_PERU, T_BRAZIL, -1, -1, -1},                                                      .cardtype=CAVALRY,    .owner=-1,  .troops=0 },
+    {  .name="Peru",                   .neighbors={ T_VENEZUELA, T_BRAZIL, T_ARGENTINA, -1, -1, -1},                                              .cardtype=CAVALRY,    .owner=-1,  .troops=0 },
+    {  .name="Argentina",              .neighbors={ T_PERU, T_BRAZIL, -1, -1, -1, -1},                                                            .cardtype=INFANTRY,   .owner=-1,  .troops=0 },
+    {  .name="Brazil",                 .neighbors={ T_VENEZUELA, T_PERU, T_ARGENTINA, T_NORTHERN_AFRICA, -1, -1},                                 .cardtype=INFANTRY,   .owner=-1,  .troops=0 },
+    {  .name="Iceland",                .neighbors={ T_GREENLAND, T_SCANDINAVIA, T_GREAT_BRITAIN, -1, -1, -1},                                     .cardtype=CAVALRY,    .owner=-1,  .troops=0 },
+    {  .name="Scandinavia",            .neighbors={ T_ICELAND, T_UKRAINE, T_NORTHERN_EUROPE, T_GREAT_BRITAIN, -1, -1},                            .cardtype=INFANTRY,   .owner=-1,  .troops=0 },
+    {  .name="Great Britain",          .neighbors={ T_ICELAND, T_SCANDINAVIA, T_NORTHERN_EUROPE, T_WESTERN_EUROPE, -1, -1},                       .cardtype=INFANTRY,   .owner=-1,  .troops=0 },
+    {  .name="Northern Europe",        .neighbors={ T_SCANDINAVIA, T_UKRAINE, T_SOUTHERN_EUROPE, T_WESTERN_EUROPE, -1, -1},                       .cardtype=CAVALRY,    .owner=-1,  .troops=0 },
+    {  .name="Western Europe",         .neighbors={ T_GREAT_BRITAIN, T_NORTHERN_EUROPE, T_SOUTHERN_EUROPE, T_NORTHERN_AFRICA, -1, -1},            .cardtype=INFANTRY,   .owner=-1,  .troops=0 },
+    {  .name="Southern Europe",        .neighbors={ T_WESTERN_EUROPE, T_NORTHERN_EUROPE, T_UKRAINE, T_MIDDLE_EAST, T_EGYPT, T_NORTHERN_AFRICA},   .cardtype=INFANTRY,   .owner=-1,  .troops=0 },
+    {  .name="Ukraine",                .neighbors={ T_SCANDINAVIA, T_URALS, T_AFGHANISTAN, T_MIDDLE_EAST, T_SOUTHERN_EUROPE, T_NORTHERN_EUROPE},  .cardtype=INFANTRY,   .owner=-1,  .troops=0 },
+    {  .name="Northern Africa",        .neighbors={ T_WESTERN_EUROPE, T_SOUTHERN_EUROPE, T_EGYPT, T_EASTERN_AFRICA, T_CONGO, T_BRAZIL},           .cardtype=INFANTRY,   .owner=-1,  .troops=0 },
+    {  .name="Egypt",                  .neighbors={ T_SOUTHERN_EUROPE, T_MIDDLE_EAST, T_EASTERN_AFRICA, T_NORTHERN_AFRICA, -1, -1},               .cardtype=CAVALRY,    .owner=-1,  .troops=0 },
+    {  .name="Congo",                  .neighbors={ T_NORTHERN_AFRICA, T_EASTERN_AFRICA, T_SOUTH_AFRICA, -1, -1, -1},                             .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
+    {  .name="Eastern Africa",         .neighbors={ T_EGYPT, T_MIDDLE_EAST, T_MADAGASCAR, T_SOUTH_AFRICA, T_CONGO, T_NORTHERN_AFRICA},            .cardtype=INFANTRY,   .owner=-1,  .troops=0 },
+    {  .name="South Africa",           .neighbors={ T_CONGO, T_EASTERN_AFRICA, T_MADAGASCAR, -1, -1, -1},                                         .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
+    {  .name="Madagascar",             .neighbors={ T_SOUTH_AFRICA, T_EASTERN_AFRICA, -1, -1, -1, -1},                                            .cardtype=CAVALRY,    .owner=-1,  .troops=0 },
+    {  .name="Urals",                  .neighbors={ T_UKRAINE, T_SIBERIA, T_CHINA, T_AFGHANISTAN, -1, -1},                                        .cardtype=INFANTRY,   .owner=-1,  .troops=0 },
+    {  .name="Siberia",                .neighbors={ T_YAKUTSK, T_IRKUTSK, T_MONGOLIA, T_CHINA, T_URALS, -1},                                      .cardtype=INFANTRY,   .owner=-1,  .troops=0 },
+    {  .name="Yakutsk",                .neighbors={ T_KAMCHATKA, T_IRKUTSK, T_SIBERIA, -1, -1, -1},                                               .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
+    {  .name="Kamchatka",              .neighbors={ T_ALASKA, T_IRKUTSK, T_YAKUTSK, T_MONGOLIA, T_JAPAN, -1},                                     .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
+    {  .name="Irkutsk",                .neighbors={ T_SIBERIA, T_YAKUTSK, T_KAMCHATKA, T_MONGOLIA, T_CHINA, -1},                                  .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
+    {  .name="Afghanistan",            .neighbors={ T_UKRAINE, T_URALS, T_CHINA, T_INDIA, T_MIDDLE_EAST, -1},                                     .cardtype=INFANTRY,   .owner=-1,  .troops=0 },
+    {  .name="Japan",                  .neighbors={ T_KAMCHATKA, T_MONGOLIA, -1, -1, -1, -1},                                                     .cardtype=CAVALRY,    .owner=-1,  .troops=0 },
+    {  .name="Mongolia",               .neighbors={ T_IRKUTSK, T_KAMCHATKA, T_JAPAN, T_CHINA, T_SIBERIA, -1},                                     .cardtype=CAVALRY,    .owner=-1,  .troops=0 },
+    {  .name="Middle East",            .neighbors={ T_SOUTHERN_EUROPE, T_UKRAINE, T_AFGHANISTAN, T_INDIA, T_EASTERN_AFRICA, T_EGYPT},             .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
+    {  .name="China",                  .neighbors={ T_AFGHANISTAN, T_SIBERIA, T_URALS, T_MONGOLIA, T_SIAM, T_INDIA},                              .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
+    {  .name="India",                  .neighbors={ T_MIDDLE_EAST, T_AFGHANISTAN, T_CHINA, T_SIAM, -1, -1},                                       .cardtype=CAVALRY,    .owner=-1,  .troops=0 },
+    {  .name="Siam",                   .neighbors={ T_INDIA, T_CHINA, T_INDONESIA, -1, -1, -1},                                                   .cardtype=CAVALRY,    .owner=-1,  .troops=0 },
+    {  .name="Indonesia",              .neighbors={ T_SIAM, T_NEW_GUINEA, T_WESTERN_AUSTRAILIA, -1, -1, -1},                                      .cardtype=INFANTRY,   .owner=-1,  .troops=0 },
+    {  .name="New Guinea",             .neighbors={ T_INDONESIA, T_WESTERN_AUSTRAILIA, T_EASTERN_AUSTRAILIA, -1, -1, -1},                         .cardtype=CAVALRY,    .owner=-1,  .troops=0 },
+    {  .name="Western Austrailia",     .neighbors={ T_INDONESIA, T_NEW_GUINEA, T_EASTERN_AUSTRAILIA, -1, -1, -1},                                 .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
+    {  .name="Eastern Austrailia",     .neighbors={ T_WESTERN_AUSTRAILIA, T_NEW_GUINEA, -1, -1, -1, -1},                                          .cardtype=CAVALRY,    .owner=-1,  .troops=0 },
 };
-
 Continent continents[NUM_CONTINENTS] = 
 {
-    { "Northland", T_ZEROLAND, 4, 4},
-    { "Southland", T_FOURLAND, 4, 4},
+    { .name="North America", .firstmember=T_ALASKA, .members=9, .value=5 },
+    { .name="South America", .firstmember=T_VENEZUELA, .members=4, .value=2 },
+    { .name="Europe", .firstmember=T_ICELAND, .members=7, .value=5 },
+    { .name="Africa", .firstmember=T_NORTHERN_AFRICA, .members=6, .value=3 },
+    { .name="Asia", .firstmember=T_URALS, .members=12, .value=7 },
+    { .name="Austrailia", .firstmember=T_INDONESIA, .members=4, .value=2 },
 };
 
-int cardExchangeValues[NUM_EXCHANGE_VALUES] = 
+const int cardExchangeValues[NUM_EXCHANGE_VALUES] = 
 { 4, 6, 8, 10, 12, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85,
     90, 95};
 
-int initialTroops[MAX_PLAYERS + 1] = 
+const int initialTroops[MAX_PLAYERS + 1] = 
 { 0, 0, 40, 35, 30, 25, 20};

@@ -47,14 +47,48 @@ extern "C" {
 
 sf::Vector2f terPositions[NUM_TERRITORIES] =
 {
-    {200, 200},
-    {300, 200},
-    {400, 200},
-    {400, 300},
-    {400, 400},
-    {300, 400},
-    {200, 400},
-    {200, 300},
+    {10,10}, // T_ALASKA 0
+    {60,10}, // T_NORTHWEST 1
+    {140,10}, // T_GREENLAND 2
+    {60,60}, // T_ALBERTA 3
+    {110,60}, // T_ONTARIO 4
+    {160,60}, // T_QUEBEC 5
+    {70,110}, // T_WESTERN_US 6
+    {120,110}, // T_EASTERN_US 7
+    {90,160}, // T_MEXICO 8
+    {120,250}, // T_VENEZUELA 9
+    {100,300}, // T_PERU 10
+    {120,350}, // T_ARGENTINA 11
+    {150,300}, // T_BRAZIL 12
+    {250,10}, // T_ICELAND 13
+    {320,10}, // T_SCANDINAVIA 14
+    {270,60}, // T_GREAT_BRITAIN 15
+    {320,60}, // T_NORTHERN_EUROPE 16
+    {280,120}, // T_WESTERN_EUROPE 17
+    {340,120}, // T_SOUTHERN_EUROPE 18
+    {380,70}, // T_UKRAINE 19
+    {280,220}, // T_NORTHERN_AFRICA 20
+    {330,210}, // T_EGYPT 21
+    {330,260}, // T_CONGO 22
+    {380,250}, // T_EASTERN_AFRICA 23
+    {330,310}, // T_SOUTH_AFRICA 24
+    {380,310}, // T_MADAGASCAR 25
+    {440,50}, // T_URALS 26
+    {490,50}, // T_SIBERIA 27
+    {540,20}, // T_YAKUTSK 28
+    {600,20}, // T_KAMCHATKA 29
+    {540,70}, // T_IRKUSTK 30
+    {470,130}, // T_AFGHANISTAN 31
+    {620,130}, // T_JAPAN 32
+    {560,130}, // T_MONGOLIA 33
+    {460,180}, // T_MIDDLE_EAST 34
+    {560,180}, // T_CHINA 35
+    {540,230}, // T_INDIA 36
+    {590,230}, // T_SIAM 37
+    {580,340}, // T_INDONESIA 38
+    {640,340}, // T_NEW_GUINEA 39
+    {590,400}, // T_WESTERN_AUSTRAILIA 40
+    {640,400}, // T_EASTERN_AUSTRAILIA 41
 };
 sf::Color playerColors[MAX_PLAYERS] =
 {
@@ -73,7 +107,7 @@ void drawMap(sf::RenderWindow & win)
 {
     for(int i = 0; i < NUM_TERRITORIES; i++)
     {
-        sf::RectangleShape shape(sf::Vector2f(50, 50));
+        sf::RectangleShape shape(sf::Vector2f(46, 46));
         shape.setPosition(terPositions[i]);
 
         
@@ -107,11 +141,11 @@ void drawText(sf::RenderWindow & win)
 {
     sf::Text line(textdisplay[0], font, 20);
     line.setColor(sf::Color::White);
-    line.setPosition(sf::Vector2f(20, 20));
+    line.setPosition(sf::Vector2f(20, 520));
     win.draw(line);
 
     line.setString(textdisplay[1]);
-    line.setPosition(sf::Vector2f(20, 50));
+    line.setPosition(sf::Vector2f(20, 550));
     win.draw(line);
 }
 
@@ -159,11 +193,11 @@ int main()
         window.clear();
         drawMap(window);
         drawText(window);
-        drawDie(window, attackerDice[0], 200, 40);
-        drawDie(window, attackerDice[1], 200, 80);
-        drawDie(window, attackerDice[2], 200, 120);
-        drawDie(window, defenderDice[0], 240, 40);
-        drawDie(window, defenderDice[1], 240, 80);
+        drawDie(window, attackerDice[0], 200, 450);
+        drawDie(window, attackerDice[1], 200, 490);
+        drawDie(window, attackerDice[2], 200, 530);
+        drawDie(window, defenderDice[0], 240, 450);
+        drawDie(window, defenderDice[1], 240, 490);
         window.display();
 
         if(blinkclock.getElapsedTime() > sf::milliseconds(250))
