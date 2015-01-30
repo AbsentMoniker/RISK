@@ -8,13 +8,13 @@
 Territory territories[NUM_TERRITORIES] =
 {
     {  .name="Alaska",                 .neighbors={ T_NORTHWEST, T_ALBERTA, T_KAMCHATKA, -1, -1, -1},                                             .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
-    {  .name="Northwest Territory",    .neighbors={ T_ALASKA, T_ALBERTA, T_ONTARIO, T_GREENLAND, -1, -1},                                         .cardtype=CAVALRY,    .owner=-1,  .troops=0 },
+    {  .name="NW Territory",           .neighbors={ T_ALASKA, T_ALBERTA, T_ONTARIO, T_GREENLAND, -1, -1},                                         .cardtype=CAVALRY,    .owner=-1,  .troops=0 },
     {  .name="Greenland",              .neighbors={ T_NORTHWEST, T_ONTARIO, T_QUEBEC, T_ICELAND, -1, -1},                                         .cardtype=CAVALRY,    .owner=-1,  .troops=0 },
     {  .name="Alberta",                .neighbors={ T_ALASKA, T_NORTHWEST, T_ONTARIO, T_QUEBEC, T_WESTERN_UNITED_STATES, -1},                     .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
     {  .name="Ontario",                .neighbors={ T_NORTHWEST, T_GREENLAND, T_QUEBEC, T_WESTERN_UNITED_STATES, T_EASTERN_UNITED_STATES, -1},    .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
     {  .name="Quebec",                 .neighbors={ T_ONTARIO, T_GREENLAND, T_EASTERN_UNITED_STATES, -1, -1, -1},                                 .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
-    {  .name="Western United States",  .neighbors={ T_ALBERTA, T_ONTARIO, T_EASTERN_UNITED_STATES, T_MEXICO, -1, -1},                             .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
-    {  .name="Eastern United States",  .neighbors={ T_WESTERN_UNITED_STATES, T_ONTARIO, T_QUEBEC, T_MEXICO, -1, -1},                              .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
+    {  .name="Western US",             .neighbors={ T_ALBERTA, T_ONTARIO, T_EASTERN_UNITED_STATES, T_MEXICO, -1, -1},                             .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
+    {  .name="Eastern US",             .neighbors={ T_WESTERN_UNITED_STATES, T_ONTARIO, T_QUEBEC, T_MEXICO, -1, -1},                              .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
     {  .name="Mexico",                 .neighbors={ T_WESTERN_UNITED_STATES, T_EASTERN_UNITED_STATES, T_MEXICO, T_VENEZUELA, -1, -1},             .cardtype=INFANTRY,   .owner=-1,  .troops=0 },
     {  .name="Venezeula",              .neighbors={ T_MEXICO, T_PERU, T_BRAZIL, -1, -1, -1},                                                      .cardtype=CAVALRY,    .owner=-1,  .troops=0 },
     {  .name="Peru",                   .neighbors={ T_VENEZUELA, T_BRAZIL, T_ARGENTINA, -1, -1, -1},                                              .cardtype=CAVALRY,    .owner=-1,  .troops=0 },
@@ -47,8 +47,8 @@ Territory territories[NUM_TERRITORIES] =
     {  .name="Siam",                   .neighbors={ T_INDIA, T_CHINA, T_INDONESIA, -1, -1, -1},                                                   .cardtype=CAVALRY,    .owner=-1,  .troops=0 },
     {  .name="Indonesia",              .neighbors={ T_SIAM, T_NEW_GUINEA, T_WESTERN_AUSTRAILIA, -1, -1, -1},                                      .cardtype=INFANTRY,   .owner=-1,  .troops=0 },
     {  .name="New Guinea",             .neighbors={ T_INDONESIA, T_WESTERN_AUSTRAILIA, T_EASTERN_AUSTRAILIA, -1, -1, -1},                         .cardtype=CAVALRY,    .owner=-1,  .troops=0 },
-    {  .name="Western Austrailia",     .neighbors={ T_INDONESIA, T_NEW_GUINEA, T_EASTERN_AUSTRAILIA, -1, -1, -1},                                 .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
-    {  .name="Eastern Austrailia",     .neighbors={ T_WESTERN_AUSTRAILIA, T_NEW_GUINEA, -1, -1, -1, -1},                                          .cardtype=CAVALRY,    .owner=-1,  .troops=0 },
+    {  .name="Western Aus.",           .neighbors={ T_INDONESIA, T_NEW_GUINEA, T_EASTERN_AUSTRAILIA, -1, -1, -1},                                 .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
+    {  .name="Eastern Aus.",           .neighbors={ T_WESTERN_AUSTRAILIA, T_NEW_GUINEA, -1, -1, -1, -1},                                          .cardtype=CAVALRY,    .owner=-1,  .troops=0 },
 };
 Continent continents[NUM_CONTINENTS] = 
 {

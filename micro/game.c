@@ -17,13 +17,13 @@ int source;
 int destination;
 int attackerDice[3];
 int defenderDice[2];
-int nextCardTroops;
+int nextCardTroopsIdx;
 
 // Game variables that don't need to be exposed to the IO systems
-State state;
-int firstPlayer;
-int territoriesRemaining;
-int numTroops;
+static State state;
+static int firstPlayer;
+static int territoriesRemaining;
+static int numTroops;
 
 void gameInput(Input input)
 {
@@ -65,48 +65,70 @@ void updateText()
     switch(state)
     {
         case INIT:
-            setTextDisplay(0, "Num. players:");
-            setTextDisplay(1, "%d", numPlayers);
+            setTextDisplay(0, "Choose number");
+            setTextDisplay(1, "of players: %d", numPlayers);
+            setTextDisplay(2, "");
+            setTextDisplay(3, "");
             break;
         case SELECT:
-            setTextDisplay(0, "Pick territory");
-            setTextDisplay(1, "%d left", territoriesRemaining);
+            setTextDisplay(0, "Player %d:");
+            setTextDisplay(1, "Pick territory");
+            setTextDisplay(2, "%d available", territoriesRemaining);
+            setTextDisplay(3, "");
             break;
         case DEPLOY:
             setTextDisplay(0, "Ply %d deploy", currentPlayer);
             setTextDisplay(1, "%d troops left", numTroops);
+            setTextDisplay(2, "");
+            setTextDisplay(3, "");
             break;
         case REINFORCE:
             setTextDisplay(0, "Reinforcements", currentPlayer);
             setTextDisplay(1, "%d troops left", numTroops);
+            setTextDisplay(2, "");
+            setTextDisplay(3, "");
             break;
         case ATTACK1:
             setTextDisplay(0, "Choose attacker");
             setTextDisplay(1, "or end turn");
+            setTextDisplay(2, "");
+            setTextDisplay(3, "");
             break;
         case ATTACK2:
             setTextDisplay(0, "Choose target");
             setTextDisplay(1, "");
+            setTextDisplay(2, "");
+            setTextDisplay(3, "");
             break;
         case BATTLE:
             setTextDisplay(0, "Battle or");
             setTextDisplay(1, "retreat");
+            setTextDisplay(2, "");
+            setTextDisplay(3, "");
             break;
         case CONQUER:
             setTextDisplay(0, "Move troops to");
             setTextDisplay(1, "target");
+            setTextDisplay(2, "");
+            setTextDisplay(3, "");
             break;
         case MOVE1:
             setTextDisplay(0, "Make free move");
             setTextDisplay(1, "or end turn");
+            setTextDisplay(2, "");
+            setTextDisplay(3, "");
             break;
         case MOVE2:
             setTextDisplay(0, "Choose");
             setTextDisplay(1, "destination");
+            setTextDisplay(2, "");
+            setTextDisplay(3, "");
             break;
         case MOVE3:
             setTextDisplay(0, "Number to move");
             setTextDisplay(1, "");
+            setTextDisplay(2, "");
+            setTextDisplay(3, "");
             break;
         case GAMEOVER:
             break;
@@ -381,7 +403,7 @@ void changeState(State newstate)
     if(state == INIT)
     {
         numPlayers = 2;
-        nextCardTroops = 4;
+        nextCardTroopsIdx = 0;
     }
 
     if(state == SELECT)
@@ -410,6 +432,8 @@ void changeState(State newstate)
         numTroops = computeReinforcements(currentPlayer);
     else if(state == MOVE3)
         numTroops = territories[source].troops;
+    // numTroops is also used by CONQUER, but it needs to be set earlier than
+    // this function is called
 }
 
 int playerLiving(int player)

@@ -49,4 +49,11 @@ typedef struct
     const int members;
     const int value;
 } Continent;
+
+// Card structure
+typedef struct
+{
+    CardType type;
+    int territory;
+} Card;
 #endif
