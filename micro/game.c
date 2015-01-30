@@ -66,74 +66,74 @@ void updateText()
         case INIT:
             setTextDisplay(0, "Choose number");
             setTextDisplay(1, "of players: %d", numPlayers);
-            setTextDisplay(2, "");
+            setTextDisplay(2, "A: Confirm number");
             setTextDisplay(3, "");
             break;
         case SELECT:
             setTextDisplay(0, "Player %d:", currentPlayer);
             setTextDisplay(1, "Pick territory");
-            setTextDisplay(2, "%d available", territoriesRemaining);
-            setTextDisplay(3, "");
+            setTextDisplay(2, "A: Select", );
+            setTextDisplay(3, "%d available", territoriesRemaining);
             break;
         case DEPLOY:
-            setTextDisplay(0, "Ply %d deploy", currentPlayer);
-            setTextDisplay(1, "%d troops left", numTroops);
-            setTextDisplay(2, "");
-            setTextDisplay(3, "");
+            setTextDisplay(0, "Player %d:", currentPlayer);
+            setTextDisplay(1, "Deploy troop", );
+            setTextDisplay(2, "A: Place troop");
+            setTextDisplay(3, "%d troops left", numTroops);
             break;
         case REINFORCE:
             setTextDisplay(0, "Reinforcements", currentPlayer);
             setTextDisplay(1, "%d troops left", numTroops);
-            setTextDisplay(2, "");
-            setTextDisplay(3, "");
+            setTextDisplay(2, "A: Place troop");
+            setTextDisplay(3, "B: Other options");
             break;
         case ATTACK1:
-            setTextDisplay(0, "Choose attacker");
-            setTextDisplay(1, "or end turn");
-            setTextDisplay(2, "");
-            setTextDisplay(3, "");
+            setTextDisplay(0, "Declare attacks");
+            setTextDisplay(1, "");
+            setTextDisplay(2, "A: Choose attacker");
+            setTextDisplay(3, "B: Stop attacking");
             break;
         case ATTACK2:
-            setTextDisplay(0, "Choose target");
+            setTextDisplay(0, "Declare attacks");
             setTextDisplay(1, "");
-            setTextDisplay(2, "");
-            setTextDisplay(3, "");
+            setTextDisplay(2, "A: Choose target");
+            setTextDisplay(3, "B: Back");
             break;
         case BATTLE:
-            setTextDisplay(0, "Battle or");
-            setTextDisplay(1, "retreat");
-            setTextDisplay(2, "");
-            setTextDisplay(3, "");
+            setTextDisplay(0, "Battle!");
+            setTextDisplay(1, "");
+            setTextDisplay(2, "A: Roll dice");
+            setTextDisplay(3, "B: Retreat");
             break;
         case CONQUER:
-            setTextDisplay(0, "Move troops to");
-            setTextDisplay(1, "target");
-            setTextDisplay(2, "");
+            setTextDisplay(0, "Move troops to target");
+            setTextDisplay(1, "");
+            setTextDisplay(2, "A: Confirm troops");
             setTextDisplay(3, "");
             break;
         case MOVE1:
             setTextDisplay(0, "Make free move");
-            setTextDisplay(1, "or end turn");
-            setTextDisplay(2, "");
-            setTextDisplay(3, "");
+            setTextDisplay(1, "");
+            setTextDisplay(2, "A: Choose source");
+            setTextDisplay(3, "B: End turn");
             break;
         case MOVE2:
-            setTextDisplay(0, "Choose");
-            setTextDisplay(1, "destination");
-            setTextDisplay(2, "");
-            setTextDisplay(3, "");
+            setTextDisplay(0, "Make free move");
+            setTextDisplay(1, "");
+            setTextDisplay(2, "A: Choose detination");
+            setTextDisplay(3, "B: Back");
             break;
         case MOVE3:
             setTextDisplay(0, "Number to move");
             setTextDisplay(1, "");
-            setTextDisplay(2, "");
-            setTextDisplay(3, "");
+            setTextDisplay(2, "A: Confirm move");
+            setTextDisplay(3, "B: Back");
             break;
         case GAMEOVER:
             setTextDisplay(0, "Player %d wins!", currentPlayer);
             setTextDisplay(1, "");
             setTextDisplay(2, "");
-            setTextDisplay(3, "");
+            setTextDisplay(3, "B: Start new game");
             break;
         default:
             ; // panic!
