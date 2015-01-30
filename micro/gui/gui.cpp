@@ -17,25 +17,21 @@ std::mt19937 rng;
 
 // Implement the io functions needed by io.h
 extern "C" {
-    char textdisplay[2][17] = {{'\0'},{'\0'}};
+    char textdisplay[4][21] = {0};
     void setTextDisplay(int line, const char * format, ...)
     {
+        if(line < 0 || line >= 4)
+            return;
+
         va_list args;
         va_start(args, format);
-        char str[16];
-        vsnprintf(str, 16, format, args);
+        char str[21];
+        vsnprintf(str, 21, format, args);
         va_end(args);
 
-        if(line == 0)
-        {
-            strncpy(textdisplay[0], "                ", 16);
-            strncpy(textdisplay[0], str, 16);
-        }
-        else if(line == 1)
-        {
-            strncpy(textdisplay[1], "                ", 16);
-            strncpy(textdisplay[1], str, 16);
-        }
+        //                          01234567890123456789
+        strncpy(textdisplay[line], "                    ", 21);
+        strncpy(textdisplay[line], str, 21);
     }
 
     int randint(int min, int max)
@@ -141,10 +137,18 @@ void drawText(sf::RenderWindow & win)
 {
     sf::Text line(textdisplay[0], font, 20);
     line.setColor(sf::Color::White);
-    line.setPosition(sf::Vector2f(20, 520));
+    line.setPosition(sf::Vector2f(20, 460));
     win.draw(line);
 
     line.setString(textdisplay[1]);
+    line.setPosition(sf::Vector2f(20, 490));
+    win.draw(line);
+
+    line.setString(textdisplay[2]);
+    line.setPosition(sf::Vector2f(20, 520));
+    win.draw(line);
+
+    line.setString(textdisplay[3]);
     line.setPosition(sf::Vector2f(20, 550));
     win.draw(line);
 }
@@ -193,11 +197,11 @@ int main()
         window.clear();
         drawMap(window);
         drawText(window);
-        drawDie(window, attackerDice[0], 200, 450);
-        drawDie(window, attackerDice[1], 200, 490);
-        drawDie(window, attackerDice[2], 200, 530);
-        drawDie(window, defenderDice[0], 240, 450);
-        drawDie(window, defenderDice[1], 240, 490);
+        drawDie(window, attackerDice[0], 300, 450);
+        drawDie(window, attackerDice[1], 300, 490);
+        drawDie(window, attackerDice[2], 300, 530);
+        drawDie(window, defenderDice[0], 340, 450);
+        drawDie(window, defenderDice[1], 340, 490);
         window.display();
 
         if(blinkclock.getElapsedTime() > sf::milliseconds(250))
