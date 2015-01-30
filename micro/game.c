@@ -72,12 +72,12 @@ void updateText()
         case SELECT:
             setTextDisplay(0, "Player %d:", currentPlayer);
             setTextDisplay(1, "Pick territory");
-            setTextDisplay(2, "A: Select", );
+            setTextDisplay(2, "A: Select");
             setTextDisplay(3, "%d available", territoriesRemaining);
             break;
         case DEPLOY:
             setTextDisplay(0, "Player %d:", currentPlayer);
-            setTextDisplay(1, "Deploy troop", );
+            setTextDisplay(1, "Deploy troops");
             setTextDisplay(2, "A: Place troop");
             setTextDisplay(3, "%d troops left", numTroops);
             break;
