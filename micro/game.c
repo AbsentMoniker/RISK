@@ -52,8 +52,7 @@ void gameInput(Input input)
         case MOVE3:
             moveTroopsNumber(input); break;
         case GAMEOVER:
-            // TODO: do something here 
-            break;
+            gameOver(input); break;
         default:
             ; // panic!
     }
@@ -71,7 +70,7 @@ void updateText()
             setTextDisplay(3, "");
             break;
         case SELECT:
-            setTextDisplay(0, "Player %d:");
+            setTextDisplay(0, "Player %d:", currentPlayer);
             setTextDisplay(1, "Pick territory");
             setTextDisplay(2, "%d available", territoriesRemaining);
             setTextDisplay(3, "");
@@ -131,6 +130,10 @@ void updateText()
             setTextDisplay(3, "");
             break;
         case GAMEOVER:
+            setTextDisplay(0, "Player %d wins!", currentPlayer);
+            setTextDisplay(1, "");
+            setTextDisplay(2, "");
+            setTextDisplay(3, "");
             break;
         default:
             ; // panic!
@@ -294,7 +297,18 @@ void conquerTerritory(Input input)
         }
     }      
     else if(input == ADVANCE)
-        changeState(ATTACK1);
+    {
+        for(int i = 0; i < numPlayers; i++)
+        {
+            // Game continues unless current player is the only one left.
+            if(i != currentPlayer && playerLiving(i))
+            {
+                changeState(ATTACK1);
+                break;
+            }
+        }
+        changeState(GAMEOVER);
+    }
 }
 
 
@@ -374,6 +388,13 @@ void moveTroopsNumber(Input input)
         changeState(MOVE2);
     }
 }
+void gameOver(Input input)
+{
+    if(input == CANCEL)
+    {
+        changeState(INIT);
+    }
+}
 
 void moveSelection(int movesource, int direction, int (*predicate)(int))
 {
@@ -402,8 +423,10 @@ void changeState(State newstate)
 
     if(state == INIT)
     {
+        resetGame();
         numPlayers = 2;
         nextCardTroopsIdx = 0;
+        currentPlayer = -1;
     }
 
     if(state == SELECT)
@@ -434,6 +457,15 @@ void changeState(State newstate)
         numTroops = territories[source].troops;
     // numTroops is also used by CONQUER, but it needs to be set earlier than
     // this function is called
+}
+
+void resetGame()
+{
+    for(int i = 0; i < NUM_TERRITORIES; i++)
+    {
+        territories[i].owner = -1;
+        territories[i].troops = 0;
+    }
 }
 
 int playerLiving(int player)

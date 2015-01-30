@@ -42,11 +42,16 @@ void conquerTerritory(Input input);
 void moveTroops(Input input);
 void moveTroopsTarget(Input input);
 void moveTroopsNumber(Input input);
+void gameOver(Input input);
 
 // Helper functions for the game logic; these are functions that get called
 // from many of the above update functions.
 void moveSelection(int movesource, int direction, int (*predicate)(int));
 void changeState(State state);
+
+// Reset the game state (territories, cards, etc.) to their initial values, in
+// preparation for starting a new game.
+void resetGame();
 
 // playerLiving is true if player owns at least one territory; dead players do
 // not get turns

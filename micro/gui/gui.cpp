@@ -195,14 +195,14 @@ int main()
             }
         }
         window.clear();
-        drawMap(window);
         drawText(window);
+        drawMap(window);
         drawDie(window, attackerDice[0], 300, 450);
         drawDie(window, attackerDice[1], 300, 490);
         drawDie(window, attackerDice[2], 300, 530);
         drawDie(window, defenderDice[0], 340, 450);
         drawDie(window, defenderDice[1], 340, 490);
-        window.display();
+        window.display(); 
 
         if(blinkclock.getElapsedTime() > sf::milliseconds(250))
             blinkclock.restart();
