@@ -95,13 +95,13 @@ void updateText()
             break;
         case ATTACK2:
             setTextDisplay(0, "Declare attacks");
-            setTextDisplay(1, "");
+            setTextDisplay(1, "(%s)", territories[source].name);
             setTextDisplay(2, "A: Choose target");
             setTextDisplay(3, "B: Back");
             break;
         case BATTLE:
-            setTextDisplay(0, "Battle!");
-            setTextDisplay(1, "");
+            setTextDisplay(0, "%s vs", territories[source].name);
+            setTextDisplay(1, "%s!", territories[destination].name);
             setTextDisplay(2, "A: Roll dice");
             setTextDisplay(3, "B: Retreat");
             break;
@@ -119,20 +119,20 @@ void updateText()
             break;
         case MOVE2:
             setTextDisplay(0, "Make free move");
-            setTextDisplay(1, "");
+            setTextDisplay(1, "(%s)", territories[source].name);
             setTextDisplay(2, "A: Choose detination");
             setTextDisplay(3, "B: Back");
             break;
         case MOVE3:
-            setTextDisplay(0, "Number to move");
-            setTextDisplay(1, "");
-            setTextDisplay(2, "A: Confirm move");
+            setTextDisplay(0, "%s -->", territories[source].name);
+            setTextDisplay(1, "%s", territories[destination].name);
+            setTextDisplay(2, "A: Confirm number");
             setTextDisplay(3, "B: Back");
             break;
         case GAMEOVER:
             setTextDisplay(0, "Player %d wins!", currentPlayer);
-            setTextDisplay(1, "");
-            setTextDisplay(2, "");
+            setTextDisplay(1, "   R   I   S   K    ");
+            setTextDisplay(2, "  C H A M P I O N   ");
             setTextDisplay(3, "B: Start new game");
             break;
         default:
