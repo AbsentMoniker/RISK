@@ -61,8 +61,7 @@ Continent continents[NUM_CONTINENTS] =
 };
 
 const int cardExchangeValues[NUM_EXCHANGE_VALUES] = 
-{ 4, 6, 8, 10, 12, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85,
-    90, 95};
+{ 4, 6, 8, 10, 12, 15};
 
 const int initialTroops[MAX_PLAYERS + 1] = 
 { 0, 0, 40, 35, 30, 25, 20};

@@ -10,6 +10,7 @@
 #include "gamedata.h"
 #include "io.h"
 #include "util.h"
+#include "cards.h"
 // Global variables
 int numPlayers;
 int currentPlayer;
@@ -17,7 +18,6 @@ int source;
 int destination;
 int attackerDice[3];
 int defenderDice[2];
-int nextCardTroopsIdx;
 
 // Game variables that don't need to be exposed to the IO systems
 static State state;
@@ -82,7 +82,7 @@ void updateText()
             setTextDisplay(3, "%d troops left", numTroops);
             break;
         case REINFORCE:
-            setTextDisplay(0, "Reinforcements", currentPlayer);
+            setTextDisplay(0, "Reinforcements");
             setTextDisplay(1, "%d troops left", numTroops);
             setTextDisplay(2, "A: Place troop");
             setTextDisplay(3, "B: Other options");
@@ -106,8 +106,8 @@ void updateText()
             setTextDisplay(3, "B: Retreat");
             break;
         case CONQUER:
-            setTextDisplay(0, "Move troops to target");
-            setTextDisplay(1, "");
+            setTextDisplay(0, "Move troops into");
+            setTextDisplay(1, "%s", territories[destination].name);
             setTextDisplay(2, "A: Confirm troops");
             setTextDisplay(3, "");
             break;
@@ -304,7 +304,7 @@ void conquerTerritory(Input input)
             if(i != currentPlayer && playerLiving(i))
             {
                 changeState(ATTACK1);
-                break;
+                return;
             }
         }
         changeState(GAMEOVER);
@@ -425,7 +425,6 @@ void changeState(State newstate)
     {
         resetGame();
         numPlayers = 2;
-        nextCardTroopsIdx = 0;
         currentPlayer = -1;
     }
 
@@ -466,6 +465,7 @@ void resetGame()
         territories[i].owner = -1;
         territories[i].troops = 0;
     }
+    initCards(INCREASING);
 }
 
 int playerLiving(int player)

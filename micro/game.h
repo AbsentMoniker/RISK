@@ -17,9 +17,6 @@ extern int source;
 extern int destination;
 extern int attackerDice[3];
 extern int defenderDice[2];
-// note this is an index into the array of values, not the actual next number
-// of troops
-extern int nextCardTroopsIdx;
 
 // gameInput is the main entry point into the game logic; this function calls
 // one of the other functions below it to advance the game state.

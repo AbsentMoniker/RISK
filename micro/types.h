@@ -6,6 +6,8 @@
 // Part of R.I.S.K
 // ECE 477 Group 2, Spring 2015
 
+#include "limits.h"
+
 // Possible game states. See gamelogic.txt for details.
 typedef enum
 {
@@ -27,10 +29,15 @@ typedef enum
     INFANTRY, CAVALRY, ARTILLERY, WILD,
 } CardType;
 
+// Possible schemes for card exchange values.
+typedef enum
+{
+    INCREASING, INCREASING_ONE, SET_VALUE,
+} CardValueScheme;
+
 // Territory structure.
 // The neighbors are not pointers to other structures, but simple indexes
 // into the global array of territories.
-#define MAX_NEIGHBORS 6
 typedef struct
 {
     const char * name;
@@ -56,4 +63,9 @@ typedef struct
     CardType type;
     int territory;
 } Card;
+typedef struct
+{
+    Card hand[MAX_HAND_SIZE];
+    int cards;
+} Hand;
 #endif

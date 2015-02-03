@@ -7,7 +7,6 @@
 // ECE 477 Group 2, Spring 2015
 
 #include "types.h"
-#define MAX_PLAYERS 6
 
 // Symbolic names for each territory. Much of the game logic code assumes that
 // these cover [0, NUM_TERRITORIES), and the continent structures assume that
@@ -55,9 +54,6 @@
 #define T_WESTERN_AUSTRAILIA 40
 #define T_EASTERN_AUSTRAILIA 41
 
-#define NUM_TERRITORIES 42
-
-
 // Array of every territory, including its current state. This can be thought
 // of as a graph, since every territory knows it neighbors, but we never need
 // to do any complex graph analysis or anything with this structure.
@@ -65,14 +61,12 @@ extern Territory territories[NUM_TERRITORIES];
 
 // Array of continent information. These are simple structures, and assume that
 // the territories that make up each continent are consecutive.
-#define NUM_CONTINENTS 6
 extern Continent continents[NUM_CONTINENTS];
 
 // Array of card exchange values. According to the actual rules of Risk, the
 // values should just keep increasing indefinitely, but since we only two
 // digits, we might as well stop at 95.
 // TODO: add support for alternate sequences (4,5,6,8...)
-#define NUM_EXCHANGE_VALUES 22
 extern const int cardExchangeValues[NUM_EXCHANGE_VALUES];
 
 // Array of the number of troops that each player start with, for a game with a
