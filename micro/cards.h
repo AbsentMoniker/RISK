@@ -29,4 +29,7 @@ Card drawCard(int player);
 // was an invalid set or the player doesn't actually have the cards specified.
 int exchangeCards(int player, int card1, int card2, int card3);
 
+// Gives all the cards in an eliminated player's hand to another player.
+void takeHand(int player, int eliminatedPlayer);
+
 #endif

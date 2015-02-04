@@ -24,6 +24,8 @@ static State state;
 static int firstPlayer;
 static int territoriesRemaining;
 static int numTroops;
+static int mustTrade;
+static int needCard;
 
 void gameInput(Input input)
 {
@@ -59,6 +61,18 @@ void gameInput(Input input)
     updateText();
 }
 
+int cardInput(int card1, int card2, int card3)
+{
+    if(state != REINFORCE)
+        return 0;
+    int troops = exchangeCards(currentPlayer, card1, card2, card3);
+    numTroops += troops;
+    if(hands[currentPlayer].cards < 5)
+        mustTrade = 0;
+    updateText();
+    return troops;
+}
+
 void updateText()
 {
     switch(state)
@@ -82,10 +96,21 @@ void updateText()
             setTextDisplay(3, "%d troops left", numTroops);
             break;
         case REINFORCE:
-            setTextDisplay(0, "Reinforcements");
-            setTextDisplay(1, "%d troops left", numTroops);
-            setTextDisplay(2, "A: Place troop");
-            setTextDisplay(3, "B: Other options");
+            if(numTroops == 0 && mustTrade)
+            {
+                setTextDisplay(0, "%d cards in hand", 
+                        hands[currentPlayer].cards);
+                setTextDisplay(1, "You must exchange");
+                setTextDisplay(2, "cards to continue");
+                setTextDisplay(3, "B: Other options");            
+            }
+            else
+            {
+                setTextDisplay(0, "Reinforcements");
+                setTextDisplay(1, "%d troops left", numTroops);
+                setTextDisplay(2, "A: Place troop");
+                setTextDisplay(3, "B: Other options");
+            }
             break;
         case ATTACK1:
             setTextDisplay(0, "Declare attacks");
@@ -215,10 +240,13 @@ void reinforce(Input input)
         if(destination == -1)
             return;
 
-        territories[destination].troops += 1;
-        numTroops -= 1;
+        if(numTroops > 0)
+        {
+            territories[destination].troops += 1;
+            numTroops -= 1;
+        }
 
-        if(numTroops == 0)
+        if(numTroops == 0 && !mustTrade)
             changeState(ATTACK1);
     }
 }
@@ -236,7 +264,11 @@ void declareAttack(Input input)
         changeState(ATTACK2);
     }
     else if(input == CANCEL)
+    {
+        if(needCard)
+            drawCard(currentPlayer);
         changeState(MOVE1);
+    }
 }
 void declareAttackTarget(Input input)
 {
@@ -264,11 +296,20 @@ void resolveBattle(Input input)
             changeState(ATTACK1);
         else if(territories[destination].troops == 0)
         {
+            int defeatedPlayer = territories[destination].owner;
             territories[destination].owner = currentPlayer;
+
             numTroops = min(3, territories[source].troops - 1);
             territories[destination].troops = 
                 territories[source].troops - 1;
             territories[source].troops = 1;
+
+            if(!playerLiving(defeatedPlayer))
+            {
+                takeHand(currentPlayer, defeatedPlayer);
+                if(hands[currentPlayer].cards >= 5)
+                    mustTrade = 1;
+            }
             changeState(CONQUER);
         }
     }
@@ -280,8 +321,7 @@ void conquerTerritory(Input input)
 {
     if(input == NEXT)
     {
-        if(territories[destination].owner == currentPlayer &&
-                territories[source].troops > 1)
+        if(territories[source].troops > 1)
         {
             territories[destination].troops += 1;
             territories[source].troops -= 1;
@@ -289,8 +329,7 @@ void conquerTerritory(Input input)
     }
     else if(input == PREVIOUS)
     {
-        if(territories[destination].owner == currentPlayer &&
-                territories[destination].troops > numTroops)
+        if(territories[destination].troops > numTroops)
         {
             territories[destination].troops -= 1;
             territories[source].troops += 1;
@@ -298,12 +337,16 @@ void conquerTerritory(Input input)
     }      
     else if(input == ADVANCE)
     {
+        needCard = 1;
         for(int i = 0; i < numPlayers; i++)
         {
             // Game continues unless current player is the only one left.
             if(i != currentPlayer && playerLiving(i))
             {
-                changeState(ATTACK1);
+                if(mustTrade)
+                    changeState(REINFORCE);
+                else
+                    changeState(ATTACK1);
                 return;
             }
         }
@@ -451,11 +494,27 @@ void changeState(State newstate)
     if(state == SELECT)
         numTroops = initialTroops[numPlayers];
     else if(state == REINFORCE)
-        numTroops = computeReinforcements(currentPlayer);
+    {
+        if(mustTrade)
+            numTroops = 0;
+        else
+            numTroops = computeReinforcements(currentPlayer);
+    }
     else if(state == MOVE3)
         numTroops = territories[source].troops;
     // numTroops is also used by CONQUER, but it needs to be set earlier than
     // this function is called
+
+    if(state == REINFORCE)
+    {
+        if(hands[currentPlayer].cards >= 5)
+            mustTrade = 1;
+    }
+    else if(state != CONQUER)
+        mustTrade = 0;
+
+    if(state == REINFORCE && !mustTrade)
+        needCard = 0;
 }
 
 void resetGame()

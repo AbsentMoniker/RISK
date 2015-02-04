@@ -21,6 +21,10 @@ extern int defenderDice[2];
 // gameInput is the main entry point into the game logic; this function calls
 // one of the other functions below it to advance the game state.
 void gameInput(Input input);
+// cardInput is the other type of input, a command from the web server that
+// the current player wishes to exchange cards. Returns false if for some
+// reason the exchange could not actually happen.
+int cardInput(int card1, int card2, int card3);
 // updateText is called after every game update to update the text displayed on
 // the LCD
 void updateText();

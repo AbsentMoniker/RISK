@@ -53,7 +53,7 @@ void initCards(CardValueScheme scheme)
     cardValueScheme = scheme;
     // Even if the values are increasing by 1, they start at the same first
     // value. For set value sets, this number gets ignored completely.
-    cardExchangeValue = cardExchangeValues[NUM_EXCHANGE_VALUES];
+    cardExchangeValue = cardExchangeValues[0];
 }
 
 Card drawCard(int player)
@@ -156,3 +156,13 @@ int exchangeCards(int player, int card1, int card2, int card3)
     return 0;
 }
 
+void takeHand(int player, int eliminatedPlayer)
+{
+    for(int i = 0; i < hands[eliminatedPlayer].cards; i++)
+    {
+        hands[player].hand[hands[player].cards + i] = 
+            hands[eliminatedPlayer].hand[i];
+    }
+    hands[player].cards += hands[eliminatedPlayer].cards;
+    hands[eliminatedPlayer].cards = 0;
+}
