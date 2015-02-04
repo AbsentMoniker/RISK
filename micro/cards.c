@@ -1,4 +1,5 @@
 #include "cards.h"
+#include "gamedata.h"
 #include "territory.h"
 #include "io.h"
 
@@ -32,12 +33,12 @@ void initCards(CardValueScheme scheme)
     }
     discardsSize = 0;
     
-    for(int = 0; i < NUM_CARDS; i++)
+    for(int i = 0; i < NUM_CARDS; i++)
     {
         if(i < NUM_TERRITORIES)
         {
             deck[i].territory = i;
-            deck[i].type = territories[i].cardType;
+            deck[i].type = territories[i].cardtype;
         }
         else
         {
@@ -59,7 +60,7 @@ Card drawCard(int player)
 {
     if(deckSize == 0)
     {
-        for(int i = 0; i < discardSize; i++)
+        for(int i = 0; i < discardsSize; i++)
             deck[i] = discards[i];
         deckSize = discardsSize;
         discardsSize = 0;
@@ -67,8 +68,9 @@ Card drawCard(int player)
     }
 
     deckSize -= 1;
-    hands[player] = deck[deckSize];
-    return hands[player];
+    hands[player].hand[hands[player].cards] = deck[deckSize];
+    hands[player].cards += 1;
+    return deck[deckSize];
 }
 
 int cardSetValue(Card c1, Card c2, Card c3)
