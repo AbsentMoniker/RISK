@@ -130,6 +130,23 @@ int exchangeCards(int player, int card1, int card2, int card3)
     // Set is known valid at this point, so the exchange will go ahead.
     hands[player].cards -= 3;
 
+    // Bonuses for owning the territories being traded.
+    if(hands[player].hand[idx1].type != WILD && 
+            territories[hands[player].hand[idx1].territory].owner == player)
+    {
+        territories[hands[player].hand[idx1].territory].troops += 2;
+    }
+    if(hands[player].hand[idx2].type != WILD && 
+            territories[hands[player].hand[idx2].territory].owner == player)
+    {
+        territories[hands[player].hand[idx2].territory].troops += 2;
+    }
+    if(hands[player].hand[idx3].type != WILD && 
+            territories[hands[player].hand[idx3].territory].owner == player)
+    {
+        territories[hands[player].hand[idx3].territory].troops += 2;
+    }
+
     if(cardValueScheme == SET_VALUE)
         return value;
     if(cardValueScheme == INCREASING_ONE)
