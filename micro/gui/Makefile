@@ -1,9 +1,12 @@
-CFLAGS=-std=c99 -Wall -g
-CXXFLAGS=-std=c++11 -Wall -g
+CFLAGS=-std=c99 -Wall -g -MMD
+CXXFLAGS=-std=c++11 -Wall -g -MMD
 OBJ= gui.o ../game.o ../gamedata.o ../territory.o ../cards.o
+DEPS=$(OBJ:.o=.d)
 
 risk: $(OBJ)
 	g++ -o $@ $^ -std=c++11 -lsfml-graphics -lsfml-window -lsfml-system
 
 clean:
-	rm -f $(OBJ) risk
+	rm -f $(OBJ) $(DEPS) risk
+
+-include $(DEPS)
