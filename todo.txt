@@ -1,0 +1,5 @@
+1. add menu during initialization for game options
+2. add menu during reinforcement phase to allow ending game
+3. add confirm options for starting game, ending attack phase, skipping moves.
+4. add random allocation of territories instead of draft
+5. change free moves to allow connected paths
