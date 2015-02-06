@@ -3,7 +3,5 @@
 # compilation files
 *.o
 *.d
-gui/*.o
-gui/*.d
 # binary
-gui/risk
+micro/gui/risk

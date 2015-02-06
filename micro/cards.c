@@ -25,7 +25,7 @@ void shuffleDeck()
     }
 }
 
-void initCards(CardValueScheme scheme)
+void initCards()
 {
     for(int i = 0; i < MAX_PLAYERS; i++)
     {
@@ -50,7 +50,6 @@ void initCards(CardValueScheme scheme)
     shuffleDeck();
 
     cardValueIndex = 0;
-    cardValueScheme = scheme;
     // Even if the values are increasing by 1, they start at the same first
     // value. For set value sets, this number gets ignored completely.
     cardExchangeValue = cardExchangeValues[0];

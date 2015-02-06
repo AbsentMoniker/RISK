@@ -13,6 +13,9 @@
 #include "cards.h"
 // Global variables
 int numPlayers;
+int randomTerritories;
+// cardValueScheme is handled by cards.c
+
 int currentPlayer;
 int source;
 int destination;
@@ -26,13 +29,14 @@ static int territoriesRemaining;
 static int numTroops;
 static int mustTrade;
 static int needCard;
+static int currentOption;
 
 void gameInput(Input input)
 {
     switch(state)
     {
         case INIT:
-            choosePlayers(input); break;
+            chooseOptions(input); break;
         case SELECT:
             selectTerritories(input); break;
         case DEPLOY:
@@ -78,10 +82,31 @@ void updateText()
     switch(state)
     {
         case INIT:
-            setTextDisplay(0, "Choose number");
-            setTextDisplay(1, "of players: %d", numPlayers);
-            setTextDisplay(2, "A: Confirm number");
-            setTextDisplay(3, "");
+            if(currentOption == OPTION_NUM_PLAYERS)
+            {
+                setTextDisplay(0, "Number of players");
+                setTextDisplay(1, "%d", numPlayers);
+            }
+            else if(currentOption == OPTION_CARD_SCHEME)
+            {
+                setTextDisplay(0, "Card exchange values");
+                if(cardValueScheme == INCREASING)
+                    setTextDisplay(1, "Increasing");
+                else if(cardValueScheme == INCREASING_ONE)
+                    setTextDisplay(1, "Increasing by 1");
+                else if(cardValueScheme == SET_VALUE)
+                    setTextDisplay(1, "Set Value");
+            }
+            else if(currentOption == OPTION_RANDOM_TERRITORIES)
+            {
+                setTextDisplay(0, "Territory allocation");
+                if(randomTerritories)
+                    setTextDisplay(1, "Random");
+                else
+                    setTextDisplay(1, "Select");
+            }
+            setTextDisplay(2, "A: Start game");
+            setTextDisplay(3, "B: Next option");
             break;
         case SELECT:
             setTextDisplay(0, "Player %d:", currentPlayer);
@@ -165,14 +190,43 @@ void updateText()
     }
 }
 
-void choosePlayers(Input input)
+void chooseOptions(Input input)
 {
-    if(input == NEXT && numPlayers < MAX_PLAYERS)
-        numPlayers += 1;
-    else if(input == PREVIOUS && numPlayers > 2)
-        numPlayers -= 1;
-    else if(input == ADVANCE)
+    if(input == ADVANCE)
+    {
         changeState(SELECT);
+        if(randomTerritories)
+        {
+            allocateRandomTerritories();
+            changeState(DEPLOY);
+        }
+        return;
+    }
+    if(currentOption == OPTION_NUM_PLAYERS)
+    {
+        if(input == NEXT && numPlayers < MAX_PLAYERS)
+            numPlayers += 1;
+        else if(input == PREVIOUS && numPlayers > 2)
+            numPlayers -= 1;
+        else if(input == CANCEL)
+            currentOption = OPTION_RANDOM_TERRITORIES;
+    }
+    else if(currentOption == OPTION_RANDOM_TERRITORIES)
+    {
+        if(input == NEXT || input == PREVIOUS)
+            randomTerritories = !randomTerritories;
+        else if(input == CANCEL)
+            currentOption = OPTION_CARD_SCHEME;
+    }
+    else if(currentOption == OPTION_CARD_SCHEME)
+    {
+        if(input == NEXT)
+            cardValueScheme = (cardValueScheme == 2? 0 : cardValueScheme + 1);
+        else if(input == PREVIOUS)
+            cardValueScheme = (cardValueScheme == 0? 2 : cardValueScheme - 1);
+        else if(input == CANCEL)
+            currentOption = OPTION_NUM_PLAYERS;
+    }
 }
 
 void selectTerritories(Input input)
@@ -198,7 +252,10 @@ void selectTerritories(Input input)
         if(currentPlayer == firstPlayer)
             numTroops -= 1;
 
-        if(territoriesRemaining == 0)
+        // Changing the state here after random allocation would cause
+        // recursion, so the function for the INIT state handles the state
+        // change instead right after the random deployment. 
+        if(territoriesRemaining == 0 && !randomTerritories)
             changeState(DEPLOY);
     }
 }
@@ -468,6 +525,10 @@ void changeState(State newstate)
     {
         resetGame();
         numPlayers = 2;
+        cardValueScheme = INCREASING;
+        randomTerritories = 1;
+        currentOption = OPTION_NUM_PLAYERS; 
+
         currentPlayer = -1;
     }
 
@@ -524,7 +585,7 @@ void resetGame()
         territories[i].owner = -1;
         territories[i].troops = 0;
     }
-    initCards(INCREASING);
+    initCards();
 }
 
 int playerLiving(int player)
@@ -557,4 +618,25 @@ int computeReinforcements(int player)
     }
 
     return bonus + max(3, territoriesHeld / 3);
+}
+
+#define SWAP(a,b) do{int tmp = a; a = b; b = tmp;}while(0)
+void allocateRandomTerritories()
+{
+    // create a list and randomize it
+    int list[NUM_TERRITORIES];
+    for(int i = 0; i < NUM_TERRITORIES; i++)
+        list[i] = i;
+    for(int i = 0; i < NUM_TERRITORIES; i++)
+    {
+        int r = randint(i, NUM_TERRITORIES - 1);
+        SWAP(list[i], list[r]);
+    }
+
+    // deal territories by forcing inputs
+    for(int i = 0; i < NUM_TERRITORIES; i++)
+    {
+        destination = list[i];
+        selectTerritories(ADVANCE);
+    }
 }
