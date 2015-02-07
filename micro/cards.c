@@ -100,51 +100,46 @@ int cardSetValue(Card c1, Card c2, Card c3)
     return 0;
 }
 
-int exchangeCards(int player, int card1, int card2, int card3)
+int exchangeCards(int player, int idx1, int idx2, int idx3)
 {
-    if(card1 >= hands[player].cards || card2 >= hands[player].cards 
-            || card3 >= hands[player].cards)
-    {
+    int handsize = hands[player].cards;
+    if(idx1 >= handsize || idx2 >= handsize || idx3 >= handsize)
         return 0;
-    }
-    if(card1 == card2 || card1 == card3 || card2 == card3)
-    {
+    if(idx1 == idx2 || idx1 == idx3 || idx2 == idx3)
         return 0;
-    }
 
-    // Ensure that the three cards of interest are at the end of the hand.
-    // The checks above ensure that the hand has at least three cards.
-    int idx1 = hands[player].cards - 1;
-    int idx2 = hands[player].cards - 2;
-    int idx3 = hands[player].cards - 3;
-    SWAP(hands[player].hand[card1], hands[player].hand[idx1]);
-    SWAP(hands[player].hand[card2], hands[player].hand[idx2]);
-    SWAP(hands[player].hand[card3], hands[player].hand[idx3]);
-
-    int value = cardSetValue(hands[player].hand[idx1],
-            hands[player].hand[idx2], hands[player].hand[idx3]);
+    Card c1 = hands[player].hand[idx1];
+    Card c2 = hands[player].hand[idx2];
+    Card c3 = hands[player].hand[idx3];
+    int value = cardSetValue(c1, c2, c3);
     if(value == 0)
         return 0;
+    
+    // Add the cards to the discard pile
+    discards[discardsSize++] = c1;
+    discards[discardsSize++] = c2;
+    discards[discardsSize++] = c3;
 
-    // Set is known valid at this point, so the exchange will go ahead.
+    // Move selected cards to end of hand, then remove them
+    SWAP(hands[player].hand[idx1], hands[player].hand[handsize - 1]);
+    if(idx2 == handsize - 1)
+        idx2 = idx1;
+    if(idx3 == handsize - 1)
+        idx3 = idx1;
+    SWAP(hands[player].hand[idx2], hands[player].hand[handsize - 2]);
+    if(idx3 == handsize - 2)
+        idx3 = idx2;
+    SWAP(hands[player].hand[idx3], hands[player].hand[handsize - 3]);
+
     hands[player].cards -= 3;
 
     // Bonuses for owning the territories being traded.
-    if(hands[player].hand[idx1].type != WILD && 
-            territories[hands[player].hand[idx1].territory].owner == player)
-    {
-        territories[hands[player].hand[idx1].territory].troops += 2;
-    }
-    if(hands[player].hand[idx2].type != WILD && 
-            territories[hands[player].hand[idx2].territory].owner == player)
-    {
-        territories[hands[player].hand[idx2].territory].troops += 2;
-    }
-    if(hands[player].hand[idx3].type != WILD && 
-            territories[hands[player].hand[idx3].territory].owner == player)
-    {
-        territories[hands[player].hand[idx3].territory].troops += 2;
-    }
+    if(c1.type != WILD && territories[c1.territory].owner == player)
+        territories[c1.territory].troops += 2;
+    if(c2.type != WILD && territories[c2.territory].owner == player)
+        territories[c2.territory].troops += 2;
+    if(c3.type != WILD && territories[c3.territory].owner == player)
+        territories[c3.territory].troops += 2;
 
     if(cardValueScheme == SET_VALUE)
         return value;
