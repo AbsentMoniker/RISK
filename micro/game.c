@@ -30,6 +30,8 @@ static int numTroops;
 static int mustTrade;
 static int needCard;
 static int currentOption;
+static int reinforceMenu;
+static int confirm;
 
 void gameInput(Input input)
 {
@@ -121,7 +123,21 @@ void updateText()
             setTextDisplay(3, "%d troops left", numTroops);
             break;
         case REINFORCE:
-            if(numTroops == 0 && mustTrade)
+            if(reinforceMenu && !confirm)
+            {
+                setTextDisplay(0, "Options:");
+                setTextDisplay(1, "End game?");
+                setTextDisplay(2, "A: End game");
+                setTextDisplay(3, "B: Cancel");
+            }
+            else if(reinforceMenu && confirm)
+            {
+                setTextDisplay(0, "Really end game?");
+                setTextDisplay(1, "");
+                setTextDisplay(2, "A: Yes");
+                setTextDisplay(3, "B: No");
+            }
+            else if(numTroops == 0 && mustTrade)
             {
                 setTextDisplay(0, "%d cards in hand", 
                         hands[currentPlayer].cards);
@@ -288,12 +304,21 @@ void deployTroops(Input input)
 
 void reinforce(Input input)
 {
-    if(input == NEXT)
+    if(input == NEXT && !reinforceMenu)
         moveSelection(0, 1, predOwnedCurrent);
-    else if(input == PREVIOUS)
+    else if(input == PREVIOUS && !reinforceMenu)
         moveSelection(0, -1, predOwnedCurrent);
     else if(input == ADVANCE)
     {
+        if(reinforceMenu)
+        {
+            if(!confirm)
+                confirm = 1;
+            else
+                changeState(INIT);
+            return;
+        }
+
         if(destination == -1)
             return;
 
@@ -305,6 +330,15 @@ void reinforce(Input input)
 
         if(numTroops == 0 && !mustTrade)
             changeState(ATTACK1);
+    }
+    else if(input == CANCEL)
+    {
+        if(reinforceMenu && confirm)
+            confirm = 0;
+        else if(reinforceMenu)
+            reinforceMenu = 0;
+        else
+            reinforceMenu = 1;
     }
 }
 
@@ -568,6 +602,7 @@ void changeState(State newstate)
 
     if(state == REINFORCE)
     {
+        reinforceMenu = 0;
         if(hands[currentPlayer].cards >= 5)
             mustTrade = 1;
     }
@@ -576,6 +611,8 @@ void changeState(State newstate)
 
     if(state == REINFORCE && !mustTrade)
         needCard = 0;
+
+    confirm = 0;
 }
 
 void resetGame()
