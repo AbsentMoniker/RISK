@@ -11,6 +11,9 @@
 #include "io.h"
 #include "gamedata.h"
 
+// Array of connected territories, used to check valid move targets.
+static int connectedTerritories[NUM_TERRITORIES];
+
 int isNeighbor(int t1, int t2)
 {
     for(int i = 0; i < MAX_NEIGHBORS; i++)
@@ -111,7 +114,45 @@ int predMoveTarget(int t)
         return 0;
     if(territories[t].owner != currentPlayer)
         return 0;
-    if(!isNeighbor(source, t))
+    if(connectedTerritories[t] != 1)
         return 0;
     return 1;
+}
+
+// Find all connected territories by doing a breadth-first search of the
+// territory graph. XXX: This uses quite a bit of stack, make sure there's
+// enough space on the micro!
+// In connectedTerritories: 
+// -1 => visited and not connected, 0 => not visited, 1 => connected
+void computeConnected(int sourceTerritory)
+{
+    int stack[NUM_TERRITORIES];
+    int stackIdx = 0;
+    int sourceOwner = territories[sourceTerritory].owner;
+    
+    for(int i = 0; i < NUM_TERRITORIES; i++)
+        connectedTerritories[i] = 0;
+
+    stack[stackIdx++] = sourceTerritory;
+    connectedTerritories[sourceTerritory] = 1;
+    
+    while(stackIdx > 0)
+    {
+        int t = stack[--stackIdx];
+        for(int i = 0; i < MAX_NEIGHBORS; i++)
+        {
+            if(territories[t].neighbors[i] == -1)
+                break;
+            int neighbor = territories[t].neighbors[i];
+            if(connectedTerritories[neighbor])
+                continue;
+            if(territories[neighbor].owner == sourceOwner)
+            {
+                stack[stackIdx++] = neighbor;
+                connectedTerritories[neighbor] = 1;
+            }
+            else
+                connectedTerritories[neighbor] = -1;
+        }
+    }
 }

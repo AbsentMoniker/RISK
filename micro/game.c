@@ -512,6 +512,8 @@ void moveTroops(Input input)
 
         if(source == -1)
             return;
+
+        computeConnected(source);
         changeState(MOVE2);
     }
     else if(input == CANCEL)
