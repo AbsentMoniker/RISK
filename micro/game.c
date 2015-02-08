@@ -117,10 +117,20 @@ void updateText()
             setTextDisplay(3, "%d available", territoriesRemaining);
             break;
         case DEPLOY:
-            setTextDisplay(0, "Player %d:", currentPlayer);
-            setTextDisplay(1, "Deploy troops");
-            setTextDisplay(2, "A: Place troop");
-            setTextDisplay(3, "%d troops left", numTroops);
+            if(!confirm)
+            {
+                setTextDisplay(0, "Player %d:", currentPlayer);
+                setTextDisplay(1, "Deploy troops");
+                setTextDisplay(2, "A: Place troop");
+                setTextDisplay(3, "%d troops left", numTroops);
+            }
+            else
+            {
+                setTextDisplay(0, "All troops have been");
+                setTextDisplay(1, "deployed.");
+                setTextDisplay(2, "");
+                setTextDisplay(3, "B: Begin play");
+            }
             break;
         case REINFORCE:
             if(reinforceMenu && !confirm)
@@ -154,10 +164,20 @@ void updateText()
             }
             break;
         case ATTACK1:
-            setTextDisplay(0, "Declare attacks");
-            setTextDisplay(1, "");
-            setTextDisplay(2, "A: Choose attacker");
-            setTextDisplay(3, "B: Stop attacking");
+            if(!confirm)
+            {
+                setTextDisplay(0, "Declare attacks");
+                setTextDisplay(1, "");
+                setTextDisplay(2, "A: Choose attacker");
+                setTextDisplay(3, "B: Stop attacking");
+            }
+            else
+            {
+                setTextDisplay(0, "Really stop");
+                setTextDisplay(1, "attacking?");
+                setTextDisplay(2, "A: Yes");
+                setTextDisplay(3, "B: No");
+            }
             break;
         case ATTACK2:
             setTextDisplay(0, "Declare attacks");
@@ -178,10 +198,20 @@ void updateText()
             setTextDisplay(3, "");
             break;
         case MOVE1:
-            setTextDisplay(0, "Make free move");
-            setTextDisplay(1, "");
-            setTextDisplay(2, "A: Choose source");
-            setTextDisplay(3, "B: End turn");
+            if(!confirm)
+            {
+                setTextDisplay(0, "Make free move");
+                setTextDisplay(1, "");
+                setTextDisplay(2, "A: Choose source");
+                setTextDisplay(3, "B: End turn");
+            }
+            else
+            {
+                setTextDisplay(0, "Really end turn");
+                setTextDisplay(1, "without a move?");
+                setTextDisplay(2, "A: Yes");
+                setTextDisplay(3, "B: No");
+            }
             break;
         case MOVE2:
             setTextDisplay(0, "Make free move");
@@ -278,12 +308,14 @@ void selectTerritories(Input input)
 
 void deployTroops(Input input)
 {
-    if(input == NEXT)
+    if(input == NEXT && !confirm)
         moveSelection(0, 1, predOwnedCurrent);
-    else if(input == PREVIOUS)
+    else if(input == PREVIOUS && !confirm)
         moveSelection(0, -1, predOwnedCurrent);
     else if(input == ADVANCE)
     {
+        if(confirm)
+            return;
         if(destination == -1)
             return;
 
@@ -298,7 +330,12 @@ void deployTroops(Input input)
             numTroops -= 1;
 
         if(numTroops == 0)
-            changeState(REINFORCE);
+            confirm = 1;
+    }
+    else if(input == CANCEL)
+    {
+        if(confirm)
+            changeState(ATTACK1);
     }
 }
 
@@ -344,21 +381,27 @@ void reinforce(Input input)
 
 void declareAttack(Input input)
 {
-    if(input == NEXT)
+    if(input == NEXT && !confirm)
         moveSelection(1, 1, predAttackSource);
-    else if(input == PREVIOUS)
+    else if(input == PREVIOUS && !confirm)
         moveSelection(1, -1, predAttackSource);
     else if(input == ADVANCE)
     {
+        if(confirm)
+        {
+            if(needCard)
+                drawCard(currentPlayer);
+            changeState(MOVE1);
+            return;
+        }
+
         if(source == -1)
             return;
         changeState(ATTACK2);
     }
     else if(input == CANCEL)
     {
-        if(needCard)
-            drawCard(currentPlayer);
-        changeState(MOVE1);
+        confirm = !confirm;
     }
 }
 void declareAttackTarget(Input input)
@@ -448,26 +491,32 @@ void conquerTerritory(Input input)
 
 void moveTroops(Input input)
 {
-    if(input == NEXT)
+    if(input == NEXT && !confirm)
         moveSelection(1, 1, predMoveSource);
-    else if(input == PREVIOUS)
+    else if(input == PREVIOUS && !confirm)
         moveSelection(1, -1, predMoveSource);
     else if(input == ADVANCE)
     {
+        if(confirm)
+        {
+            do
+            {
+                currentPlayer += 1;
+                if(currentPlayer == numPlayers)
+                    currentPlayer = 0;
+            } while(!playerLiving(currentPlayer));
+
+            changeState(REINFORCE);
+            return;
+        }
+
         if(source == -1)
             return;
         changeState(MOVE2);
     }
     else if(input == CANCEL)
     {
-        do
-        {
-            currentPlayer += 1;
-            if(currentPlayer == numPlayers)
-                currentPlayer = 0;
-        } while(!playerLiving(currentPlayer));
-
-        changeState(REINFORCE);
+        confirm = !confirm;
     }
 }
 void moveTroopsTarget(Input input)

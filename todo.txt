@@ -1,5 +1,3 @@
-1. add menu during reinforcement phase to allow ending game
-2. add confirm options for starting game, ending attack phase, skipping moves.
 3. change free moves to allow connected paths
 4. log dice rolls for each player
 5. log troops gained/killed/lost for each player
