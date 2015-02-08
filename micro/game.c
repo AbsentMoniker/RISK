@@ -335,7 +335,7 @@ void deployTroops(Input input)
     else if(input == CANCEL)
     {
         if(confirm)
-            changeState(ATTACK1);
+            changeState(REINFORCE);
     }
 }
 
