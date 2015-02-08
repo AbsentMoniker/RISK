@@ -31,10 +31,10 @@ void doBattle(int tA, int tD)
     int attackers = min(3, territories[tA].troops - 1);
     int defenders = min(2, territories[tD].troops);
     attackerDice[0] = randint(1,6);     
-    attackerDice[1] = attackers > 1? randint(1,6) : -1;
-    attackerDice[2] = attackers > 2? randint(1,6) : -1;
+    attackerDice[1] = attackers > 1? randint(1,6) : 0;
+    attackerDice[2] = attackers > 2? randint(1,6) : 0;
     defenderDice[0] = randint(1,6);     
-    defenderDice[1] = defenders > 1? randint(1,6) : -1;
+    defenderDice[1] = defenders > 1? randint(1,6) : 0;
 
     SORT(attackerDice[0], attackerDice[1]);
     SORT(attackerDice[0], attackerDice[2]);

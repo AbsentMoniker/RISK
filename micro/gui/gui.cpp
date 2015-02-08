@@ -156,7 +156,7 @@ void drawText(sf::RenderWindow & win)
 
 void drawDie(sf::RenderWindow & win, int d, int x, int y)
 {
-    if(d < 0)
+    if(d == 0)
         return;
     sf::Text num(std::to_string(d), font, 24);
     num.setColor(sf::Color::Red);

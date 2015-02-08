@@ -633,8 +633,8 @@ void changeState(State newstate)
 
     if(state != ATTACK1 && state != BATTLE && state != CONQUER)
     {
-        attackerDice[0] = attackerDice[1] = attackerDice[2] = -1;
-        defenderDice[0] = defenderDice[1] = -1;
+        attackerDice[0] = attackerDice[1] = attackerDice[2] = 0;
+        defenderDice[0] = defenderDice[1] = 0;
     }
     
     if(state == SELECT)
