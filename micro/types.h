@@ -7,6 +7,7 @@
 // ECE 477 Group 2, Spring 2015
 
 #include "limits.h"
+#include <stdint.h>
 
 // Possible game states. See gamelogic.txt for details.
 typedef enum
@@ -68,4 +69,27 @@ typedef struct
     Card hand[MAX_HAND_SIZE];
     int cards;
 } Hand;
+
+// Log structure for various game events.
+typedef uint8_t LogType;
+#define LOG_BATTLE 0
+
+typedef struct
+{
+    LogType type;
+    unsigned attackingPlayer : 3;
+    unsigned defendingPlayer : 3;
+    unsigned aDie1 : 3;
+    unsigned aDie2 : 3;
+    unsigned aDie3 : 3;
+    unsigned dDie1 : 3;
+    unsigned dDie2 : 3;
+} LogBattle;
+
+typedef union
+{
+    LogType type;
+    LogBattle battle;
+} LogEntry;
+ 
 #endif

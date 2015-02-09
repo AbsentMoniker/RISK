@@ -10,6 +10,7 @@
 #include "util.h"
 #include "io.h"
 #include "gamedata.h"
+#include "log.h"
 
 // Array of connected territories, used to check valid move targets.
 static int connectedTerritories[NUM_TERRITORIES];
@@ -53,6 +54,10 @@ void doBattle(int tA, int tD)
         else
             territories[tA].troops -= 1;
     }
+
+    logBattle(currentPlayer, territories[tD].owner, attackerDice[0],
+            attackerDice[1], attackerDice[2], defenderDice[0],
+            defenderDice[1]);
 }
 
 int predUnowned(int t)

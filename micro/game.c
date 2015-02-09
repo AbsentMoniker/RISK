@@ -11,6 +11,7 @@
 #include "io.h"
 #include "util.h"
 #include "cards.h"
+#include "log.h"
 // Global variables
 int numPlayers;
 int randomTerritories;

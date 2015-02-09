@@ -6,6 +6,7 @@ extern "C" {
 #include "../territory.h"
 #include "../io.h"
 #include "../cards.h"
+#include "../log.h"
 }
 
 #include <cstdio>
@@ -285,6 +286,47 @@ int main()
                                 hands[currentPlayer].hand[i].type != WILD?  territories[hands[currentPlayer].hand[i].territory].name : "Wild");
                     }
                     printf("\n");
+                }
+                if(ev.key.code == sf::Keyboard::L)
+                {
+                    int count[numPlayers][7] = {0};
+                    for(int i = 0; i < gamelogSize; i++)
+                    {
+                        if(gamelog[i].type == LOG_BATTLE)
+                        {
+                            count[gamelog[i].battle.attackingPlayer]
+                                [gamelog[i].battle.aDie1]++;
+                            count[gamelog[i].battle.attackingPlayer]
+                                [gamelog[i].battle.aDie2]++;
+                            count[gamelog[i].battle.attackingPlayer]
+                                [gamelog[i].battle.aDie3]++;
+                            count[gamelog[i].battle.defendingPlayer]
+                                [gamelog[i].battle.dDie1]++;
+                            count[gamelog[i].battle.defendingPlayer]
+                                [gamelog[i].battle.dDie2]++;
+                            printf("A %d: %d %d %d    D %d: %d %d\n",
+                                    gamelog[i].battle.attackingPlayer,
+                                    gamelog[i].battle.aDie1,
+                                    gamelog[i].battle.aDie2,
+                                    gamelog[i].battle.aDie3,
+                                    gamelog[i].battle.defendingPlayer,
+                                    gamelog[i].battle.dDie1,
+                                    gamelog[i].battle.dDie2);
+                        }
+                    }
+
+                    for(int i = 0; i < numPlayers; i++)
+                    {
+                        int total = count[i][1] + count[i][2] + count[i][3] 
+                            + count[i][4] + count[i][5] + count[i][6];
+                        printf("Player %d summary\n-------\n", i);
+                        for(int n = 1; n <= 6; n++)
+                        {
+                            printf("%d: %6d %5.2f%%\n", n, count[i][n], 
+                                    count[i][n] / (double)total * 100.0);
+                        }
+                    }
+
                 }
             }
         }
