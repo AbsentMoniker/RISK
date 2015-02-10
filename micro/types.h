@@ -72,9 +72,30 @@ typedef struct
 
 // Log structure for various game events.
 typedef uint8_t LogType;
-#define LOG_BATTLE 0
-#define LOG_CONQUER 1
-#define LOG_REINFORCE 2
+#define LOG_REINFORCE 0
+#define LOG_ATTACK 1
+#define LOG_BATTLE 2
+#define LOG_CONQUER 3
+#define LOG_MOVE 4
+#define LOG_CARD_GIVEN 5
+#define LOG_CARD_EXCHANGE 6
+
+typedef struct
+{
+    LogType type;
+    unsigned player : 3;
+    unsigned territory : 6;
+    unsigned troops : 12;
+} LogReinforce;
+
+typedef struct
+{
+    LogType type;
+    unsigned attackingPlayer : 3;
+    unsigned defendingPlayer : 3;
+    unsigned attackingTerritory : 6;
+    unsigned defendingTerritory : 6;
+} LogAttack;
 
 typedef struct
 {
@@ -92,7 +113,6 @@ typedef struct
 {
     LogType type;
     unsigned attackingPlayer : 3;
-    unsigned defendingPlayer : 3;
     unsigned territory : 6;
     unsigned troops : 12;
 } LogConquer;
@@ -101,16 +121,39 @@ typedef struct
 {
     LogType type;
     unsigned player : 3;
-    unsigned territory : 6;
+    unsigned sourceTerritory : 6;
+    unsigned destinationTerritory : 6;
+    unsigned troops : 9;
+} LogMove;
+
+typedef struct
+{
+    LogType type;
+    unsigned player : 3;
+    unsigned cardtype : 2;
+    signed territory : 7;
+} LogCardGiven;
+
+typedef struct
+{
+    LogType type;
+    unsigned player : 3;
+    unsigned cardtype1 : 2;
+    unsigned cardtype2 : 2;
+    unsigned cardtype3 : 2;
     unsigned troops : 12;
-} LogReinforce;
+} LogCardExchange;
 
 typedef union
 {
     LogType type;
+    LogReinforce reinforce;
+    LogAttack attack;
     LogBattle battle;
     LogConquer conquer;
-    LogReinforce reinforce;
+    LogMove move;
+    LogCardGiven cardgiven;
+    LogCardExchange exchange;
 } LogEntry;
  
 #endif

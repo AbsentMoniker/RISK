@@ -37,6 +37,14 @@ void clearLog()
     gamelogSize = 0;
 }
 
+void logAttack(int aPlayer, int dPlayer, int aTerritory, int dTerritory)
+{
+    LogEntry le = {
+        .attack = {LOG_ATTACK, aPlayer, dPlayer, aTerritory, dTerritory}
+    };
+    addLogEntry(le);
+}
+
 void logBattle(int aPlayer, int dPlayer, int aD1, int aD2, int aD3, 
         int dD1, int dD2)
 {
@@ -45,6 +53,37 @@ void logBattle(int aPlayer, int dPlayer, int aD1, int aD2, int aD3,
     };
     addLogEntry(le);
 }
+
+void logConquer(int aPlayer, int territory, int troops)
+{
+    LogEntry le = {
+        .conquer = {LOG_CONQUER, aPlayer, territory, troops}
+    };
+    addLogEntry(le);
+}
+void logMove(int player, int sTerritory, int dTerritory, int troops)
+{
+    LogEntry le = {
+        .move = {LOG_MOVE, player, sTerritory, dTerritory, troops}
+    };
+    addLogEntry(le);
+}
+void logCard(int player, CardType cardtype, int territory)
+{
+    LogEntry le = {
+        .cardgiven = {LOG_CARD_GIVEN, player, cardtype, territory}
+    };
+    addLogEntry(le);
+}
+void logExchange(int player, CardType type1, CardType type2, CardType type3, 
+        int troops)
+{
+    LogEntry le = {
+        .exchange = {LOG_CARD_EXCHANGE, player, type1, type2, type3, troops}
+    };
+    addLogEntry(le);
+}
+
 
 static int loggingPlayer = 0;
 static int loggedTroops[NUM_TERRITORIES] = {0};

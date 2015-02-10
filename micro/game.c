@@ -423,6 +423,8 @@ void declareAttackTarget(Input input)
     {
         if(destination == -1)
             return;
+        logAttack(currentPlayer, territories[destination].owner, source,
+                destination);
         changeState(BATTLE);
     }
     else if(input == CANCEL)
@@ -481,6 +483,7 @@ void conquerTerritory(Input input)
     else if(input == ADVANCE)
     {
         needCard = 1;
+        logConquer(currentPlayer, destination, territories[destination].troops);
         for(int i = 0; i < numPlayers; i++)
         {
             // Game continues unless current player is the only one left.
@@ -565,6 +568,9 @@ void moveTroopsNumber(Input input)
     }
     else if(input == ADVANCE)
     {
+        logMove(currentPlayer, source, destination, 
+                numTroops - territories[source].troops);
+
         do
         {
             currentPlayer += 1;

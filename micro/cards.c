@@ -67,6 +67,8 @@ Card drawCard(int player)
         shuffleDeck();
     }
 
+    logCard(player, deck[deckSize].type, deck[deckSize].territory);
+
     deckSize -= 1;
     hands[player].hand[hands[player].cards] = deck[deckSize];
     hands[player].cards += 1;
@@ -115,6 +117,7 @@ int exchangeCards(int player, int idx1, int idx2, int idx3)
     int value = cardSetValue(c1, c2, c3);
     if(value == 0)
         return 0;
+
     
     // Add the cards to the discard pile
     discards[discardsSize++] = c1;
@@ -151,14 +154,14 @@ int exchangeCards(int player, int idx1, int idx2, int idx3)
         territories[c3.territory].troops += 2;
     }
 
-    if(cardValueScheme == SET_VALUE)
-        return value;
+    // If scheme is SET_VALUE, value is already set.
+    
     if(cardValueScheme == INCREASING_ONE)
     {
+        value = cardExchangeValue;
         cardExchangeValue += 1;
-        return cardExchangeValue - 1;
     }
-    if(cardValueScheme == INCREASING)
+    else if(cardValueScheme == INCREASING)
     {
         value = cardExchangeValue;
         if(cardValueIndex < NUM_EXCHANGE_VALUES - 1)
@@ -170,11 +173,11 @@ int exchangeCards(int player, int idx1, int idx2, int idx3)
         {
             cardExchangeValue += 5;
         }
-        return value;
     }
 
-    // uh oh
-    return 0;
+    logExchange(player, c1.type, c2.type, c3.type, value);
+
+    return value;
 }
 
 void takeHand(int player, int eliminatedPlayer)
