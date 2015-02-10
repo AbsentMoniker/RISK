@@ -1,2 +1,1 @@
-5. log troops killed/lost
 6. compute some basic statistics
