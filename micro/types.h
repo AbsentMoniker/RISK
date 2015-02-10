@@ -73,6 +73,8 @@ typedef struct
 // Log structure for various game events.
 typedef uint8_t LogType;
 #define LOG_BATTLE 0
+#define LOG_CONQUER 1
+#define LOG_REINFORCE 2
 
 typedef struct
 {
@@ -86,10 +88,29 @@ typedef struct
     unsigned dDie2 : 3;
 } LogBattle;
 
+typedef struct
+{
+    LogType type;
+    unsigned attackingPlayer : 3;
+    unsigned defendingPlayer : 3;
+    unsigned territory : 6;
+    unsigned troops : 12;
+} LogConquer;
+
+typedef struct
+{
+    LogType type;
+    unsigned player : 3;
+    unsigned territory : 6;
+    unsigned troops : 12;
+} LogReinforce;
+
 typedef union
 {
     LogType type;
     LogBattle battle;
+    LogConquer conquer;
+    LogReinforce reinforce;
 } LogEntry;
  
 #endif

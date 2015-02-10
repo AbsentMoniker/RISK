@@ -1,3 +1,2 @@
-4. log dice rolls for each player
-5. log troops gained/killed/lost for each player
+5. log troops killed/lost
 6. compute some basic statistics

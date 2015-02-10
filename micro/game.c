@@ -336,7 +336,11 @@ void deployTroops(Input input)
     else if(input == CANCEL)
     {
         if(confirm)
+        {
+            for(int i = 0; i < NUM_TERRITORIES; i++)
+                logReinforce(territories[i].owner, i, territories[i].troops);
             changeState(REINFORCE);
+        }
     }
 }
 
@@ -362,12 +366,16 @@ void reinforce(Input input)
 
         if(numTroops > 0)
         {
+            logReinforce(currentPlayer, destination, 1);
             territories[destination].troops += 1;
             numTroops -= 1;
         }
 
         if(numTroops == 0 && !mustTrade)
+        {
+            logReinforce(currentPlayer, -1, 0);
             changeState(ATTACK1);
+        }
     }
     else if(input == CANCEL)
     {

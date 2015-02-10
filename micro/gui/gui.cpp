@@ -313,6 +313,14 @@ int main()
                                     gamelog[i].battle.dDie1,
                                     gamelog[i].battle.dDie2);
                         }
+                        else if(gamelog[i].type == LOG_REINFORCE)
+                        {
+                            printf("Player %d: %d troops placed in %s\n",
+                                    gamelog[i].reinforce.player,
+                                    gamelog[i].reinforce.troops,
+                                    territories[
+                                        gamelog[i].reinforce.territory].name);
+                        }
                     }
 
                     for(int i = 0; i < numPlayers; i++)

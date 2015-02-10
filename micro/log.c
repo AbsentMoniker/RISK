@@ -46,3 +46,36 @@ void logBattle(int aPlayer, int dPlayer, int aD1, int aD2, int aD3,
     addLogEntry(le);
 }
 
+static int loggingPlayer = 0;
+static int loggedTroops[NUM_TERRITORIES] = {0};
+void writeReinforceLogs()
+{
+    for(int i = 0; i < NUM_TERRITORIES; i++)
+    {
+        if(loggedTroops[i] != 0)
+        {
+            LogEntry le = {
+                .reinforce = {LOG_REINFORCE, loggingPlayer, i, loggedTroops[i]}
+            };
+            addLogEntry(le);
+            loggedTroops[i] = 0;
+        }
+    }
+}
+
+void logReinforce(int player, int territory, int troops)
+{
+    if(territory == -1)
+    {
+        writeReinforceLogs();
+        return;
+    }
+
+    // Each log has only 12 bits for troop number, so in the rare case where
+    // some player is placing more than that, we need to write out immediately.
+    if(player != loggingPlayer || loggedTroops[territory] + troops >= 0xFFF)
+        writeReinforceLogs();
+
+    loggingPlayer = player;
+    loggedTroops[territory] += troops;
+}

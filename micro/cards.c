@@ -2,6 +2,7 @@
 #include "gamedata.h"
 #include "territory.h"
 #include "io.h"
+#include "log.h"
 
 Hand hands[MAX_PLAYERS];
 int cardExchangeValue;
@@ -135,11 +136,20 @@ int exchangeCards(int player, int idx1, int idx2, int idx3)
 
     // Bonuses for owning the territories being traded.
     if(c1.type != WILD && territories[c1.territory].owner == player)
+    {
         territories[c1.territory].troops += 2;
+        logReinforce(player, c1.territory, 2);
+    }
     if(c2.type != WILD && territories[c2.territory].owner == player)
+    {
         territories[c2.territory].troops += 2;
+        logReinforce(player, c1.territory, 2);
+    }
     if(c3.type != WILD && territories[c3.territory].owner == player)
+    {
+        logReinforce(player, c1.territory, 2);
         territories[c3.territory].troops += 2;
+    }
 
     if(cardValueScheme == SET_VALUE)
         return value;
