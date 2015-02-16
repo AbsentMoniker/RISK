@@ -14,12 +14,10 @@
 extern Hand hands[MAX_PLAYERS];
 // Number of troops for the next exchange.
 extern int cardExchangeValue;
-// Scheme for increasing values of cardExchangeValue.
-extern CardValueScheme cardValueScheme;
 
 // Initializes the cards system by emptying each player's hand, creating a new
 // deck of cards, and shuffling the deck.
-void initCards(CardValueScheme scheme);
+void initCards();
 
 // Take the top card from the deck and places it in the specified player's hand.
 Card drawCard(int player);
@@ -28,5 +26,8 @@ Card drawCard(int player);
 // returns the number of bonus troops from the exchange. Returns 0 if the trade
 // was an invalid set or the player doesn't actually have the cards specified.
 int exchangeCards(int player, int card1, int card2, int card3);
+
+// Gives all the cards in an eliminated player's hand to another player.
+void takeHand(int player, int eliminatedPlayer);
 
 #endif

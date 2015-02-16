@@ -19,4 +19,8 @@ int predAttackTarget(int territory);
 int predMoveSource(int territory);
 int predMoveTarget(int territory);
 
+// Fills a static array with all territories in a single connected group with
+// sourceTerritory, for use in predMoveTarget.
+void computeConnected(int sourceTerritory);
+
 #endif

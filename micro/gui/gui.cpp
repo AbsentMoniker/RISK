@@ -5,6 +5,8 @@ extern "C" {
 #include "../types.h"
 #include "../territory.h"
 #include "../io.h"
+#include "../cards.h"
+#include "../log.h"
 }
 
 #include <cstdio>
@@ -155,7 +157,7 @@ void drawText(sf::RenderWindow & win)
 
 void drawDie(sf::RenderWindow & win, int d, int x, int y)
 {
-    if(d < 0)
+    if(d == 0)
         return;
     sf::Text num(std::to_string(d), font, 24);
     num.setColor(sf::Color::Red);
@@ -165,6 +167,7 @@ void drawDie(sf::RenderWindow & win, int d, int x, int y)
 
 int main()
 {
+    int card1, card2;
     rng.seed(time(0));
     if(!font.loadFromFile("DroidSansMono.ttf"))
     {
@@ -185,13 +188,154 @@ int main()
             if(ev.type == sf::Event::KeyPressed)
             {
                 if(ev.key.code == sf::Keyboard::Space)
+                {
                     gameInput(ADVANCE);
+                    card1 = card2 = -1;
+                }
                 if(ev.key.code == sf::Keyboard::LControl)
+                {
                     gameInput(CANCEL);
+                    card1 = card2 = -1;
+                }
                 if(ev.key.code == sf::Keyboard::Left)
+                {
                     gameInput(PREVIOUS);
+                    card1 = card2 = -1;
+                }
                 if(ev.key.code == sf::Keyboard::Right)
+                {
                     gameInput(NEXT);
+                    card1 = card2 = -1;
+                }
+
+                if(ev.key.code == sf::Keyboard::Num0)
+                {
+                    if(card1 == -1)
+                        card1 = 0;
+                    else if(card2 == -1 && card1 != 0)
+                        card2 = 0;
+                    else if(card2 != 0 && card1 != 0)
+                    {
+                        printf("traded for %d troops\n", 
+                                cardInput(card1, card2, 0));
+                        card1 = card2  = -1;
+                    }
+                }
+                if(ev.key.code == sf::Keyboard::Num1)
+                {
+                    if(card1 == -1)
+                        card1 = 1;
+                    else if(card2 == -1 && card1 != 1)
+                        card2 = 1;
+                    else if(card2 != 1 && card1 != 1)
+                    {
+                        printf("traded for %d troops\n", 
+                                cardInput(card1, card2, 1));
+                        card1 = card2  = -1;
+                    }
+                }
+
+                if(ev.key.code == sf::Keyboard::Num2)
+                {
+                    if(card1 == -1)
+                        card1 = 2;
+                    else if(card2 == -1 && card1 != 2)
+                        card2 = 2;
+                    else if(card2 != 2 && card1 != 2)
+                    {
+                        printf("traded for %d troops\n", 
+                                cardInput(card1, card2, 2));
+                        card1 = card2  = -1;
+                    }
+                }
+
+                if(ev.key.code == sf::Keyboard::Num3)
+                {
+                    if(card1 == -1)
+                        card1 = 3;
+                    else if(card2 == -1 && card1 != 3)
+                        card2 = 3;
+                    else if(card2 != 3 && card1 != 3)
+                    {
+                        printf("traded for %d troops\n", 
+                                cardInput(card1, card2, 3));
+                        card1 = card2  = -1;
+                    }
+                }
+
+                if(ev.key.code == sf::Keyboard::Num4)
+                {
+                    if(card1 == -1)
+                        card1 = 4;
+                    else if(card2 == -1 && card1 != 4)
+                        card2 = 4;
+                    else if(card2 != 4 && card1 != 4)
+                    {
+                        printf("traded for %d troops\n", 
+                                cardInput(card1, card2, 4));
+                        card1 = card2  = -1;
+                    }
+                }
+                if(ev.key.code == sf::Keyboard::C)
+                {
+                    printf("Player %d cards: %d\n", currentPlayer, 
+                            hands[currentPlayer].cards);
+                    for(int i = 0; i < hands[currentPlayer].cards; i++)
+                    {
+                        printf("%d (%s)\n", hands[currentPlayer].hand[i].type,
+                                hands[currentPlayer].hand[i].type != WILD?  territories[hands[currentPlayer].hand[i].territory].name : "Wild");
+                    }
+                    printf("\n");
+                }
+                if(ev.key.code == sf::Keyboard::L)
+                {
+                    int count[numPlayers][7] = {0};
+                    for(int i = 0; i < gamelogSize; i++)
+                    {
+                        if(gamelog[i].type == LOG_BATTLE)
+                        {
+                            count[gamelog[i].battle.attackingPlayer]
+                                [gamelog[i].battle.aDie1]++;
+                            count[gamelog[i].battle.attackingPlayer]
+                                [gamelog[i].battle.aDie2]++;
+                            count[gamelog[i].battle.attackingPlayer]
+                                [gamelog[i].battle.aDie3]++;
+                            count[gamelog[i].battle.defendingPlayer]
+                                [gamelog[i].battle.dDie1]++;
+                            count[gamelog[i].battle.defendingPlayer]
+                                [gamelog[i].battle.dDie2]++;
+                            printf("A %d: %d %d %d    D %d: %d %d\n",
+                                    gamelog[i].battle.attackingPlayer,
+                                    gamelog[i].battle.aDie1,
+                                    gamelog[i].battle.aDie2,
+                                    gamelog[i].battle.aDie3,
+                                    gamelog[i].battle.defendingPlayer,
+                                    gamelog[i].battle.dDie1,
+                                    gamelog[i].battle.dDie2);
+                        }
+                        else if(gamelog[i].type == LOG_REINFORCE)
+                        {
+                            printf("Player %d: %d troops placed in %s\n",
+                                    gamelog[i].reinforce.player,
+                                    gamelog[i].reinforce.troops,
+                                    territories[
+                                        gamelog[i].reinforce.territory].name);
+                        }
+                    }
+
+                    for(int i = 0; i < numPlayers; i++)
+                    {
+                        int total = count[i][1] + count[i][2] + count[i][3] 
+                            + count[i][4] + count[i][5] + count[i][6];
+                        printf("Player %d summary\n-------\n", i);
+                        for(int n = 1; n <= 6; n++)
+                        {
+                            printf("%d: %6d %5.2f%%\n", n, count[i][n], 
+                                    count[i][n] / (double)total * 100.0);
+                        }
+                    }
+
+                }
             }
         }
         window.clear();

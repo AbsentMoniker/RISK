@@ -1,6 +1,6 @@
 CFLAGS=-std=c99 -Wall -g -MMD
 CXXFLAGS=-std=c++11 -Wall -g -MMD
-OBJ= gui.o ../game.o ../gamedata.o ../territory.o ../cards.o
+OBJ= gui.o ../game.o ../gamedata.o ../territory.o ../cards.o ../log.o
 DEPS=$(OBJ:.o=.d)
 
 risk: $(OBJ)

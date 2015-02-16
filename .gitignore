@@ -1,0 +1,7 @@
+# Vim swap files
+.*.swp
+# compilation files
+*.o
+*.d
+# binary
+micro/gui/risk

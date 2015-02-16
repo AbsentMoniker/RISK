@@ -8,10 +8,18 @@
 
 #include "types.h"
 
+// Game options. These are determined by setting options during game startup
+// and do not change during the course of a game.
+extern int randomTerritories;
+extern int numPlayers;
+extern CardValueScheme cardValueScheme;
+#define OPTION_NUM_PLAYERS 0
+#define OPTION_CARD_SCHEME 1
+#define OPTION_RANDOM_TERRITORIES 2
+
 // Global variables holding the current gamestate. These are all things that
 // the display routines need to know about to output information to the LEDs,
 // in addition to the territories array in gamedata.c
-extern int numPlayers;
 extern int currentPlayer;
 extern int source;
 extern int destination;
@@ -21,6 +29,10 @@ extern int defenderDice[2];
 // gameInput is the main entry point into the game logic; this function calls
 // one of the other functions below it to advance the game state.
 void gameInput(Input input);
+// cardInput is the other type of input, a command from the web server that
+// the current player wishes to exchange cards. Returns false if for some
+// reason the exchange could not actually happen.
+int cardInput(int card1, int card2, int card3);
 // updateText is called after every game update to update the text displayed on
 // the LCD
 void updateText();
@@ -28,7 +40,7 @@ void updateText();
 // These functions actually perform the bulk of the game logic; there is one
 // function for each possible GameState value, and each responds to the four
 // possible inputs in some way.
-void choosePlayers(Input input);
+void chooseOptions(Input input);
 void selectTerritories(Input input);
 void deployTroops(Input input);
 void reinforce(Input input);
@@ -57,5 +69,9 @@ int playerLiving(int player);
 // from territory count and continent bonuses; it does not include card
 // exchanging.
 int computeReinforcements(int player);
+
+// Randomly allocate territories to the players, in effect skipping the SELECT
+// state.
+void allocateRandomTerritories();
 
 #endif

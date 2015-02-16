@@ -2,6 +2,7 @@
 #include "gamedata.h"
 #include "territory.h"
 #include "io.h"
+#include "log.h"
 
 Hand hands[MAX_PLAYERS];
 int cardExchangeValue;
@@ -25,7 +26,7 @@ void shuffleDeck()
     }
 }
 
-void initCards(CardValueScheme scheme)
+void initCards()
 {
     for(int i = 0; i < MAX_PLAYERS; i++)
     {
@@ -50,10 +51,9 @@ void initCards(CardValueScheme scheme)
     shuffleDeck();
 
     cardValueIndex = 0;
-    cardValueScheme = scheme;
     // Even if the values are increasing by 1, they start at the same first
     // value. For set value sets, this number gets ignored completely.
-    cardExchangeValue = cardExchangeValues[NUM_EXCHANGE_VALUES];
+    cardExchangeValue = cardExchangeValues[0];
 }
 
 Card drawCard(int player)
@@ -66,6 +66,8 @@ Card drawCard(int player)
         discardsSize = 0;
         shuffleDeck();
     }
+
+    logCard(player, deck[deckSize].type, deck[deckSize].territory);
 
     deckSize -= 1;
     hands[player].hand[hands[player].cards] = deck[deckSize];
@@ -101,43 +103,65 @@ int cardSetValue(Card c1, Card c2, Card c3)
     return 0;
 }
 
-int exchangeCards(int player, int card1, int card2, int card3)
+int exchangeCards(int player, int idx1, int idx2, int idx3)
 {
-    if(card1 >= hands[player].cards || card2 >= hands[player].cards 
-            || card3 >= hands[player].cards)
-    {
+    int handsize = hands[player].cards;
+    if(idx1 >= handsize || idx2 >= handsize || idx3 >= handsize)
         return 0;
-    }
-    if(card1 == card2 || card1 == card3 || card2 == card3)
-    {
+    if(idx1 == idx2 || idx1 == idx3 || idx2 == idx3)
         return 0;
-    }
 
-    // Ensure that the three cards of interest are at the end of the hand.
-    // The checks above ensure that the hand has at least three cards.
-    int idx1 = hands[player].cards - 1;
-    int idx2 = hands[player].cards - 2;
-    int idx3 = hands[player].cards - 3;
-    SWAP(hands[player].hand[card1], hands[player].hand[idx1]);
-    SWAP(hands[player].hand[card2], hands[player].hand[idx2]);
-    SWAP(hands[player].hand[card3], hands[player].hand[idx3]);
-
-    int value = cardSetValue(hands[player].hand[idx1],
-            hands[player].hand[idx2], hands[player].hand[idx3]);
+    Card c1 = hands[player].hand[idx1];
+    Card c2 = hands[player].hand[idx2];
+    Card c3 = hands[player].hand[idx3];
+    int value = cardSetValue(c1, c2, c3);
     if(value == 0)
         return 0;
 
-    // Set is known valid at this point, so the exchange will go ahead.
+    
+    // Add the cards to the discard pile
+    discards[discardsSize++] = c1;
+    discards[discardsSize++] = c2;
+    discards[discardsSize++] = c3;
+
+    // Move selected cards to end of hand, then remove them
+    SWAP(hands[player].hand[idx1], hands[player].hand[handsize - 1]);
+    if(idx2 == handsize - 1)
+        idx2 = idx1;
+    if(idx3 == handsize - 1)
+        idx3 = idx1;
+    SWAP(hands[player].hand[idx2], hands[player].hand[handsize - 2]);
+    if(idx3 == handsize - 2)
+        idx3 = idx2;
+    SWAP(hands[player].hand[idx3], hands[player].hand[handsize - 3]);
+
     hands[player].cards -= 3;
 
-    if(cardValueScheme == SET_VALUE)
-        return value;
+    // Bonuses for owning the territories being traded.
+    if(c1.type != WILD && territories[c1.territory].owner == player)
+    {
+        territories[c1.territory].troops += 2;
+        logReinforce(player, c1.territory, 2);
+    }
+    if(c2.type != WILD && territories[c2.territory].owner == player)
+    {
+        territories[c2.territory].troops += 2;
+        logReinforce(player, c1.territory, 2);
+    }
+    if(c3.type != WILD && territories[c3.territory].owner == player)
+    {
+        logReinforce(player, c1.territory, 2);
+        territories[c3.territory].troops += 2;
+    }
+
+    // If scheme is SET_VALUE, value is already set.
+    
     if(cardValueScheme == INCREASING_ONE)
     {
+        value = cardExchangeValue;
         cardExchangeValue += 1;
-        return cardExchangeValue - 1;
     }
-    if(cardValueScheme == INCREASING)
+    else if(cardValueScheme == INCREASING)
     {
         value = cardExchangeValue;
         if(cardValueIndex < NUM_EXCHANGE_VALUES - 1)
@@ -149,10 +173,20 @@ int exchangeCards(int player, int card1, int card2, int card3)
         {
             cardExchangeValue += 5;
         }
-        return value;
     }
 
-    // uh oh
-    return 0;
+    logExchange(player, c1.type, c2.type, c3.type, value);
+
+    return value;
 }
 
+void takeHand(int player, int eliminatedPlayer)
+{
+    for(int i = 0; i < hands[eliminatedPlayer].cards; i++)
+    {
+        hands[player].hand[hands[player].cards + i] = 
+            hands[eliminatedPlayer].hand[i];
+    }
+    hands[player].cards += hands[eliminatedPlayer].cards;
+    hands[eliminatedPlayer].cards = 0;
+}

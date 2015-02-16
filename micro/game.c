@@ -11,8 +11,12 @@
 #include "io.h"
 #include "util.h"
 #include "cards.h"
+#include "log.h"
 // Global variables
 int numPlayers;
+int randomTerritories;
+// cardValueScheme is handled by cards.c
+
 int currentPlayer;
 int source;
 int destination;
@@ -24,13 +28,18 @@ static State state;
 static int firstPlayer;
 static int territoriesRemaining;
 static int numTroops;
+static int mustTrade;
+static int needCard;
+static int currentOption;
+static int reinforceMenu;
+static int confirm;
 
 void gameInput(Input input)
 {
     switch(state)
     {
         case INIT:
-            choosePlayers(input); break;
+            chooseOptions(input); break;
         case SELECT:
             selectTerritories(input); break;
         case DEPLOY:
@@ -59,15 +68,48 @@ void gameInput(Input input)
     updateText();
 }
 
+int cardInput(int card1, int card2, int card3)
+{
+    if(state != REINFORCE)
+        return 0;
+    int troops = exchangeCards(currentPlayer, card1, card2, card3);
+    numTroops += troops;
+    if(hands[currentPlayer].cards < 5)
+        mustTrade = 0;
+    updateText();
+    return troops;
+}
+
 void updateText()
 {
     switch(state)
     {
         case INIT:
-            setTextDisplay(0, "Choose number");
-            setTextDisplay(1, "of players: %d", numPlayers);
-            setTextDisplay(2, "A: Confirm number");
-            setTextDisplay(3, "");
+            if(currentOption == OPTION_NUM_PLAYERS)
+            {
+                setTextDisplay(0, "Number of players");
+                setTextDisplay(1, "%d", numPlayers);
+            }
+            else if(currentOption == OPTION_CARD_SCHEME)
+            {
+                setTextDisplay(0, "Card exchange values");
+                if(cardValueScheme == INCREASING)
+                    setTextDisplay(1, "Increasing");
+                else if(cardValueScheme == INCREASING_ONE)
+                    setTextDisplay(1, "Increasing by 1");
+                else if(cardValueScheme == SET_VALUE)
+                    setTextDisplay(1, "Set Value");
+            }
+            else if(currentOption == OPTION_RANDOM_TERRITORIES)
+            {
+                setTextDisplay(0, "Territory allocation");
+                if(randomTerritories)
+                    setTextDisplay(1, "Random");
+                else
+                    setTextDisplay(1, "Select");
+            }
+            setTextDisplay(2, "A: Start game");
+            setTextDisplay(3, "B: Next option");
             break;
         case SELECT:
             setTextDisplay(0, "Player %d:", currentPlayer);
@@ -76,22 +118,67 @@ void updateText()
             setTextDisplay(3, "%d available", territoriesRemaining);
             break;
         case DEPLOY:
-            setTextDisplay(0, "Player %d:", currentPlayer);
-            setTextDisplay(1, "Deploy troops");
-            setTextDisplay(2, "A: Place troop");
-            setTextDisplay(3, "%d troops left", numTroops);
+            if(!confirm)
+            {
+                setTextDisplay(0, "Player %d:", currentPlayer);
+                setTextDisplay(1, "Deploy troops");
+                setTextDisplay(2, "A: Place troop");
+                setTextDisplay(3, "%d troops left", numTroops);
+            }
+            else
+            {
+                setTextDisplay(0, "All troops have been");
+                setTextDisplay(1, "deployed.");
+                setTextDisplay(2, "");
+                setTextDisplay(3, "B: Begin play");
+            }
             break;
         case REINFORCE:
-            setTextDisplay(0, "Reinforcements");
-            setTextDisplay(1, "%d troops left", numTroops);
-            setTextDisplay(2, "A: Place troop");
-            setTextDisplay(3, "B: Other options");
+            if(reinforceMenu && !confirm)
+            {
+                setTextDisplay(0, "Options:");
+                setTextDisplay(1, "End game?");
+                setTextDisplay(2, "A: End game");
+                setTextDisplay(3, "B: Cancel");
+            }
+            else if(reinforceMenu && confirm)
+            {
+                setTextDisplay(0, "Really end game?");
+                setTextDisplay(1, "");
+                setTextDisplay(2, "A: Yes");
+                setTextDisplay(3, "B: No");
+            }
+            else if(numTroops == 0 && mustTrade)
+            {
+                setTextDisplay(0, "%d cards in hand", 
+                        hands[currentPlayer].cards);
+                setTextDisplay(1, "You must exchange");
+                setTextDisplay(2, "cards to continue");
+                setTextDisplay(3, "B: Other options");            
+            }
+            else
+            {
+                setTextDisplay(0, "Reinforcements");
+                setTextDisplay(1, "%d troops left", numTroops);
+                setTextDisplay(2, "A: Place troop");
+                setTextDisplay(3, "B: Other options");
+            }
             break;
         case ATTACK1:
-            setTextDisplay(0, "Declare attacks");
-            setTextDisplay(1, "");
-            setTextDisplay(2, "A: Choose attacker");
-            setTextDisplay(3, "B: Stop attacking");
+            if(!confirm)
+            {
+                setTextDisplay(0, "Declare attacks");
+                setTextDisplay(1, "");
+                setTextDisplay(2, "A: Choose attacker");
+                setTextDisplay(3, "B: Stop attacking");
+            }
+            else
+            {
+                setTextDisplay(0, "Really stop");
+                setTextDisplay(1, "attacking?");
+                setTextDisplay(2, "A: Yes");
+                setTextDisplay(3, "B: No");
+            }
             break;
         case ATTACK2:
             setTextDisplay(0, "Declare attacks");
@@ -112,10 +199,20 @@ void updateText()
             setTextDisplay(3, "");
             break;
         case MOVE1:
-            setTextDisplay(0, "Make free move");
-            setTextDisplay(1, "");
-            setTextDisplay(2, "A: Choose source");
-            setTextDisplay(3, "B: End turn");
+            if(!confirm)
+            {
+                setTextDisplay(0, "Make free move");
+                setTextDisplay(1, "");
+                setTextDisplay(2, "A: Choose source");
+                setTextDisplay(3, "B: End turn");
+            }
+            else
+            {
+                setTextDisplay(0, "Really end turn");
+                setTextDisplay(1, "without a move?");
+                setTextDisplay(2, "A: Yes");
+                setTextDisplay(3, "B: No");
+            }
             break;
         case MOVE2:
             setTextDisplay(0, "Make free move");
@@ -140,14 +237,43 @@ void updateText()
     }
 }
 
-void choosePlayers(Input input)
+void chooseOptions(Input input)
 {
-    if(input == NEXT && numPlayers < MAX_PLAYERS)
-        numPlayers += 1;
-    else if(input == PREVIOUS && numPlayers > 2)
-        numPlayers -= 1;
-    else if(input == ADVANCE)
+    if(input == ADVANCE)
+    {
         changeState(SELECT);
+        if(randomTerritories)
+        {
+            allocateRandomTerritories();
+            changeState(DEPLOY);
+        }
+        return;
+    }
+    if(currentOption == OPTION_NUM_PLAYERS)
+    {
+        if(input == NEXT && numPlayers < MAX_PLAYERS)
+            numPlayers += 1;
+        else if(input == PREVIOUS && numPlayers > 2)
+            numPlayers -= 1;
+        else if(input == CANCEL)
+            currentOption = OPTION_RANDOM_TERRITORIES;
+    }
+    else if(currentOption == OPTION_RANDOM_TERRITORIES)
+    {
+        if(input == NEXT || input == PREVIOUS)
+            randomTerritories = !randomTerritories;
+        else if(input == CANCEL)
+            currentOption = OPTION_CARD_SCHEME;
+    }
+    else if(currentOption == OPTION_CARD_SCHEME)
+    {
+        if(input == NEXT)
+            cardValueScheme = (cardValueScheme == 2? 0 : cardValueScheme + 1);
+        else if(input == PREVIOUS)
+            cardValueScheme = (cardValueScheme == 0? 2 : cardValueScheme - 1);
+        else if(input == CANCEL)
+            currentOption = OPTION_NUM_PLAYERS;
+    }
 }
 
 void selectTerritories(Input input)
@@ -173,19 +299,24 @@ void selectTerritories(Input input)
         if(currentPlayer == firstPlayer)
             numTroops -= 1;
 
-        if(territoriesRemaining == 0)
+        // Changing the state here after random allocation would cause
+        // recursion, so the function for the INIT state handles the state
+        // change instead right after the random deployment. 
+        if(territoriesRemaining == 0 && !randomTerritories)
             changeState(DEPLOY);
     }
 }
 
 void deployTroops(Input input)
 {
-    if(input == NEXT)
+    if(input == NEXT && !confirm)
         moveSelection(0, 1, predOwnedCurrent);
-    else if(input == PREVIOUS)
+    else if(input == PREVIOUS && !confirm)
         moveSelection(0, -1, predOwnedCurrent);
     else if(input == ADVANCE)
     {
+        if(confirm)
+            return;
         if(destination == -1)
             return;
 
@@ -200,43 +331,87 @@ void deployTroops(Input input)
             numTroops -= 1;
 
         if(numTroops == 0)
+            confirm = 1;
+    }
+    else if(input == CANCEL)
+    {
+        if(confirm)
+        {
+            for(int i = 0; i < NUM_TERRITORIES; i++)
+                logReinforce(territories[i].owner, i, territories[i].troops);
             changeState(REINFORCE);
+        }
     }
 }
 
 void reinforce(Input input)
 {
-    if(input == NEXT)
+    if(input == NEXT && !reinforceMenu)
         moveSelection(0, 1, predOwnedCurrent);
-    else if(input == PREVIOUS)
+    else if(input == PREVIOUS && !reinforceMenu)
         moveSelection(0, -1, predOwnedCurrent);
     else if(input == ADVANCE)
     {
+        if(reinforceMenu)
+        {
+            if(!confirm)
+                confirm = 1;
+            else
+                changeState(INIT);
+            return;
+        }
+
         if(destination == -1)
             return;
 
-        territories[destination].troops += 1;
-        numTroops -= 1;
+        if(numTroops > 0)
+        {
+            logReinforce(currentPlayer, destination, 1);
+            territories[destination].troops += 1;
+            numTroops -= 1;
+        }
 
-        if(numTroops == 0)
+        if(numTroops == 0 && !mustTrade)
+        {
+            logReinforce(currentPlayer, -1, 0);
             changeState(ATTACK1);
+        }
+    }
+    else if(input == CANCEL)
+    {
+        if(reinforceMenu && confirm)
+            confirm = 0;
+        else if(reinforceMenu)
+            reinforceMenu = 0;
+        else
+            reinforceMenu = 1;
     }
 }
 
 void declareAttack(Input input)
 {
-    if(input == NEXT)
+    if(input == NEXT && !confirm)
         moveSelection(1, 1, predAttackSource);
-    else if(input == PREVIOUS)
+    else if(input == PREVIOUS && !confirm)
         moveSelection(1, -1, predAttackSource);
     else if(input == ADVANCE)
     {
+        if(confirm)
+        {
+            if(needCard)
+                drawCard(currentPlayer);
+            changeState(MOVE1);
+            return;
+        }
+
         if(source == -1)
             return;
         changeState(ATTACK2);
     }
     else if(input == CANCEL)
-        changeState(MOVE1);
+    {
+        confirm = !confirm;
+    }
 }
 void declareAttackTarget(Input input)
 {
@@ -248,6 +423,8 @@ void declareAttackTarget(Input input)
     {
         if(destination == -1)
             return;
+        logAttack(currentPlayer, territories[destination].owner, source,
+                destination);
         changeState(BATTLE);
     }
     else if(input == CANCEL)
@@ -264,11 +441,20 @@ void resolveBattle(Input input)
             changeState(ATTACK1);
         else if(territories[destination].troops == 0)
         {
+            int defeatedPlayer = territories[destination].owner;
             territories[destination].owner = currentPlayer;
+
             numTroops = min(3, territories[source].troops - 1);
             territories[destination].troops = 
                 territories[source].troops - 1;
             territories[source].troops = 1;
+
+            if(!playerLiving(defeatedPlayer))
+            {
+                takeHand(currentPlayer, defeatedPlayer);
+                if(hands[currentPlayer].cards >= 5)
+                    mustTrade = 1;
+            }
             changeState(CONQUER);
         }
     }
@@ -280,8 +466,7 @@ void conquerTerritory(Input input)
 {
     if(input == NEXT)
     {
-        if(territories[destination].owner == currentPlayer &&
-                territories[source].troops > 1)
+        if(territories[source].troops > 1)
         {
             territories[destination].troops += 1;
             territories[source].troops -= 1;
@@ -289,8 +474,7 @@ void conquerTerritory(Input input)
     }
     else if(input == PREVIOUS)
     {
-        if(territories[destination].owner == currentPlayer &&
-                territories[destination].troops > numTroops)
+        if(territories[destination].troops > numTroops)
         {
             territories[destination].troops -= 1;
             territories[source].troops += 1;
@@ -298,12 +482,17 @@ void conquerTerritory(Input input)
     }      
     else if(input == ADVANCE)
     {
+        needCard = 1;
+        logConquer(currentPlayer, destination, territories[destination].troops);
         for(int i = 0; i < numPlayers; i++)
         {
             // Game continues unless current player is the only one left.
             if(i != currentPlayer && playerLiving(i))
             {
-                changeState(ATTACK1);
+                if(mustTrade)
+                    changeState(REINFORCE);
+                else
+                    changeState(ATTACK1);
                 return;
             }
         }
@@ -314,26 +503,34 @@ void conquerTerritory(Input input)
 
 void moveTroops(Input input)
 {
-    if(input == NEXT)
+    if(input == NEXT && !confirm)
         moveSelection(1, 1, predMoveSource);
-    else if(input == PREVIOUS)
+    else if(input == PREVIOUS && !confirm)
         moveSelection(1, -1, predMoveSource);
     else if(input == ADVANCE)
     {
+        if(confirm)
+        {
+            do
+            {
+                currentPlayer += 1;
+                if(currentPlayer == numPlayers)
+                    currentPlayer = 0;
+            } while(!playerLiving(currentPlayer));
+
+            changeState(REINFORCE);
+            return;
+        }
+
         if(source == -1)
             return;
+
+        computeConnected(source);
         changeState(MOVE2);
     }
     else if(input == CANCEL)
     {
-        do
-        {
-            currentPlayer += 1;
-            if(currentPlayer == numPlayers)
-                currentPlayer = 0;
-        } while(!playerLiving(currentPlayer));
-
-        changeState(REINFORCE);
+        confirm = !confirm;
     }
 }
 void moveTroopsTarget(Input input)
@@ -371,6 +568,9 @@ void moveTroopsNumber(Input input)
     }
     else if(input == ADVANCE)
     {
+        logMove(currentPlayer, source, destination, 
+                numTroops - territories[source].troops);
+
         do
         {
             currentPlayer += 1;
@@ -425,6 +625,10 @@ void changeState(State newstate)
     {
         resetGame();
         numPlayers = 2;
+        cardValueScheme = INCREASING;
+        randomTerritories = 1;
+        currentOption = OPTION_NUM_PLAYERS; 
+
         currentPlayer = -1;
     }
 
@@ -444,18 +648,37 @@ void changeState(State newstate)
 
     if(state != ATTACK1 && state != BATTLE && state != CONQUER)
     {
-        attackerDice[0] = attackerDice[1] = attackerDice[2] = -1;
-        defenderDice[0] = defenderDice[1] = -1;
+        attackerDice[0] = attackerDice[1] = attackerDice[2] = 0;
+        defenderDice[0] = defenderDice[1] = 0;
     }
     
     if(state == SELECT)
         numTroops = initialTroops[numPlayers];
     else if(state == REINFORCE)
-        numTroops = computeReinforcements(currentPlayer);
+    {
+        if(mustTrade)
+            numTroops = 0;
+        else
+            numTroops = computeReinforcements(currentPlayer);
+    }
     else if(state == MOVE3)
         numTroops = territories[source].troops;
     // numTroops is also used by CONQUER, but it needs to be set earlier than
     // this function is called
+
+    if(state == REINFORCE)
+    {
+        reinforceMenu = 0;
+        if(hands[currentPlayer].cards >= 5)
+            mustTrade = 1;
+    }
+    else if(state != CONQUER)
+        mustTrade = 0;
+
+    if(state == REINFORCE && !mustTrade)
+        needCard = 0;
+
+    confirm = 0;
 }
 
 void resetGame()
@@ -465,7 +688,7 @@ void resetGame()
         territories[i].owner = -1;
         territories[i].troops = 0;
     }
-    initCards(INCREASING);
+    initCards();
 }
 
 int playerLiving(int player)
@@ -498,4 +721,25 @@ int computeReinforcements(int player)
     }
 
     return bonus + max(3, territoriesHeld / 3);
+}
+
+#define SWAP(a,b) do{int tmp = a; a = b; b = tmp;}while(0)
+void allocateRandomTerritories()
+{
+    // create a list and randomize it
+    int list[NUM_TERRITORIES];
+    for(int i = 0; i < NUM_TERRITORIES; i++)
+        list[i] = i;
+    for(int i = 0; i < NUM_TERRITORIES; i++)
+    {
+        int r = randint(i, NUM_TERRITORIES - 1);
+        SWAP(list[i], list[r]);
+    }
+
+    // deal territories by forcing inputs
+    for(int i = 0; i < NUM_TERRITORIES; i++)
+    {
+        destination = list[i];
+        selectTerritories(ADVANCE);
+    }
 }
