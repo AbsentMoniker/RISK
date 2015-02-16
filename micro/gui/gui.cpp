@@ -165,6 +165,99 @@ void drawDie(sf::RenderWindow & win, int d, int x, int y)
     win.draw(num);
 }
 
+void dumpLog()
+{
+    int count[numPlayers][7] = {0};
+    for(int i = 0; i < gamelogSize; i++)
+    {
+        if(gamelog[i].type == LOG_REINFORCE)
+        {
+            printf("Player %d: %d troops placed in %s\n",
+                    gamelog[i].reinforce.player,
+                    gamelog[i].reinforce.troops,
+                    territories[gamelog[i].reinforce.territory].name);
+        }
+        else if(gamelog[i].type == LOG_ATTACK)
+        {
+            printf("%s (%d) attacks (%s) %d\n",
+                    territories[gamelog[i].attack.attackingTerritory].name,
+                    gamelog[i].attack.attackingPlayer,
+                    territories[gamelog[i].attack.defendingTerritory].name,
+                    gamelog[i].attack.defendingTerritory);
+        }
+        else if(gamelog[i].type == LOG_BATTLE)
+        {
+            count[gamelog[i].battle.attackingPlayer]
+                [gamelog[i].battle.aDie1]++;
+            count[gamelog[i].battle.attackingPlayer]
+                [gamelog[i].battle.aDie2]++;
+            count[gamelog[i].battle.attackingPlayer]
+                [gamelog[i].battle.aDie3]++;
+            count[gamelog[i].battle.defendingPlayer]
+                [gamelog[i].battle.dDie1]++;
+            count[gamelog[i].battle.defendingPlayer]
+                [gamelog[i].battle.dDie2]++;
+            printf("A %d: %d %d %d    D %d: %d %d\n",
+                    gamelog[i].battle.attackingPlayer,
+                    gamelog[i].battle.aDie1,
+                    gamelog[i].battle.aDie2,
+                    gamelog[i].battle.aDie3,
+                    gamelog[i].battle.defendingPlayer,
+                    gamelog[i].battle.dDie1,
+                    gamelog[i].battle.dDie2);
+        }
+        else if(gamelog[i].type == LOG_CONQUER)
+        {
+            printf("Player %d takes %s with %d troops\n",
+                    gamelog[i].conquer.attackingPlayer,
+                    territories[gamelog[i].conquer.territory].name,
+                    gamelog[i].conquer.troops);
+        }
+        else if(gamelog[i].type == LOG_MOVE)
+        {
+            printf("Player %d moves %d troops from %s to %s\n",
+                    gamelog[i].move.player,
+                    gamelog[i].move.troops,
+                    territories[gamelog[i].move.sourceTerritory].name,
+                    territories[gamelog[i].move.destinationTerritory].name);
+        }
+        else if(gamelog[i].type == LOG_CARD_GIVEN)
+        {
+            printf("Player %d receives card %d (%s, type %d)\n",
+                    gamelog[i].cardgiven.player,
+                    gamelog[i].cardgiven.territory,
+                    gamelog[i].cardgiven.territory != -1?
+                        territories[gamelog[i].cardgiven.territory].name :
+                        "wild",
+                    gamelog[i].cardgiven.cardtype);
+        }
+        else if(gamelog[i].type == LOG_CARD_EXCHANGE)
+        {
+            printf("Player %d exchanges %d %d %d for %d troops\n",
+                    gamelog[i].exchange.player,
+                    gamelog[i].exchange.cardtype1,
+                    gamelog[i].exchange.cardtype2,
+                    gamelog[i].exchange.cardtype3,
+                    gamelog[i].exchange.troops);
+        }
+
+        
+    }
+
+    for(int i = 0; i < numPlayers; i++)
+    {
+        int total = count[i][1] + count[i][2] + count[i][3] 
+            + count[i][4] + count[i][5] + count[i][6];
+        printf("Player %d summary\n-------\n", i);
+        for(int n = 1; n <= 6; n++)
+        {
+            printf("%d: %6d %5.2f%%\n", n, count[i][n], 
+                    count[i][n] / (double)total * 100.0);
+        }
+    }
+
+}
+
 int main()
 {
     int card1, card2;
@@ -288,54 +381,8 @@ int main()
                     printf("\n");
                 }
                 if(ev.key.code == sf::Keyboard::L)
-                {
-                    int count[numPlayers][7] = {0};
-                    for(int i = 0; i < gamelogSize; i++)
-                    {
-                        if(gamelog[i].type == LOG_BATTLE)
-                        {
-                            count[gamelog[i].battle.attackingPlayer]
-                                [gamelog[i].battle.aDie1]++;
-                            count[gamelog[i].battle.attackingPlayer]
-                                [gamelog[i].battle.aDie2]++;
-                            count[gamelog[i].battle.attackingPlayer]
-                                [gamelog[i].battle.aDie3]++;
-                            count[gamelog[i].battle.defendingPlayer]
-                                [gamelog[i].battle.dDie1]++;
-                            count[gamelog[i].battle.defendingPlayer]
-                                [gamelog[i].battle.dDie2]++;
-                            printf("A %d: %d %d %d    D %d: %d %d\n",
-                                    gamelog[i].battle.attackingPlayer,
-                                    gamelog[i].battle.aDie1,
-                                    gamelog[i].battle.aDie2,
-                                    gamelog[i].battle.aDie3,
-                                    gamelog[i].battle.defendingPlayer,
-                                    gamelog[i].battle.dDie1,
-                                    gamelog[i].battle.dDie2);
-                        }
-                        else if(gamelog[i].type == LOG_REINFORCE)
-                        {
-                            printf("Player %d: %d troops placed in %s\n",
-                                    gamelog[i].reinforce.player,
-                                    gamelog[i].reinforce.troops,
-                                    territories[
-                                        gamelog[i].reinforce.territory].name);
-                        }
-                    }
-
-                    for(int i = 0; i < numPlayers; i++)
-                    {
-                        int total = count[i][1] + count[i][2] + count[i][3] 
-                            + count[i][4] + count[i][5] + count[i][6];
-                        printf("Player %d summary\n-------\n", i);
-                        for(int n = 1; n <= 6; n++)
-                        {
-                            printf("%d: %6d %5.2f%%\n", n, count[i][n], 
-                                    count[i][n] / (double)total * 100.0);
-                        }
-                    }
-
-                }
+                    dumpLog();
+                
             }
         }
         window.clear();
