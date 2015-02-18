@@ -114,11 +114,44 @@ APP_DATA appData;
 void APP_Initialize ( void )
 {
     /* Place the App state machine in its initial state. */
-    appData.state = APP_STATE_INIT;
+    //appData.state = APP_STATE_INIT;
     
     /* TODO: Initialize your application's state machine and other
      * parameters.
      */
+
+    /*SPI1CONbits.ON = 1;
+
+    SPI1CONbits.FRMEN = 0;
+    SPI1CONbits.MSSEN = 0;
+    SPI1CONbits.MCLKSEL = 1;
+    SPI1CONbits.ENHBUF = 0;
+    SPI1CONbits.MODE32 = 0;
+    SPI1CONbits.MODE16 = 0;
+    SPI1CONbits.SMP = 0;
+    SPI1CONbits.CKE = 0;
+    SPI1CONbits.SSEN = 0;
+    SPI1CONbits.CKP = 0;
+    SPI1CONbits.MSTEN = 1;
+    SPI1CONbits.DISSDI = 1;
+    SPI1CONbits.STXISEL = 0b01;
+    SPI1CONbits.SRXISEL = 0b11;
+
+    SPI1CON2bits.SPISGNEXT = 0;
+    SPI1CON2bits.FRMERREN = 0;
+    SPI1CON2bits.SPIROVEN = 0;
+    SPI1CON2bits.SPITUREN = 0;
+    SPI1CON2bits.IGNROV = 1;
+    SPI1CON2bits.IGNTUR = 1;
+    SPI1CON2bits.AUDEN = 0;
+
+    RPF1R = 0b0101;*/
+
+    TRISF = 0xFFFD;
+    TRISD = 0xFFFD;
+
+
+
 }
 
 
@@ -132,6 +165,26 @@ void APP_Initialize ( void )
 
 void APP_Tasks ( void )
 {
+    /*while(SPI1STATbits.SPIBUSY != 0)
+    {}
+    SPI1BUF = 0xFF;*/
+    int data[8] = {0,1,1,1,1,1,1,0};
+    int i, b;
+    
+    for(b = 0; b < 16; b++)
+    {
+        for(i = 100; i; i--)
+        {}
+        PORTDbits.RD1 = b % 2;
+        if(b % 2 == 1)
+        {
+            PORTFbits.RF1 = data[b/2];
+        }
+    }
+    for(i = 200 * 1000 * 1000; i; i--)
+    {}
+
+#if 0
     /* Check the application's current state. */
     switch ( appData.state )
     {
@@ -150,6 +203,7 @@ void APP_Tasks ( void )
             break;
         }
     }
+#endif
 }
  
 
