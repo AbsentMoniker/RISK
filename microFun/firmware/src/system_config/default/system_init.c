@@ -60,9 +60,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 /*** DEVCFG0 ***/
 
-#pragma config DEBUG =      OFF
-#pragma config JTAGEN =     ON
-#pragma config ICESEL =     ICS_PGx1
+#pragma config DEBUG =      ON
+#pragma config JTAGEN =     OFF
+#pragma config ICESEL =     ICS_PGx2
 #pragma config TRCEN =      ON
 #pragma config BOOTISA =    MIPS32
 #pragma config FECCCON =    OFF_UNLOCKED
@@ -82,11 +82,11 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #pragma config FCKSM =      CSECME
 #pragma config WDTPS =      PS1048576
 #pragma config WDTSPGM =    STOP
-#pragma config FWDTEN =     ON
+#pragma config FWDTEN =     OFF
 #pragma config WINDIS =     NORMAL
 #pragma config FWDTWINSZ =  WINSZ_25
 #pragma config DMTCNT =     DMT31
-#pragma config FDMTEN =     ON
+#pragma config FDMTEN =     OFF
 
 /*** DEVCFG2 ***/
 
@@ -186,7 +186,6 @@ void SYS_Initialize ( void* data )
     SYS_CLK_Initialize( NULL );
     sysObj.sysDevcon = SYS_DEVCON_Initialize(SYS_DEVCON_INDEX_0, (SYS_MODULE_INIT*)&sysDevconInit);
     SYS_DEVCON_PerformanceConfig(SYS_CLK_SystemFrequencyGet());
-    SYS_DEVCON_JTAGDisable();
     SYS_PORTS_Initialize();
 
     /* Initialize Drivers */

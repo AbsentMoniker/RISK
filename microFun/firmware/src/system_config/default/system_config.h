@@ -71,11 +71,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: System Service Configuration
 // *****************************************************************************
 // *****************************************************************************
-// *****************************************************************************
-/* Common System Service Configuration Options
-*/
-#define SYS_VERSION_STR           "1.03"
-#define SYS_VERSION               10300
 
 // *****************************************************************************
 /* Clock System Service Configuration Options

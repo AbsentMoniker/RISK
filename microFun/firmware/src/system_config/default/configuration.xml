@@ -28,14 +28,6 @@
       <Path>/framework/system/devcon</Path>
     </File>
     <File>
-      <Name>sys_common.h</Name>
-      <Path>/framework/system/common</Path>
-    </File>
-    <File>
-      <Name>sys_module.h</Name>
-      <Path>/framework/system/common</Path>
-    </File>
-    <File>
       <Name>sys_ports.c</Name>
       <Path>/framework/system/ports/src</Path>
     </File>
@@ -76,12 +68,12 @@
     <Template>
       <Name>system_init.c</Name>
       <Path>app/system_config/default</Path>
-      <Checksum>34B0213500A06F3F5AE11653AAAF17FA</Checksum>
+      <Checksum>C9D3EF03416917211436CDBA6467C3B4</Checksum>
     </Template>
     <Template>
       <Name>system_config.h</Name>
       <Path>app/system_config/default</Path>
-      <Checksum>FD0BDC522F1BB6530C7323ABD993E94A</Checksum>
+      <Checksum>5CEA859104045A7CD6AF76EDA47EC418</Checksum>
     </Template>
     <Template>
       <Name>system_definitions.h</Name>
