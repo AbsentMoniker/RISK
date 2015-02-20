@@ -103,10 +103,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #pragma config USERID =     0xffff
 #pragma config FMIIEN =     ON
 #pragma config FETHIO =     ON
-#pragma config PGL1WAY =    ON
-#pragma config PMDL1WAY =   ON
-#pragma config IOL1WAY =    ON
-#pragma config FUSBIDIO =   ON
+#pragma config PGL1WAY =    OFF
+#pragma config PMDL1WAY =   OFF
+#pragma config IOL1WAY =    OFF
+#pragma config FUSBIDIO =   OFF
 
 /*** BF1SEQ0 ***/
 

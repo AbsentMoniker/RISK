@@ -68,7 +68,7 @@
     <Template>
       <Name>system_init.c</Name>
       <Path>app/system_config/default</Path>
-      <Checksum>C9D3EF03416917211436CDBA6467C3B4</Checksum>
+      <Checksum>3DEFD7DDEFBBF84759B42E3A788E3E5A</Checksum>
     </Template>
     <Template>
       <Name>system_config.h</Name>
