@@ -12,6 +12,7 @@
 
 #include "init.h"
 
+
 #define SHORTWAIT() asm volatile ("nop\n nop\n nop\n nop\n nop\n nop")
 
 void msleep(int msecs);
