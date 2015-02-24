@@ -1,21 +1,19 @@
 #include <p32xxxx.h>
 #include "init.h"
 
-inline void systemUnlock()
+static inline void systemUnlock()
 {
-    // disable interrupts
-    asm volatile("di":::"memory");
+    __builtin_disable_interrupts();
 
     SYSKEY = 0x0;
     SYSKEY = 0xAA996655;
     SYSKEY = 0x556699AA;
 }
 
-inline void systemLock()
+static inline void systemLock()
 {
     SYSKEY = 0x0;
-    // enable interrupts
-    asm volatile("ei":::"memory");
+    __builtin_enable_interrupts();
 }
 
 void initClocks()

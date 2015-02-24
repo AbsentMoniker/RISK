@@ -54,7 +54,7 @@ int main(void)
 
 void __ISR(_CHANGE_NOTICE_D_VECTOR, IPL7SOFT) portDisr()
 {
-    if(PORTDbits.RD13)
-        iflag = 1;
-    IFS3bits.CNDIF = 0;
+    if(PORTDbits.RD13)  // If bit changed to 1
+        iflag = 1;      // set flag for main function to see.
+    IFS3bits.CNDIF = 0; // Clear interrupt flag.
 }
