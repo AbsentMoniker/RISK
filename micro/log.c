@@ -9,9 +9,16 @@
 
 #include <stdlib.h>
 
+#ifdef HEAP
 LogEntry * gamelog;
-int gamelogSize;
 int gamelogCapacity;
+int gamelogSize;
+#else
+LogEntry stLog[4000];
+LogEntry * gamelog = stLog;
+int gamelogCapacity = 4000;
+int gamelogSize;
+#endif
 
 void addLogEntry(LogEntry entry)
 {
@@ -21,6 +28,7 @@ void addLogEntry(LogEntry entry)
         return;
     }
 
+#ifdef HEAP
     gamelogCapacity += 2000;
     gamelog = realloc(gamelog, gamelogCapacity);
     if(!gamelog)
@@ -30,6 +38,9 @@ void addLogEntry(LogEntry entry)
         abort();
     }
     gamelog[gamelogSize++] = entry;
+#else
+    abort();
+#endif
 }
 
 void clearLog()
