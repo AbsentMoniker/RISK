@@ -12,10 +12,12 @@
 // and do not change during the course of a game.
 extern int randomTerritories;
 extern int numPlayers;
+extern int multipleDeploy;
 extern CardValueScheme cardValueScheme;
 #define OPTION_NUM_PLAYERS 0
 #define OPTION_CARD_SCHEME 1
 #define OPTION_RANDOM_TERRITORIES 2
+#define OPTION_MULTIPLE_DEPLOY 3
 
 // Global variables holding the current gamestate. These are all things that
 // the display routines need to know about to output information to the LEDs,

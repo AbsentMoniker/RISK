@@ -8,6 +8,17 @@
 // http://www.kent.ac.uk/smsas/personal/odl/riskfaq.htm
 
 #include "gamedata.h"
+
+#ifdef USE_SIMPLE_MAP
+Territory territories[NUM_TERRITORIES] =
+{
+    {  .name="Breadboardia",         .neighbors={ T_CIRCUITUNO, T_CIRCUITTRES },  .cardtype=INFANTRY,  .owner=-1,  .troops=0 },
+    {  .name="Circuit Uno",          .neighbors={ T_CIRCUITDOS, T_BREADBOARDIA }, .cardtype=INFANTRY,  .owner=-1,  .troops=0 },
+    {  .name="Circuit Dos",          .neighbors={ T_CIRCUITTRES, T_CIRCUITUNO },  .cardtype=INFANTRY,  .owner=-1,  .troops=0 },
+    {  .name="Circuit Tres",         .neighbors={ T_BREADBOARDIA, T_CIRCUITDOS }, .cardtype=INFANTRY,  .owner=-1,  .troops=0 },
+};
+Continent continents[NUM_CONTINENTS] = {};
+#else
 Territory territories[NUM_TERRITORIES] =
 {
     {  .name="Alaska",                 .neighbors={ T_NORTHWEST, T_ALBERTA, T_KAMCHATKA, -1, -1, -1},                                             .cardtype=ARTILLERY,  .owner=-1,  .troops=0 },
@@ -62,9 +73,15 @@ Continent continents[NUM_CONTINENTS] =
     { .name="Asia", .firstmember=T_URALS, .members=12, .value=7 },
     { .name="Austrailia", .firstmember=T_INDONESIA, .members=4, .value=2 },
 };
+#endif
 
 const int cardExchangeValues[NUM_EXCHANGE_VALUES] = 
 { 4, 6, 8, 10, 12, 15};
 
+#ifdef USE_SIMPLE_MAP
+const int initialTroops[MAX_PLAYERS + 1] =
+{ 0, 0, 10};
+#else
 const int initialTroops[MAX_PLAYERS + 1] = 
 { 0, 0, 40, 35, 30, 25, 20};
+#endif

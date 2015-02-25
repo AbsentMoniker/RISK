@@ -8,10 +8,13 @@
 #ifndef INIT_H
 #define	INIT_H
 
+void initInterrupts();
 void initClocks();
 void initPorts();
 void initTimers();
 void initSPI();
+void initRNG();
+void seedRNG();
 
 #endif	/* INIT_H */
 
