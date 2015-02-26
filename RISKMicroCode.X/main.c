@@ -14,12 +14,18 @@
 #include "lcd.h"
 #include "gamelogic.h"
 // implement stubs for required game logic in io.h
+#ifdef USE_RANDOM
 int randint(int min, int max)
 {
     unsigned random = RNGNUMGEN1;
     return min + (random % (max - min + 1)); 
 }
-//void setTextDisplay(int line, const char * format, ...) {}
+#else
+int randint(int min, int max)
+{
+    return min;
+}
+#endif
 
 // Making two different writes to the same port in quick succession can cause
 // problems, so call this macro to make sure both writes get through.
@@ -28,6 +34,7 @@ int randint(int min, int max)
 
 void msleep(int msecs);
 void SPIRiskTerritory(int terr);
+void SPIByte(unsigned char byte);
 void buttontest();
 
 int inputflag1, inputflag2, inputflag3;
@@ -51,12 +58,85 @@ int main(void)
 
     while(1)
     {
-        static int terr = 0;
+        //static int terr = 0;
+        
+        //SPIRiskTerritory(terr);
         //SPIRiskTerritory(1);
-        SPIRiskTerritory(terr);
+
+        //if(inputflag3 && PORTFbits.RF8 == 0)
+        //{
+            //static int RNGseeded = 0;
+            //color = 4;
+            //clearLCD();
+            //if(!RNGseeded)
+            //{
+            //    seedRNG();
+            //    RNGseeded = 1;
+            //}
+            //gameInput(ADVANCE);
+        static int digits[10] = {
+        // gfedcba
+        0b00111111, // 0
+        0b00000110, // 1
+        0b01011011, // 2
+        0b01001111, // 3
+        0b01100110, // 4
+        0b01101101, // 5
+        0b01111100, // 6
+        0b00000111, // 7
+        0b01111111, // 8
+        0b01100111, // 9
+    };
+        static int digitsrev[10] = {
+        // gfedcba
+        0b011111100, // 0
+        0b001100000, // 1
+        0b011011010, // 2
+        0b011110010, // 3
+        0b001100110, // 4
+        0b010110110, // 5
+        0b000111110, // 6
+        0b011100000, // 7
+        0b011111110, // 8
+        0b011100110, // 9
+    };
+            static int x = 1;
+            int ones = digitsrev[x % 10];
+            int tens = digitsrev[(x / 10) % 10];
+            
+            //SPIByte(ones);
+            //SPIByte(tens);
+             ones = digits[x % 10];
+             tens = digits[(x / 10) % 10];
+            //SPIByte(ones);
+            //SPIByte(tens);
+            //SPIByte(x % 8);
+            SPIByte(x);
+            SPIByte(x);
+            SPIByte(x);
+            SPIByte(x);
+            SPIByte(x);
+
+            x <<= 1;
+            if(x > 0xFF)
+                x = 1;
+           PORTFbits.RF2 = 1;
+
+    SHORTWAIT();
+    SHORTWAIT();
+    SHORTWAIT();
+    SHORTWAIT();
+    SHORTWAIT();
+    SHORTWAIT();
+    SHORTWAIT();
+    SHORTWAIT();
+
+    PORTFbits.RF2 = 0;
+            //inputflag3 = 0;
+        //}
         //terr = (terr + 1) % NUM_TERRITORIES;
         
-        if(inputflag1 && PORTDbits.RD13 == 0)
+        /*if(inputflag1 && PORTDbits.RD13 == 0)
         {
             //color = 1;
             //clearLCD();
@@ -83,10 +163,11 @@ int main(void)
             gameInput(ADVANCE);
             inputflag3 = 0;
         }
+         */
         //printLCDline(1, "Hello World!");
         //printLCDline(2, "This is Risk");
         //msleep(1000);
-        msleep(100);
+        msleep(1000);
     }
 
     return EXIT_SUCCESS;
@@ -133,18 +214,40 @@ void SPIRiskTerritory(int terr)
     int ones = territories[terr].troops % 10;
     int tens = (territories[terr].troops / 10) % 100;
 
-    while(SPI1STATbits.SPITBE != 1) {}
-    SPI1BUF = digits[ones];
-    while(SPI1STATbits.SPITBE != 1) {}
-    SPI1BUF = (tens? digits[tens] : 0x00);
+    if(terr != 1)
+    {
+        while(SPI1STATbits.SPITBE != 1) {}
+        SPI1BUF = digits[ones];
+        while(SPI1STATbits.SPITBE != 1) {}
+        SPI1BUF = (tens? digits[tens] : 0x00);
+    }
     while(SPI1STATbits.SPITBE != 1) {}
     SPI1BUF = color;
-
+    while(SPI1STATbits.SPITBE != 1) {}
+    
     PORTFbits.RF2 = 1;
-    //PORTFbits.RF2 = 1;
-    //SHORTWAIT();
-    //PORTFbits.RF2 = 0;
 
+    
+    SHORTWAIT();
+    SHORTWAIT();
+    SHORTWAIT();
+    SHORTWAIT();
+    SHORTWAIT();
+    SHORTWAIT();
+    SHORTWAIT();
+    SHORTWAIT();
+
+    PORTFbits.RF2 = 0;
+
+}
+
+void SPIByte(unsigned char byte)
+{
+    while(SPI1STATbits.SPITBE != 1) {}
+    SPI1BUF = byte;
+    while(SPI1STATbits.SPITBE != 1) {}
+
+    
 }
 
 void buttontest()
