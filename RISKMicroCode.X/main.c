@@ -92,7 +92,7 @@ int main(void)
     };
         static int x = 0;
         int ones = digits[x % 10] << 1;
-        int tens = digits[(x / 10) % 10];
+        int tens = digits[(x / 10) % 10] <<1;
 
         //SPIByte(ones);
         //SPIByte(tens);
@@ -103,26 +103,18 @@ int main(void)
         //SPIByte(x % 8);
 
         SPIByte(ones);
-        SPIByte(ones);
-        SPIByte(0xFF);
-        usleep(1);
-        PORTFbits.RF2 = 1;
-        usleep(1);
-        PORTFbits.RF2 = 0;
-        msleep(1000);
-
-        SPIByte(0);
-        SPIByte(0);
-        SPIByte(0);
+        SPIByte(tens);
+        SPIByte((x % 8)*4);
         usleep(1);
         PORTFbits.RF2 = 1;
         usleep(1);
         PORTFbits.RF2 = 0;
         msleep(500);
 
+        
+
          x += 1;
-        if (x > 9)
-            x = 0;
+       
 
     /*
     SHORTWAIT();
