@@ -13,8 +13,6 @@ void initClocks();
 void initPorts();
 void initTimers();
 void initSPI();
-void initRNG();
-void seedRNG();
 
 #endif	/* INIT_H */
 

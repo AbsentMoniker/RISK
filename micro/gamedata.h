@@ -11,6 +11,12 @@
 // Symbolic names for each territory. Much of the game logic code assumes that
 // these cover [0, NUM_TERRITORIES), and the continent structures assume that
 // the each continent's members are consecutive numbers.
+#ifdef USE_SIMPLE_MAP
+#define T_BREADBOARDIA 0
+#define T_CIRCUITUNO 1
+#define T_CIRCUITDOS 2
+#define T_CIRCUITTRES 3
+#else
 #define T_ALASKA 0
 #define T_NORTHWEST 1
 #define T_GREENLAND 2
@@ -53,6 +59,7 @@
 #define T_NEW_GUINEA 39
 #define T_WESTERN_AUSTRAILIA 40
 #define T_EASTERN_AUSTRAILIA 41
+#endif
 
 // Array of every territory, including its current state. This can be thought
 // of as a graph, since every territory knows it neighbors, but we never need

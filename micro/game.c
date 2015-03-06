@@ -15,6 +15,7 @@
 // Global variables
 int numPlayers;
 int randomTerritories;
+int multipleDeploy;
 // cardValueScheme is handled by cards.c
 
 int currentPlayer;
@@ -28,6 +29,7 @@ static State state;
 static int firstPlayer;
 static int territoriesRemaining;
 static int numTroops;
+static int deployTroopsLeft[MAX_PLAYERS];
 static int mustTrade;
 static int needCard;
 static int currentOption;
@@ -108,6 +110,11 @@ void updateText()
                 else
                     setTextDisplay(1, "Select");
             }
+            else if(currentOption == OPTION_MULTIPLE_DEPLOY)
+            {
+                setTextDisplay(0, "Troop deployment");
+                setTextDisplay(1, "%d at a time", multipleDeploy);
+            }
             setTextDisplay(2, "A: Start game");
             setTextDisplay(3, "B: Next option");
             break;
@@ -121,9 +128,17 @@ void updateText()
             if(!confirm)
             {
                 setTextDisplay(0, "Player %d:", currentPlayer);
-                setTextDisplay(1, "Deploy troops");
+                if(multipleDeploy > 1)
+                {
+                    setTextDisplay(1, "Deploy %d troop%s",
+                            numTroops, numTroops == 1? "" : "s");
+                }
+                else
+                {
+                    setTextDisplay(1, "Deploy troop");
+                }
                 setTextDisplay(2, "A: Place troop");
-                setTextDisplay(3, "%d troops left", numTroops);
+                setTextDisplay(3, "%d troops left", deployTroopsLeft[currentPlayer]);
             }
             else
             {
@@ -263,6 +278,15 @@ void chooseOptions(Input input)
         if(input == NEXT || input == PREVIOUS)
             randomTerritories = !randomTerritories;
         else if(input == CANCEL)
+            currentOption = OPTION_MULTIPLE_DEPLOY;
+    }
+    else if(currentOption == OPTION_MULTIPLE_DEPLOY)
+    {
+        if(input == NEXT)
+            multipleDeploy = (multipleDeploy == 5? 1 : multipleDeploy + 2);
+        else if(input == PREVIOUS)
+            multipleDeploy = (multipleDeploy == 1? 5 : multipleDeploy - 2);
+        else if(input == CANCEL)
             currentOption = OPTION_CARD_SCHEME;
     }
     else if(currentOption == OPTION_CARD_SCHEME)
@@ -290,14 +314,15 @@ void selectTerritories(Input input)
         territories[destination].owner = currentPlayer;
         territories[destination].troops = 1;
         destination = -1;
+        deployTroopsLeft[currentPlayer] -= 1;
 
         currentPlayer += 1;
         if(currentPlayer == numPlayers)
             currentPlayer = 0;
 
         territoriesRemaining -= 1;
-        if(currentPlayer == firstPlayer)
-            numTroops -= 1;
+        //if(currentPlayer == firstPlayer)
+        //    numTroops -= 1;
 
         // Changing the state here after random allocation would cause
         // recursion, so the function for the INIT state handles the state
@@ -321,17 +346,27 @@ void deployTroops(Input input)
             return;
 
         territories[destination].troops += 1;
-        destination = -1;
-
-        currentPlayer += 1;
-        if(currentPlayer == numPlayers)
-            currentPlayer = 0;
-
-        if(currentPlayer == firstPlayer)
-            numTroops -= 1;
+        deployTroopsLeft[currentPlayer] -= 1;
+        numTroops -= 1;
 
         if(numTroops == 0)
-            confirm = 1;
+        {
+            destination = -1;
+
+            for(int i = 0; i < numPlayers; i++)
+            {
+                currentPlayer += 1;
+                if(currentPlayer == numPlayers)
+                    currentPlayer = 0;
+                if(deployTroopsLeft[currentPlayer] != 0)
+                    break;
+            }
+
+            if(deployTroopsLeft[currentPlayer] == 0)
+                confirm = 1;
+            else
+                numTroops = min(deployTroopsLeft[currentPlayer], multipleDeploy);
+        }
     }
     else if(input == CANCEL)
     {
@@ -627,6 +662,7 @@ void changeState(State newstate)
         numPlayers = 2;
         cardValueScheme = INCREASING;
         randomTerritories = 1;
+        multipleDeploy = 1;
         currentOption = OPTION_NUM_PLAYERS; 
 
         currentPlayer = -1;
@@ -653,7 +689,14 @@ void changeState(State newstate)
     }
     
     if(state == SELECT)
-        numTroops = initialTroops[numPlayers];
+    {
+        for(int i = 0; i < numPlayers; i++)
+            deployTroopsLeft[i] = initialTroops[numPlayers];
+    }
+    else if(state == DEPLOY)
+    {
+        numTroops = min(deployTroopsLeft[currentPlayer], multipleDeploy);
+    }
     else if(state == REINFORCE)
     {
         if(mustTrade)

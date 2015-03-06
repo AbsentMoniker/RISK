@@ -4,8 +4,20 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <logicalFolder name="f1" displayName="gamelogic" projectFiles="true">
+        <itemPath>../micro/cards.h</itemPath>
+        <itemPath>../micro/game.h</itemPath>
+        <itemPath>../micro/gamedata.h</itemPath>
+        <itemPath>../micro/io.h</itemPath>
+        <itemPath>../micro/limits.h</itemPath>
+        <itemPath>../micro/log.h</itemPath>
+        <itemPath>../micro/territory.h</itemPath>
+        <itemPath>../micro/types.h</itemPath>
+        <itemPath>../micro/util.h</itemPath>
+      </logicalFolder>
       <itemPath>init.h</itemPath>
       <itemPath>gamelogic.h</itemPath>
+      <itemPath>lcd.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -14,16 +26,16 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <logicalFolder name="RISKMicroCode.X"
-                     displayName="RISKMicroCode.X"
-                     projectFiles="true">
-        <logicalFolder name="debug" displayName="debug" projectFiles="true">
-          <logicalFolder name="default" displayName="default" projectFiles="true">
-          </logicalFolder>
-        </logicalFolder>
-        <itemPath>main.c</itemPath>
-        <itemPath>init.c</itemPath>
+      <logicalFolder name="f1" displayName="gamelogic" projectFiles="true">
+        <itemPath>../micro/cards.c</itemPath>
+        <itemPath>../micro/game.c</itemPath>
+        <itemPath>../micro/gamedata.c</itemPath>
+        <itemPath>../micro/log.c</itemPath>
+        <itemPath>../micro/territory.c</itemPath>
       </logicalFolder>
+      <itemPath>init.c</itemPath>
+      <itemPath>main.c</itemPath>
+      <itemPath>lcd.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -86,12 +98,13 @@
         <property key="place-data-into-section" value="false"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
-        <property key="preprocessor-macros" value=""/>
+        <property key="preprocessor-macros" value="USE_SIMPLE_MAP;USE_RANDOM"/>
         <property key="strict-ansi" value="false"/>
         <property key="support-ansi" value="false"/>
         <property key="use-cci" value="false"/>
         <property key="use-iar" value="false"/>
         <property key="use-indirect-calls" value="false"/>
+        <appendMe value="-std=gnu99"/>
       </C32>
       <C32-AR>
         <property key="additional-options-chop-files" value="false"/>
@@ -229,6 +242,7 @@
         <property key="UART5" value="true"/>
         <property key="UART6" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="false"/>
