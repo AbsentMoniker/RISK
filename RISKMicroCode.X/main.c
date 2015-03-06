@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   main.c
  * Author: jacob
  *
@@ -18,7 +18,7 @@
 int randint(int min, int max)
 {
     unsigned random = RNGNUMGEN1;
-    return min + (random % (max - min + 1)); 
+    return min + (random % (max - min + 1));
 }
 #else
 int randint(int min, int max)
@@ -62,7 +62,7 @@ int main(void)
     while(1)
     {
         //static int terr = 0;
-        
+
         //SPIRiskTerritory(terr);
         //SPIRiskTerritory(1);
 
@@ -78,7 +78,7 @@ int main(void)
             //}
             //gameInput(ADVANCE);
         static int digits[10] = {
-        // gfedcba
+        //hgfedcba
         0b00111111, // 0
         0b00000110, // 1
         0b01011011, // 2
@@ -90,46 +90,39 @@ int main(void)
         0b01111111, // 8
         0b01100111, // 9
     };
-        static int digitsrev[10] = {
-        0b11111100, // 0
-        0b01100000, // 1
-        0b11011010, // 2
-        0b11110010, // 3
-        0b01100110, // 4
-        0b10110110, // 5
-        0b00111110, // 6
-        0b11100000, // 7
-        0b11111110, // 8
-        0b11100110, // 9
-    };
-            static int x = 1;
-            int ones = digitsrev[x % 10];
-            int tens = digitsrev[(x / 10) % 10];
-            
-            //SPIByte(ones);
-            //SPIByte(tens);
-            //ones = digits[x % 10];
-            //tens = digits[(x / 10) % 10];
-            //SPIByte(ones);
-            //SPIByte(tens);
-            //SPIByte(x % 8);
-            
-            SPIByte(x);
-            SPIByte(x);
-            SPIByte(x);
-            SPIByte(x);
-            SPIByte(x);
-            SPIByte(x);
+        static int x = 0;
+        int ones = digits[x % 10] << 1;
+        int tens = digits[(x / 10) % 10];
 
-            x = (x + 1) % 8;
-            //x <<= 1;
-            //if(x > 0xFF)
-            //    x = 1;
+        //SPIByte(ones);
+        //SPIByte(tens);
+        //ones = digits[x % 10];
+        //tens = digits[(x / 10) % 10];
+        //SPIByte(ones);
+        //SPIByte(tens);
+        //SPIByte(x % 8);
 
-            usleep(1);
+        SPIByte(ones);
+        SPIByte(ones);
+        SPIByte(0xFF);
+        usleep(1);
+        PORTFbits.RF2 = 1;
+        usleep(1);
+        PORTFbits.RF2 = 0;
+        msleep(1000);
 
-    PORTFbits.RF2 = 1;
-    usleep(1);
+        SPIByte(0);
+        SPIByte(0);
+        SPIByte(0);
+        usleep(1);
+        PORTFbits.RF2 = 1;
+        usleep(1);
+        PORTFbits.RF2 = 0;
+        msleep(500);
+
+         x += 1;
+        if (x > 9)
+            x = 0;
 
     /*
     SHORTWAIT();
@@ -141,11 +134,11 @@ int main(void)
     SHORTWAIT();
     SHORTWAIT();
 */
-    PORTFbits.RF2 = 0;
+
             //inputflag3 = 0;
         //}
         //terr = (terr + 1) % NUM_TERRITORIES;
-        
+
         /*if(inputflag1 && PORTDbits.RD13 == 0)
         {
             //color = 1;
@@ -177,7 +170,7 @@ int main(void)
         //printLCDline(1, "Hello World!");
         //printLCDline(2, "This is Risk");
         //msleep(1000);
-        msleep(1000);
+
     }
 
     return EXIT_SUCCESS;
@@ -206,16 +199,16 @@ void SPIRiskTerritory(int terr)
 {
     static int digits[10] = {
         // gfedcba
-        0b00111111, // 0
-        0b00000110, // 1
-        0b01011011, // 2
-        0b01001111, // 3
-        0b01100110, // 4
-        0b01101101, // 5
-        0b01111100, // 6
-        0b00000111, // 7
-        0b01111111, // 8
-        0b01100111, // 9
+        0b01111110, // 0
+        0b00001100, // 1
+        0b10110110, // 2
+        0b10011110, // 3
+        0b11001100, // 4
+        0b11011010, // 5
+        0b11111000, // 6
+        0b00001110, // 7
+        0b11111110, // 8
+        0b11001110, // 9
     };
 
     color = territories[terr].owner + 1;
@@ -236,11 +229,11 @@ void SPIRiskTerritory(int terr)
     while(SPI1STATbits.SPITBE != 1) {}
 
     usleep(1);
-    
+
     PORTFbits.RF2 = 0;
 
     usleep(1000);
-    
+
     /*SHORTWAIT();
     SHORTWAIT();
     SHORTWAIT();
@@ -260,7 +253,7 @@ void SPIByte(unsigned char byte)
     SPI1BUF = byte;
     while(SPI1STATbits.SPITBE != 1) {}
 
-    
+
 }
 
 void buttontest()

@@ -148,7 +148,7 @@ void initSPI()
 {
     // Let's configure an SPI!
     SPI1CON = 0;           // SPI off
-    SPI1BRG = 0;         // baud rate
+    SPI1BRG = 3;         // baud rate
     SPI1STATCLR = 0x40;    // clear status
     RPF1R = 0b0101;        // SPI data out on F1
     SPI1CONbits.MSTEN = 1; // master mode
