@@ -7,3 +7,5 @@
 micro/gui/risk
 # harmony build files
 dist
+# useless mplab stuff
+**/Makefile-genesis.properties

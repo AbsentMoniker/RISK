@@ -33,6 +33,7 @@ int randint(int min, int max)
 #define SHORTWAIT() asm volatile ("nop\n nop\n nop\n nop\n nop\n nop")
 
 void msleep(int msecs);
+void usleep(int usecs);
 void SPIRiskTerritory(int terr);
 void SPIByte(unsigned char byte);
 void buttontest();
@@ -55,6 +56,8 @@ int main(void)
 
     changeState(INIT);
     updateText();
+
+    PORTFbits.RF2 = 0;
 
     while(1)
     {
@@ -88,17 +91,16 @@ int main(void)
         0b01100111, // 9
     };
         static int digitsrev[10] = {
-        // gfedcba
-        0b011111100, // 0
-        0b001100000, // 1
-        0b011011010, // 2
-        0b011110010, // 3
-        0b001100110, // 4
-        0b010110110, // 5
-        0b000111110, // 6
-        0b011100000, // 7
-        0b011111110, // 8
-        0b011100110, // 9
+        0b11111100, // 0
+        0b01100000, // 1
+        0b11011010, // 2
+        0b11110010, // 3
+        0b01100110, // 4
+        0b10110110, // 5
+        0b00111110, // 6
+        0b11100000, // 7
+        0b11111110, // 8
+        0b11100110, // 9
     };
             static int x = 1;
             int ones = digitsrev[x % 10];
@@ -106,31 +108,39 @@ int main(void)
             
             //SPIByte(ones);
             //SPIByte(tens);
-             ones = digits[x % 10];
-             tens = digits[(x / 10) % 10];
+            //ones = digits[x % 10];
+            //tens = digits[(x / 10) % 10];
             //SPIByte(ones);
             //SPIByte(tens);
             //SPIByte(x % 8);
+            
+            SPIByte(x);
             SPIByte(x);
             SPIByte(x);
             SPIByte(x);
             SPIByte(x);
             SPIByte(x);
 
-            x <<= 1;
-            if(x > 0xFF)
-                x = 1;
-           PORTFbits.RF2 = 1;
+            x = (x + 1) % 8;
+            //x <<= 1;
+            //if(x > 0xFF)
+            //    x = 1;
 
-    SHORTWAIT();
-    SHORTWAIT();
-    SHORTWAIT();
-    SHORTWAIT();
-    SHORTWAIT();
-    SHORTWAIT();
-    SHORTWAIT();
-    SHORTWAIT();
+            usleep(1);
 
+    PORTFbits.RF2 = 1;
+    usleep(1);
+
+    /*
+    SHORTWAIT();
+    SHORTWAIT();
+    SHORTWAIT();
+    SHORTWAIT();
+    SHORTWAIT();
+    SHORTWAIT();
+    SHORTWAIT();
+    SHORTWAIT();
+*/
     PORTFbits.RF2 = 0;
             //inputflag3 = 0;
         //}
@@ -224,20 +234,23 @@ void SPIRiskTerritory(int terr)
     while(SPI1STATbits.SPITBE != 1) {}
     SPI1BUF = color;
     while(SPI1STATbits.SPITBE != 1) {}
-    
-    PORTFbits.RF2 = 1;
 
+    usleep(1);
     
-    SHORTWAIT();
-    SHORTWAIT();
-    SHORTWAIT();
-    SHORTWAIT();
-    SHORTWAIT();
-    SHORTWAIT();
-    SHORTWAIT();
-    SHORTWAIT();
-
     PORTFbits.RF2 = 0;
+
+    usleep(1000);
+    
+    /*SHORTWAIT();
+    SHORTWAIT();
+    SHORTWAIT();
+    SHORTWAIT();
+    SHORTWAIT();
+    SHORTWAIT();
+    SHORTWAIT();
+    SHORTWAIT();*/
+
+    PORTFbits.RF2 = 1;
 
 }
 
