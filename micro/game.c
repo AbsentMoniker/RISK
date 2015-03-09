@@ -321,8 +321,6 @@ void selectTerritories(Input input)
             currentPlayer = 0;
 
         territoriesRemaining -= 1;
-        //if(currentPlayer == firstPlayer)
-        //    numTroops -= 1;
 
         // Changing the state here after random allocation would cause
         // recursion, so the function for the INIT state handles the state
@@ -372,6 +370,7 @@ void deployTroops(Input input)
     {
         if(confirm)
         {
+            currentPlayer = firstPlayer;
             for(int i = 0; i < NUM_TERRITORIES; i++)
                 logReinforce(territories[i].owner, i, territories[i].troops);
             changeState(REINFORCE);
