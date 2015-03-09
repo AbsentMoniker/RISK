@@ -27,7 +27,7 @@
 
 // Number of territories/continents on the standard board.
 #ifdef USE_SIMPLE_MAP
-#define NUM_TERRITORIES 4
+#define NUM_TERRITORIES 2
 #define NUM_CONTINENTS 0
 #else
 #define NUM_TERRITORIES 42

@@ -12,10 +12,8 @@
 #ifdef USE_SIMPLE_MAP
 Territory territories[NUM_TERRITORIES] =
 {
-    {  .name="Breadboardia",         .neighbors={ T_CIRCUITUNO, T_CIRCUITTRES },  .cardtype=INFANTRY,  .owner=-1,  .troops=0 },
-    {  .name="Circuit Uno",          .neighbors={ T_CIRCUITDOS, T_BREADBOARDIA }, .cardtype=INFANTRY,  .owner=-1,  .troops=0 },
-    {  .name="Circuit Dos",          .neighbors={ T_CIRCUITTRES, T_CIRCUITUNO },  .cardtype=INFANTRY,  .owner=-1,  .troops=0 },
-    {  .name="Circuit Tres",         .neighbors={ T_BREADBOARDIA, T_CIRCUITDOS }, .cardtype=INFANTRY,  .owner=-1,  .troops=0 },
+    {  .name="Breadboardia",         .neighbors={ T_CIRCUITLAND, -1},  .cardtype=INFANTRY,  .owner=-1,  .troops=0 },
+    {  .name="Circuitland",          .neighbors={ T_BREADBOARDIA, -1}, .cardtype=INFANTRY,  .owner=-1,  .troops=0 },
 };
 Continent continents[NUM_CONTINENTS] = {};
 #else
@@ -80,7 +78,7 @@ const int cardExchangeValues[NUM_EXCHANGE_VALUES] =
 
 #ifdef USE_SIMPLE_MAP
 const int initialTroops[MAX_PLAYERS + 1] =
-{ 0, 0, 10};
+{ 0, 0, 6};
 #else
 const int initialTroops[MAX_PLAYERS + 1] = 
 { 0, 0, 40, 35, 30, 25, 20};

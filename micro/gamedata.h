@@ -13,9 +13,7 @@
 // the each continent's members are consecutive numbers.
 #ifdef USE_SIMPLE_MAP
 #define T_BREADBOARDIA 0
-#define T_CIRCUITUNO 1
-#define T_CIRCUITDOS 2
-#define T_CIRCUITTRES 3
+#define T_CIRCUITLAND 1
 #else
 #define T_ALASKA 0
 #define T_NORTHWEST 1

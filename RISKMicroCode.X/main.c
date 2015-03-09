@@ -35,11 +35,8 @@ int randint(int min, int max)
 void msleep(int msecs);
 void usleep(int usecs);
 void SPIRiskTerritory(int terr);
-void SPIByte(unsigned char byte);
-void buttontest();
 
 int inputflag1, inputflag2, inputflag3;
-int color = 0;
 
 int main(void)
 {
@@ -53,7 +50,6 @@ int main(void)
     startLCD();
 
 
-
     changeState(INIT);
     updateText();
 
@@ -61,107 +57,33 @@ int main(void)
 
     while(1)
     {
-        //static int terr = 0;
+        SPIRiskTerritory(0);
+        SPIRiskTerritory(1);
 
-        //SPIRiskTerritory(terr);
-        //SPIRiskTerritory(1);
-
-        //if(inputflag3 && PORTFbits.RF8 == 0)
-        //{
-            //static int RNGseeded = 0;
-            //color = 4;
-            //clearLCD();
-            //if(!RNGseeded)
-            //{
-            //    seedRNG();
-            //    RNGseeded = 1;
-            //}
-            //gameInput(ADVANCE);
-        static int digits[10] = {
-        //hgfedcba
-        0b00111111, // 0
-        0b00000110, // 1
-        0b01011011, // 2
-        0b01001111, // 3
-        0b01100110, // 4
-        0b01101101, // 5
-        0b01111100, // 6
-        0b00000111, // 7
-        0b01111111, // 8
-        0b01100111, // 9
-    };
-        static int x = 0;
-        int ones = digits[x % 10] << 1;
-        int tens = digits[(x / 10) % 10] <<1;
-
-        //SPIByte(ones);
-        //SPIByte(tens);
-        //ones = digits[x % 10];
-        //tens = digits[(x / 10) % 10];
-        //SPIByte(ones);
-        //SPIByte(tens);
-        //SPIByte(x % 8);
-
-        SPIByte(ones);
-        SPIByte(tens);
-        SPIByte((x % 8)*4);
-        usleep(1);
-        PORTFbits.RF2 = 1;
-        usleep(1);
-        PORTFbits.RF2 = 0;
-        msleep(500);
-
-        
-
-         x += 1;
-       
-
-    /*
-    SHORTWAIT();
-    SHORTWAIT();
-    SHORTWAIT();
-    SHORTWAIT();
-    SHORTWAIT();
-    SHORTWAIT();
-    SHORTWAIT();
-    SHORTWAIT();
-*/
-
-            //inputflag3 = 0;
-        //}
-        //terr = (terr + 1) % NUM_TERRITORIES;
-
-        /*if(inputflag1 && PORTDbits.RD13 == 0)
-        {
-            //color = 1;
-            //clearLCD();
-            gameInput(CANCEL);
-            inputflag1 = 0;
-        }
-        if(inputflag2 && PORTAbits.RA7 == 0)
-        {
-            //color = 2;
-            //clearLCD();
-            gameInput(NEXT);
-            inputflag2 = 0;
-        }
         if(inputflag3 && PORTFbits.RF8 == 0)
         {
             static int RNGseeded = 0;
-            //color = 4;
-            //clearLCD();
+
             if(!RNGseeded)
             {
                 seedRNG();
                 RNGseeded = 1;
             }
             gameInput(ADVANCE);
+
             inputflag3 = 0;
         }
-         */
-        //printLCDline(1, "Hello World!");
-        //printLCDline(2, "This is Risk");
-        //msleep(1000);
+        if(inputflag1 && PORTDbits.RD13 == 0)
+        {
+            gameInput(CANCEL);
+            inputflag1 = 0;
+        }
+        if(inputflag2 && PORTAbits.RA7 == 0)
+        {
+            gameInput(NEXT);
+            inputflag2 = 0;
+        }
+        msleep(50);
 
     }
 
@@ -190,7 +112,7 @@ void usleep(int usecs)
 void SPIRiskTerritory(int terr)
 {
     static int digits[10] = {
-        // gfedcba
+        //gfedcba
         0b01111110, // 0
         0b00001100, // 1
         0b10110110, // 2
@@ -203,19 +125,17 @@ void SPIRiskTerritory(int terr)
         0b11001110, // 9
     };
 
-    color = territories[terr].owner + 1;
+    int color = territories[terr].owner + 1;
     if(destination == terr && TMR2 > 390625/2)
         color = 7;
     int ones = territories[terr].troops % 10;
     int tens = (territories[terr].troops / 10) % 100;
 
-    if(terr != 1)
-    {
-        while(SPI1STATbits.SPITBE != 1) {}
-        SPI1BUF = digits[ones];
-        while(SPI1STATbits.SPITBE != 1) {}
-        SPI1BUF = (tens? digits[tens] : 0x00);
-    }
+ 
+    while(SPI1STATbits.SPITBE != 1) {}
+    SPI1BUF = digits[ones];
+    while(SPI1STATbits.SPITBE != 1) {}
+    SPI1BUF = (tens? digits[tens] : 0x00);
     while(SPI1STATbits.SPITBE != 1) {}
     SPI1BUF = color;
     while(SPI1STATbits.SPITBE != 1) {}
@@ -224,37 +144,10 @@ void SPIRiskTerritory(int terr)
 
     PORTFbits.RF2 = 0;
 
-    usleep(1000);
-
-    /*SHORTWAIT();
-    SHORTWAIT();
-    SHORTWAIT();
-    SHORTWAIT();
-    SHORTWAIT();
-    SHORTWAIT();
-    SHORTWAIT();
-    SHORTWAIT();*/
+    usleep(1);
 
     PORTFbits.RF2 = 1;
 
-}
-
-void SPIByte(unsigned char byte)
-{
-    while(SPI1STATbits.SPITBE != 1) {}
-    SPI1BUF = byte;
-    while(SPI1STATbits.SPITBE != 1) {}
-
-
-}
-
-void buttontest()
-{
-    //unsigned s1 = PORTDbits.RD13;
-    //unsigned s2 = PORTFbits.RF8;
-    //PORTAbits.RA1 = s1;
-    //SHORTWAIT();
-    //PORTAbits.RA0 = s2;
 }
 
 // Middle button
