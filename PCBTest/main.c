@@ -16,7 +16,7 @@
 // Making two different writes to the same port in quick succession can cause
 // problems, so call this macro to make sure both writes get through.
 // eg: PORTAbits.RA0 = 1; SHORTWAIT(); PORTAbits.RA1 = 1;
-#define SHORTWAIT() asm volatile ("nop\n nop\n nop\n nop\n nop\n nop")
+#define SHORTWAIT() asm volatile ("nop\n nop\n nop\n nop\n nop\n nop":::"memory")
 
 void msleep(int msecs);
 void usleep(int usecs);
@@ -65,7 +65,7 @@ int main(void)
         SPIByte((x % 8) << 2);
         usleep(1);
         PORTFbits.RF2 = 1;
-        usleep(1);
+        SHORTWAIT();
         PORTFbits.RF2 = 0;
         msleep(500);
 

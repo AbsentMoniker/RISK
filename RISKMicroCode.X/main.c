@@ -83,7 +83,7 @@ int main(void)
             gameInput(NEXT);
             inputflag2 = 0;
         }
-        msleep(50);
+        msleep(20);
 
     }
 
@@ -124,10 +124,18 @@ void SPIRiskTerritory(int terr)
         0b11111110, // 8
         0b11001110, // 9
     };
+    const static int
+            tmr1_4 = 390625 / 4,
+            tmr1_2 = 390625 / 2,
+            tmr3_4 = 390625 * 3 / 4;
 
     int color = territories[terr].owner + 1;
-    if(destination == terr && TMR2 > 390625/2)
+    if((source == terr && (TMR2 < tmr1_4 || TMR2 > tmr3_4)) ||
+            (destination == terr && TMR2 > tmr1_2))
+    {
         color = 7;
+    }
+    
     int ones = territories[terr].troops % 10;
     int tens = (territories[terr].troops / 10) % 100;
 
@@ -137,7 +145,7 @@ void SPIRiskTerritory(int terr)
     while(SPI1STATbits.SPITBE != 1) {}
     SPI1BUF = (tens? digits[tens] : 0x00);
     while(SPI1STATbits.SPITBE != 1) {}
-    SPI1BUF = color;
+    SPI1BUF = color << 2;
     while(SPI1STATbits.SPITBE != 1) {}
 
     usleep(1);

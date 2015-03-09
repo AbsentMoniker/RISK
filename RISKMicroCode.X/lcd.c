@@ -20,9 +20,12 @@ void usleep(int msecs);
 
 void startLCD()
 {
-    LCD_CLK = 1; // hold clock high
-    SHORTWAIT();
+    msleep(2); // make sure LCD has a chance to power up
+
     LCD_RW = 0;  // writing
+    SHORTWAIT();
+    LCD_CLK = 1; // hold clock high
+    
     msleep(1);
     sendLCDcmd(LCDCMD_ON);
     sendLCDcmd(LCDCMD_TWOLINE);
