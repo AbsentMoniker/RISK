@@ -13,6 +13,7 @@
 #include "init.h"
 #include "lcd.h"
 #include "gamelogic.h"
+
 // implement stubs for required game logic in io.h
 #ifdef USE_RANDOM
 int randint(int min, int max)
@@ -35,6 +36,7 @@ int randint(int min, int max)
 void msleep(int msecs);
 void usleep(int usecs);
 void SPIRiskTerritory(int terr);
+void SPIblank();
 
 int inputflag1, inputflag2, inputflag3;
 
@@ -59,6 +61,9 @@ int main(void)
     {
         SPIRiskTerritory(0);
         SPIRiskTerritory(1);
+        usleep(1000);
+        SPIblank();
+        SPIblank();
 
         if(inputflag3 && PORTFbits.RF8 == 0)
         {
@@ -83,7 +88,7 @@ int main(void)
             gameInput(NEXT);
             inputflag2 = 0;
         }
-        msleep(20);
+        msleep(5);
 
     }
 
@@ -124,13 +129,10 @@ void SPIRiskTerritory(int terr)
         0b11111110, // 8
         0b11001110, // 9
     };
-    const static int
-            tmr1_4 = 390625 / 4,
-            tmr1_2 = 390625 / 2,
-            tmr3_4 = 390625 * 3 / 4;
+    const static int tmr1_2 = 390625 / 2;
 
     int color = territories[terr].owner + 1;
-    if((source == terr && (TMR2 < tmr1_4 || TMR2 > tmr3_4)) ||
+    if((source == terr && TMR2 < tmr1_2) ||
             (destination == terr && TMR2 > tmr1_2))
     {
         color = 7;
@@ -146,7 +148,10 @@ void SPIRiskTerritory(int terr)
     SPI1BUF = (tens? digits[tens] : 0x00);
     while(SPI1STATbits.SPITBE != 1) {}
     SPI1BUF = color << 2;
+
     while(SPI1STATbits.SPITBE != 1) {}
+
+
 
     usleep(1);
 
@@ -156,6 +161,21 @@ void SPIRiskTerritory(int terr)
 
     PORTFbits.RF2 = 1;
 
+}
+
+void SPIblank()
+{
+    SPI1BUF = 0;
+    while(SPI1STATbits.SPITBE != 1) {}
+    SPI1BUF = 0;
+    while(SPI1STATbits.SPITBE != 1) {}
+    SPI1BUF = 0;
+    while(SPI1STATbits.SPITBE != 1) {}
+
+    usleep(1);
+    PORTFbits.RF2 = 0;
+    usleep(1);
+    PORTFbits.RF2 = 1;
 }
 
 // Middle button

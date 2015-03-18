@@ -5,15 +5,15 @@
                    displayName="Header Files"
                    projectFiles="true">
       <logicalFolder name="f1" displayName="gamelogic" projectFiles="true">
-        <itemPath>../micro/cards.h</itemPath>
-        <itemPath>../micro/game.h</itemPath>
-        <itemPath>../micro/gamedata.h</itemPath>
-        <itemPath>../micro/io.h</itemPath>
-        <itemPath>../micro/limits.h</itemPath>
-        <itemPath>../micro/log.h</itemPath>
-        <itemPath>../micro/territory.h</itemPath>
-        <itemPath>../micro/types.h</itemPath>
-        <itemPath>../micro/util.h</itemPath>
+        <itemPath>../game/gamedata.h</itemPath>
+        <itemPath>../game/game.h</itemPath>
+        <itemPath>../game/cards.h</itemPath>
+        <itemPath>../game/io.h</itemPath>
+        <itemPath>../game/limits.h</itemPath>
+        <itemPath>../game/log.h</itemPath>
+        <itemPath>../game/territory.h</itemPath>
+        <itemPath>../game/types.h</itemPath>
+        <itemPath>../game/util.h</itemPath>
       </logicalFolder>
       <itemPath>init.h</itemPath>
       <itemPath>gamelogic.h</itemPath>
@@ -27,11 +27,11 @@
                    displayName="Source Files"
                    projectFiles="true">
       <logicalFolder name="f1" displayName="gamelogic" projectFiles="true">
-        <itemPath>../micro/cards.c</itemPath>
-        <itemPath>../micro/game.c</itemPath>
-        <itemPath>../micro/gamedata.c</itemPath>
-        <itemPath>../micro/log.c</itemPath>
-        <itemPath>../micro/territory.c</itemPath>
+        <itemPath>../game/cards.c</itemPath>
+        <itemPath>../game/game.c</itemPath>
+        <itemPath>../game/gamedata.c</itemPath>
+        <itemPath>../game/log.c</itemPath>
+        <itemPath>../game/territory.c</itemPath>
       </logicalFolder>
       <itemPath>init.c</itemPath>
       <itemPath>main.c</itemPath>
@@ -46,6 +46,7 @@
   <sourceRootList>
     <Elem>.</Elem>
     <Elem>../micro</Elem>
+    <Elem>../game</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
