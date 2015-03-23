@@ -51,39 +51,47 @@ void initInterrupts()
     // why this is configurable is beyond me
     PRISS = 0x76543210;
 
-    // Timer 4/5 interrupts
-    //IFS0bits.T5IF = 0;
-    //IEC0bits.T5IE = 1;
-    //IPC6bits.T5IP = 7;
-    //IPC6bits.T5IS = 0;
+    // Timer 2 interrupts
+    // Interrupt every 2 ms, priority 2.0
+    IFS0bits.T2IF = 0;
+    IEC0bits.T2IE = 1;
+    IPC2bits.T2IP = 2;
+    IPC2bits.T2IS = 0;
+
+    // Timer 3 interrupts
+    // Interrupt every 1 ms, priority 3.0
+    IFS0bits.T3IF = 0;
+    IEC0bits.T3IE = 1;
+    IPC3bits.T3IP = 3;
+    IPC3bits.T3IS = 0;
 
     // Port A, D, F change interrupts enabled with priority 7.0
-    IFS3bits.CNAIF = 0;
-    IEC3bits.CNAIE = 1;
-    IPC29bits.CNAIP = 7;
-    IPC29bits.CNAIS = 0;
+    //IFS3bits.CNAIF = 0;
+    //IEC3bits.CNAIE = 1;
+    //IPC29bits.CNAIP = 7;
+    //IPC29bits.CNAIS = 0;
 
-    IFS3bits.CNDIF = 0;
-    IEC3bits.CNDIE = 1;
-    IPC30bits.CNDIP = 7;
-    IPC30bits.CNDIS = 0;
+    //IFS3bits.CNDIF = 0;
+    //IEC3bits.CNDIE = 1;
+    //IPC30bits.CNDIP = 7;
+    //IPC30bits.CNDIS = 0;
 
-    IFS3bits.CNFIF = 0;
-    IEC3bits.CNFIE = 1;
-    IPC30bits.CNFIP = 7;
-    IPC30bits.CNFIS = 0;
+    //IFS3bits.CNFIF = 0;
+    //IEC3bits.CNFIE = 1;
+    //IPC30bits.CNFIP = 7;
+    //IPC30bits.CNFIS = 0;
 
 
     // enable change interrupt on A7, D13, F8
-    CNCONAbits.ON = 1;
-    CNENAbits.CNIEA7 = 1;
-    CNPUAbits.CNPUA7 = 1;
-    CNCONDbits.ON = 1;
-    CNENDbits.CNIED13 = 1;
-    CNPUDbits.CNPUD13 = 1;
-    CNCONFbits.ON = 1;
-    CNENFbits.CNIEF8 = 1;
-    CNPUFbits.CNPUF8 = 1;
+    //CNCONAbits.ON = 1;
+    //CNENAbits.CNIEA7 = 1;
+    //CNPUAbits.CNPUA7 = 1;
+    //CNCONDbits.ON = 1;
+    //CNENDbits.CNIED13 = 1;
+    //CNPUDbits.CNPUD13 = 1;
+    //CNCONFbits.ON = 1;
+    //CNENFbits.CNIEF8 = 1;
+    //CNPUFbits.CNPUF8 = 1;
 
     INTCONbits.MVEC = 1;
 
@@ -128,25 +136,59 @@ void initPorts()
 
 void initTimers()
 {
-    // Let's configure a timer!
-    T4CON = 0;
-    T5CON = 0;
-    T4CONbits.TCS = 0;       // internal oscillator
-    T4CONbits.T32 = 1;       // 32-bit timer
-    T4CONbits.TCKPS = 0b110; // 1:64 pre-scale
-    PR4 = 0xFFFFFFFF;        // maximum period
+    // ----- TIMER 1 -----
+    // Used to provide short, precise waits for the usleep and msleep functions
+    // which are used mostly in the LCD driver.
+    // Will be started when a wait is called for.
+    T1CON = 0;
+    T1CONbits.TCKPS = 0b10; // 1:64 prescale = 0.64us increments
+                            // 0.64us * 0xFFFF = 41.9ms maximum
+    PR1 = 0xFFFF; // maximum period
+    TMR1 = 0;
 
+    // ----- TIMER 2 -----
+    // Generates interrupts to poll button state.
     T2CON = 0;
+    T2CONbits.TCKPS = 0b010; // 1:4 prescale = 0.04us increments
+    PR2 = 50000; // 0.04us * 50 000 = 2 ms
+    TMR2 = 0;
+    T2CONbits.ON = 1;
+
+    // ----- TIMER 3 -----
+    // Generates interrupts to start LED SPI shifting.
     T3CON = 0;
-    T2CONbits.TCS = 0;
-    T2CONbits.T32 = 1;
+    T3CONbits.TCKPS = 0b010; // 1:4 prescale = 0.04us increments
+    PR3 = 25000; // 0.04us * 25 000 = 1 ms
+    TMR3 = 0;
+    T3CONbits.ON = 1;
 
-    // timer 2 will be temporarily hijacked to seed the RNG
-    // until the first button press
-    //T2CONbits.TCKPS = 0b111;
-    //PR2 = 390625; 
-    //T2CONbits.ON = 1;
+    // ----- TIMER 4 -----
+    // Not used
+    T4CON = 0;
 
+    // ----- TIMER 5 -----
+    // Not used
+    T5CON = 0;
+
+    // ----- TIMER 6/7 -----
+    // Used to provide a random value to seed the RNG.
+    T6CON = 0;
+    T7CON = 0;
+    T6CONbits.T32 = 1;       // 32-bit timer
+    T6CONbits.TCKPS = 0b000; // no prescale
+    PR6 = 0xFFFFFFFF;        // maximum period
+    TMR6 = 0;
+    T6CONbits.ON = 1;
+
+    // ----- TIMER 8/9 -----
+    // Used to flash LEDs of selected territories.
+    T8CON = 0;
+    T9CON = 0;
+    T8CONbits.T32 = 1;       // 32-bit timer
+    T8CONbits.TCKPS = 0b110; // 1:64 prescale
+    PR8 = 390625;            // 0.64us * 390625 = 250 ms
+    TMR8 = 0;
+    T8CONbits.ON = 1;
 }
 
 void initSPI()
@@ -167,23 +209,14 @@ void initRNG()
     RNGPOLY2 = 0x00000000;
     RNGCONbits.PLEN = 42;
 
-    // Set up timer to count really fast so we can use the value as a seed
-    // for the RNG
-    T2CONbits.TCKPS = 0b000;
-    PR2 = 0xFFFFFFFF;
-    T2CONbits.ON = 1;
+    // RNG cannot be used until seedRNG() is called to start it running.
 }
 
 void seedRNG()
 {
-    RNGNUMGEN1 = RNGNUMGEN2 = TMR2;
+    RNGNUMGEN1 = RNGNUMGEN2 = TMR6;
     RNGCONbits.PRNGEN = 1;
 
-    // Put the timer back to the settings it needs to make LEDs blinky
-    T2CONbits.ON = 0;
-    T2CONbits.TCKPS = 0b110;
-    TMR2 = 0;
-    PR2 = MS_125 * 2;
-    T2CONbits.ON = 1;
-    
+    // Turn off the timer, we don't need it anymore
+    T6CONbits.ON = 0;
 }

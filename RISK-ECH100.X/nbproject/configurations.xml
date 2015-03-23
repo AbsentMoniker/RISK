@@ -19,6 +19,7 @@
       <itemPath>gamelogic.h</itemPath>
       <itemPath>lcd.h</itemPath>
       <itemPath>device_config.h</itemPath>
+      <itemPath>buttons.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -37,6 +38,7 @@
       <itemPath>init.c</itemPath>
       <itemPath>main.c</itemPath>
       <itemPath>lcd.c</itemPath>
+      <itemPath>buttons.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

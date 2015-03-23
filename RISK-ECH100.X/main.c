@@ -13,6 +13,7 @@
 #include "init.h"
 #include "lcd.h"
 #include "gamelogic.h"
+#include "buttons.h"
 
 // implement stubs for required game logic in io.h
 #ifdef NO_RANDOM
@@ -65,7 +66,7 @@ int main(void)
         SPIblank();
         SPIblank();
 
-        if(inputflag3 && PORTFbits.RF8 == 0)
+        if(flagSet_advance())
         {
             static int RNGseeded = 0;
 
@@ -76,17 +77,17 @@ int main(void)
             }
             gameInput(ADVANCE);
 
-            inputflag3 = 0;
+            clearFlag_advance();
         }
-        if(inputflag1 && PORTDbits.RD13 == 0)
+        if(flagSet_cancel())
         {
             gameInput(CANCEL);
-            inputflag1 = 0;
+            clearFlag_cancel();
         }
-        if(inputflag2 && PORTAbits.RA7 == 0)
+        if(flagSet_next())
         {
             gameInput(NEXT);
-            inputflag2 = 0;
+            clearFlag_next();
         }
         msleep(5);
 
@@ -97,21 +98,23 @@ int main(void)
 
 void msleep(int msecs)
 {
-    TMR4 = 0;
-    T4CONbits.ON = 1;
-    while(TMR4 < msecs * 1562) // timer counts in increments of 0.64 us
-    {}
-    T4CONbits.ON = 0;
+    // The timer has a maximum value of 0xFFFF * 0.64us ~= 41 ms
+    while(msecs > 40)
+    {
+        usleep(40000);
+        msecs -= 40;
+    }
+
+    usleep(msecs * 1000);
 
 }
 void usleep(int usecs)
 {
-    TMR4 = 0;
-    T4CONbits.ON = 1;
-    while(TMR4 < usecs * 1562 / 1000) // timer counts in increments of 0.64 us
+    TMR1 = 0;
+    T1CONbits.ON = 1;
+    while(TMR1 < usecs * 100 / 64) // timer counts in increments of 0.64 us
     {}
-    T4CONbits.ON = 0;
-
+    T1CONbits.ON = 0;
 }
 
 void SPIRiskTerritory(int terr)
@@ -129,11 +132,10 @@ void SPIRiskTerritory(int terr)
         0b11111110, // 8
         0b11001110, // 9
     };
-    const static int tmr1_2 = MS_125;
 
     int color = territories[terr].owner + 1;
-    if((source == terr && TMR2 < tmr1_2) ||
-            (destination == terr && TMR2 > tmr1_2))
+    if((source == terr && TMR2 < T8_MSECS(125)) ||
+            (destination == terr && TMR2 > T8_MSECS(125)))
     {
         color = 7;
     }
@@ -178,26 +180,8 @@ void SPIblank()
     PORTFbits.RF2 = 1;
 }
 
-// Middle button
-void __ISR(_CHANGE_NOTICE_A_VECTOR, IPL7SRS) portAisr()
+void __ISR(_TIMER_3_VECTOR, IPL3SRS) timer3isr()
 {
-    if(PORTAbits.RA7 == 0)
-        inputflag2 = 1;
-    IFS3bits.CNAIF = 0;
+    IFS0bits.T3IF = 0; // clear interrupt flag
 }
 
-// Left button (not including the stupid button, which is farthest left)
-void __ISR(_CHANGE_NOTICE_D_VECTOR, IPL7SRS) portDisr()
-{
-    if(PORTDbits.RD13 == 0)
-        inputflag1 = 1;
-    IFS3bits.CNDIF = 0;
-}
-
-// Right button
-void __ISR(_CHANGE_NOTICE_F_VECTOR, IPL7SRS) portFisr()
-{
-    if(PORTFbits.RF8 == 0)
-        inputflag3 = 1;
-    IFS3bits.CNFIF = 0;
-}

@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=../game/cards.c ../game/game.c ../game/gamedata.c ../game/log.c ../game/territory.c init.c main.c lcd.c
+SOURCEFILES_QUOTED_IF_SPACED=../game/cards.c ../game/game.c ../game/gamedata.c ../game/log.c ../game/territory.c init.c main.c lcd.c buttons.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/760992031/cards.o ${OBJECTDIR}/_ext/760992031/game.o ${OBJECTDIR}/_ext/760992031/gamedata.o ${OBJECTDIR}/_ext/760992031/log.o ${OBJECTDIR}/_ext/760992031/territory.o ${OBJECTDIR}/init.o ${OBJECTDIR}/main.o ${OBJECTDIR}/lcd.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/760992031/cards.o.d ${OBJECTDIR}/_ext/760992031/game.o.d ${OBJECTDIR}/_ext/760992031/gamedata.o.d ${OBJECTDIR}/_ext/760992031/log.o.d ${OBJECTDIR}/_ext/760992031/territory.o.d ${OBJECTDIR}/init.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/lcd.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/760992031/cards.o ${OBJECTDIR}/_ext/760992031/game.o ${OBJECTDIR}/_ext/760992031/gamedata.o ${OBJECTDIR}/_ext/760992031/log.o ${OBJECTDIR}/_ext/760992031/territory.o ${OBJECTDIR}/init.o ${OBJECTDIR}/main.o ${OBJECTDIR}/lcd.o ${OBJECTDIR}/buttons.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/760992031/cards.o.d ${OBJECTDIR}/_ext/760992031/game.o.d ${OBJECTDIR}/_ext/760992031/gamedata.o.d ${OBJECTDIR}/_ext/760992031/log.o.d ${OBJECTDIR}/_ext/760992031/territory.o.d ${OBJECTDIR}/init.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/lcd.o.d ${OBJECTDIR}/buttons.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/_ext/760992031/cards.o ${OBJECTDIR}/_ext/760992031/game.o ${OBJECTDIR}/_ext/760992031/gamedata.o ${OBJECTDIR}/_ext/760992031/log.o ${OBJECTDIR}/_ext/760992031/territory.o ${OBJECTDIR}/init.o ${OBJECTDIR}/main.o ${OBJECTDIR}/lcd.o
+OBJECTFILES=${OBJECTDIR}/_ext/760992031/cards.o ${OBJECTDIR}/_ext/760992031/game.o ${OBJECTDIR}/_ext/760992031/gamedata.o ${OBJECTDIR}/_ext/760992031/log.o ${OBJECTDIR}/_ext/760992031/territory.o ${OBJECTDIR}/init.o ${OBJECTDIR}/main.o ${OBJECTDIR}/lcd.o ${OBJECTDIR}/buttons.o
 
 # Source Files
-SOURCEFILES=../game/cards.c ../game/game.c ../game/gamedata.c ../game/log.c ../game/territory.c init.c main.c lcd.c
+SOURCEFILES=../game/cards.c ../game/game.c ../game/gamedata.c ../game/log.c ../game/territory.c init.c main.c lcd.c buttons.c
 
 
 CFLAGS=
@@ -142,6 +142,12 @@ ${OBJECTDIR}/lcd.o: lcd.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/lcd.o 
 	@${FIXDEPS} "${OBJECTDIR}/lcd.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DUSE_SIMPLE_MAP -DNO_RANDOM -MMD -MF "${OBJECTDIR}/lcd.o.d" -o ${OBJECTDIR}/lcd.o lcd.c    -std=gnu99
 	
+${OBJECTDIR}/buttons.o: buttons.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/buttons.o.d 
+	@${RM} ${OBJECTDIR}/buttons.o 
+	@${FIXDEPS} "${OBJECTDIR}/buttons.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DUSE_SIMPLE_MAP -DNO_RANDOM -MMD -MF "${OBJECTDIR}/buttons.o.d" -o ${OBJECTDIR}/buttons.o buttons.c    -std=gnu99
+	
 else
 ${OBJECTDIR}/_ext/760992031/cards.o: ../game/cards.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/760992031" 
@@ -190,6 +196,12 @@ ${OBJECTDIR}/lcd.o: lcd.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/lcd.o.d 
 	@${RM} ${OBJECTDIR}/lcd.o 
 	@${FIXDEPS} "${OBJECTDIR}/lcd.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DUSE_SIMPLE_MAP -DNO_RANDOM -MMD -MF "${OBJECTDIR}/lcd.o.d" -o ${OBJECTDIR}/lcd.o lcd.c    -std=gnu99
+	
+${OBJECTDIR}/buttons.o: buttons.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/buttons.o.d 
+	@${RM} ${OBJECTDIR}/buttons.o 
+	@${FIXDEPS} "${OBJECTDIR}/buttons.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DUSE_SIMPLE_MAP -DNO_RANDOM -MMD -MF "${OBJECTDIR}/buttons.o.d" -o ${OBJECTDIR}/buttons.o buttons.c    -std=gnu99
 	
 endif
 

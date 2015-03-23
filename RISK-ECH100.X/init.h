@@ -16,7 +16,7 @@ void initSPI();
 void initRNG();
 void seedRNG();
 
-#define MS_125 125000000 / 640
+#define T8_MSECS(ms) ((ms) * 1562)
 
 #endif	/* INIT_H */
 
