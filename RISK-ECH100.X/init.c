@@ -17,23 +17,28 @@ static inline void systemLock()
    __builtin_enable_interrupts();
 }
 
+// PB clocks are maximum 100 MHz, except PB7 at 200 MHz
 void initClocks()
 {
     systemUnlock();
 
     OSCCONbits.FRCDIV = 0;
-    PB1DIV = 0x8001;
-    PB2DIV = 0x8001;
-    PB3DIV = 0x8000;
-    PB4DIV = 0x8001;
-    PB5DIV = 0x8001;
-    PB7DIV = 0x8000;
-    PB8DIV = 0x8001;
+    PB1DIV = 0x8001; // system usage
+    PB2DIV = 0x8001; // SPI
+    PB3DIV = 0x8001; // timers
+    PB4DIV = 0x8001; // I/O port access
+    PB5DIV = 0x8001; // RNG
+    PB7DIV = 0x8000; // CPU clock
+    PB8DIV = 0x8001; // not used in this project
 
-    REFO1CONCLR = 0b1001000000000000;
-    REFO2CONCLR = 0b1001000000000000;
-    REFO3CONCLR = 0b1001000000000000;
-    REFO4CONCLR = 0b1001000000000000;
+    //REFO1CONCLR = 0b1001000000000000;
+    //REFO2CONCLR = 0b1001000000000000;
+    //REFO3CONCLR = 0b1001000000000000;
+    //REFO4CONCLR = 0b1001000000000000;
+    REFO1CON = 0;
+    REFO2CON = 0;
+    REFO3CON = 0;
+    REFO4CON = 0;
 
     systemLock();
 }
@@ -128,7 +133,7 @@ void initTimers()
     T5CON = 0;
     T4CONbits.TCS = 0;       // internal oscillator
     T4CONbits.T32 = 1;       // 32-bit timer
-    T4CONbits.TCKPS = 0b111; // 1:256 pre-scale
+    T4CONbits.TCKPS = 0b110; // 1:128 pre-scale
     PR4 = 0xFFFFFFFF;        // maximum period
 
     T2CON = 0;
@@ -176,7 +181,7 @@ void seedRNG()
 
     // Put the timer back to the settings it needs to make LEDs blinky
     T2CONbits.ON = 0;
-    T2CONbits.TCKPS = 0b111;
+    T2CONbits.TCKPS = 0b110;
     TMR2 = 0;
     PR2 = 390625;
     T2CONbits.ON = 1;
