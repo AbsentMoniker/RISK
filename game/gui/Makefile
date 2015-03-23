@@ -1,5 +1,5 @@
-CFLAGS=-std=c99 -Wall -g -MMD
-CXXFLAGS=-std=c++11 -Wall -g -MMD
+CFLAGS=-std=c99 -Wall -g -MMD -DUSE_SIMPLE_MAP
+CXXFLAGS=-std=c++11 -Wall -g -MMD -DUSE_SIMPLE_MAP
 OBJ= gui.o ../game.o ../gamedata.o ../territory.o ../cards.o ../log.o
 DEPS=$(OBJ:.o=.d)
 

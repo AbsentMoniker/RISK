@@ -45,6 +45,10 @@ extern "C" {
 
 sf::Vector2f terPositions[NUM_TERRITORIES] =
 {
+#ifdef USE_SIMPLE_MAP
+    {10,10},
+    {10,60},
+#else
     {10,10}, // T_ALASKA 0
     {60,10}, // T_NORTHWEST 1
     {140,10}, // T_GREENLAND 2
@@ -87,15 +91,18 @@ sf::Vector2f terPositions[NUM_TERRITORIES] =
     {640,340}, // T_NEW_GUINEA 39
     {590,400}, // T_WESTERN_AUSTRAILIA 40
     {640,400}, // T_EASTERN_AUSTRAILIA 41
+#endif
 };
 sf::Color playerColors[MAX_PLAYERS] =
 {
     sf::Color::Red,
     sf::Color::Blue,
+#ifndef USE_SIMPLE_MAP
     sf::Color::Green,
     sf::Color::Yellow,
     sf::Color::Magenta,
     sf::Color::Cyan,
+#endif
 };
 
 sf::Font font;
