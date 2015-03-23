@@ -10,9 +10,9 @@ CND_CONF=default
 CND_DISTDIR=dist
 TMPDIR=build/${CND_CONF}/${IMAGE_TYPE}/tmp-packaging
 TMPDIRNAME=tmp-packaging
-OUTPUT_PATH=dist/${CND_CONF}/${IMAGE_TYPE}/RISK-ECM064.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
-OUTPUT_BASENAME=RISK-ECM064.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
-PACKAGE_TOP_DIR=risk-ecm064/
+OUTPUT_PATH=dist/${CND_CONF}/${IMAGE_TYPE}/RISK-ECM064.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+OUTPUT_BASENAME=RISK-ECM064.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+PACKAGE_TOP_DIR=risk-ecm064.x/
 
 # Functions
 function checkReturnCode
@@ -57,15 +57,15 @@ mkdir -p ${TMPDIR}
 
 # Copy files and create directories and links
 cd "${TOP}"
-makeDirectory ${TMPDIR}/risk-ecm064/bin
+makeDirectory ${TMPDIR}/risk-ecm064.x/bin
 copyFileToTmpDir "${OUTPUT_PATH}" "${TMPDIR}/${PACKAGE_TOP_DIR}bin/${OUTPUT_BASENAME}" 0755
 
 
 # Generate tar file
 cd "${TOP}"
-rm -f ${CND_DISTDIR}/${CND_CONF}/package/risk-ecm064.tar
+rm -f ${CND_DISTDIR}/${CND_CONF}/package/risk-ecm064.x.tar
 cd ${TMPDIR}
-tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/package/risk-ecm064.tar *
+tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/package/risk-ecm064.x.tar *
 checkReturnCode
 
 # Cleanup
