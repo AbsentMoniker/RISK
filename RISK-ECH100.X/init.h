@@ -16,5 +16,7 @@ void initSPI();
 void initRNG();
 void seedRNG();
 
+#define MS_125 125000000 / 640
+
 #endif	/* INIT_H */
 

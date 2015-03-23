@@ -17,20 +17,23 @@ void usleep(int msecs);
 #define LCDCMD_LINE1   0x80
 #define LCDCMD_LINE2   0xC0
 
+#define LCD_LONG_WAIT_USEC 2000
+#define LCD_SHORT_WAIT_USEC 40
+
 
 void startLCD()
 {
-    msleep(2); // make sure LCD has a chance to power up
+    usleep(LCD_LONG_WAIT_USEC); // make sure LCD has a chance to power up
 
     LCD_RW = 0;  // writing
     SHORTWAIT();
     LCD_CLK = 1; // hold clock high
     
-    msleep(1);
+    usleep(LCD_LONG_WAIT_USEC);
     sendLCDcmd(LCDCMD_ON);
     sendLCDcmd(LCDCMD_TWOLINE);
     sendLCDcmd(LCDCMD_CLR);
-    msleep(2);
+    usleep(LCD_LONG_WAIT_USEC);
 }
 
 void clearLCD()
@@ -40,13 +43,13 @@ void clearLCD()
 void sendLCDcmd(unsigned char cmd)
 {
     LCD_RS = 0;
-    usleep(40);
+    usleep(LCD_SHORT_WAIT_USEC);
     LCD_DATA = cmd;
     LCD_CLK = 0;
-    usleep(40);
+    usleep(LCD_SHORT_WAIT_USEC);
     LCD_RS = 1;
     LCD_CLK = 1;
-    usleep(40);
+    usleep(LCD_SHORT_WAIT_USEC);
 }
 
 void setTextDisplay(int line, const char * format, ...)
@@ -59,17 +62,18 @@ void setTextDisplay(int line, const char * format, ...)
     vsnprintf(text, 17, format, args);
     va_end(args);
 
-    usleep(40);
+    usleep(LCD_SHORT_WAIT_USEC);
     if(line == 0)
         sendLCDcmd(LCDCMD_LINE1);
     if(line == 1)
         sendLCDcmd(LCDCMD_LINE2);
+    usleep(LCD_SHORT_WAIT_USEC);
     for(int i = 0; i < 16; i++)
     {
         LCD_DATA = text[i]? text[i] : ' ';
         LCD_CLK = 0;
-        usleep(40);
+        usleep(LCD_SHORT_WAIT_USEC);
         LCD_CLK = 1;
-        usleep(40);
+        usleep(LCD_SHORT_WAIT_USEC);
     }
 }

@@ -133,7 +133,7 @@ void initTimers()
     T5CON = 0;
     T4CONbits.TCS = 0;       // internal oscillator
     T4CONbits.T32 = 1;       // 32-bit timer
-    T4CONbits.TCKPS = 0b110; // 1:128 pre-scale
+    T4CONbits.TCKPS = 0b110; // 1:64 pre-scale
     PR4 = 0xFFFFFFFF;        // maximum period
 
     T2CON = 0;
@@ -183,7 +183,7 @@ void seedRNG()
     T2CONbits.ON = 0;
     T2CONbits.TCKPS = 0b110;
     TMR2 = 0;
-    PR2 = 390625;
+    PR2 = MS_125 * 2;
     T2CONbits.ON = 1;
     
 }

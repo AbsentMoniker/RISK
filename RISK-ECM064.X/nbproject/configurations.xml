@@ -18,6 +18,7 @@
       <itemPath>init.h</itemPath>
       <itemPath>gamelogic.h</itemPath>
       <itemPath>lcd.h</itemPath>
+      <itemPath>../RISK-ECH100.X/device_config.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -47,6 +48,7 @@
     <Elem>.</Elem>
     <Elem>../micro</Elem>
     <Elem>../game</Elem>
+    <Elem>../RISK-ECH100.X</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>

@@ -18,6 +18,7 @@
       <itemPath>init.h</itemPath>
       <itemPath>gamelogic.h</itemPath>
       <itemPath>lcd.h</itemPath>
+      <itemPath>device_config.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -99,7 +100,7 @@
         <property key="place-data-into-section" value="false"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
-        <property key="preprocessor-macros" value="USE_SIMPLE_MAP;USE_RANDOM"/>
+        <property key="preprocessor-macros" value="USE_SIMPLE_MAP;NO_RANDOM"/>
         <property key="strict-ansi" value="false"/>
         <property key="support-ansi" value="false"/>
         <property key="use-cci" value="false"/>
@@ -243,6 +244,7 @@
         <property key="UART5" value="true"/>
         <property key="UART6" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="false"/>

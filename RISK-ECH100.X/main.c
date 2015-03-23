@@ -15,16 +15,16 @@
 #include "gamelogic.h"
 
 // implement stubs for required game logic in io.h
-#ifdef USE_RANDOM
+#ifdef NO_RANDOM
 int randint(int min, int max)
 {
-    unsigned random = RNGNUMGEN1;
-    return min + (random % (max - min + 1));
+    return min;
 }
 #else
 int randint(int min, int max)
 {
-    return min;
+    unsigned random = RNGNUMGEN1;
+    return min + (random % (max - min + 1));
 }
 #endif
 
@@ -99,7 +99,7 @@ void msleep(int msecs)
 {
     TMR4 = 0;
     T4CONbits.ON = 1;
-    while(TMR4 < msecs * 782) // timer counts in increments of 1.28 us
+    while(TMR4 < msecs * 1562) // timer counts in increments of 0.64 us
     {}
     T4CONbits.ON = 0;
 
@@ -108,7 +108,7 @@ void usleep(int usecs)
 {
     TMR4 = 0;
     T4CONbits.ON = 1;
-    while(TMR4 < usecs * 782 / 1000) // timer counts in increments of 1.28 us
+    while(TMR4 < usecs * 1562 / 1000) // timer counts in increments of 0.64 us
     {}
     T4CONbits.ON = 0;
 
@@ -129,7 +129,7 @@ void SPIRiskTerritory(int terr)
         0b11111110, // 8
         0b11001110, // 9
     };
-    const static int tmr1_2 = 390625 / 2;
+    const static int tmr1_2 = MS_125;
 
     int color = territories[terr].owner + 1;
     if((source == terr && TMR2 < tmr1_2) ||
@@ -139,7 +139,7 @@ void SPIRiskTerritory(int terr)
     }
     
     int ones = territories[terr].troops % 10;
-    int tens = (territories[terr].troops / 10) % 100;
+    int tens = (territories[terr].troops % 100) / 10;
 
  
     while(SPI1STATbits.SPITBE != 1) {}
