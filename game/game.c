@@ -65,7 +65,7 @@ void gameInput(Input input)
         case GAMEOVER:
             gameOver(input); break;
         default:
-            ; // panic!
+            PANIC("game in invalid state");
     }
     updateText();
 }
@@ -248,7 +248,7 @@ void updateText()
             setTextDisplay(3, "B: Start new game");
             break;
         default:
-            ; // panic!
+            PANIC("game in invalid state");
     }
 }
 

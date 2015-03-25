@@ -10,6 +10,7 @@ extern "C" {
 }
 
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <cstdarg>
 #include <random>
@@ -39,6 +40,13 @@ extern "C" {
     int randint(int min, int max)
     {
         return std::uniform_int_distribution<int>(min, max)(rng);
+    }
+
+    void panic(int line, const char * file, const char * fun, const char * text)
+    {
+        fprintf(stderr, "Error in %s, %s line %d: %s\n",
+                fun, file, line, text);
+        abort();
     }
 }
 

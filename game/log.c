@@ -6,6 +6,7 @@
 
 #include "types.h"
 #include "log.h"
+#include "io.h"
 
 #include <stdlib.h>
 
@@ -33,13 +34,11 @@ void addLogEntry(LogEntry entry)
     gamelog = realloc(gamelog, gamelogCapacity);
     if(!gamelog)
     {
-        // ...
-        // help
-        abort();
+        PANIC("failed to allocate memory for game log");
     }
     gamelog[gamelogSize++] = entry;
 #else
-    abort();
+    PANIC("game log overflowed, no heap available");
 #endif
 }
 

@@ -15,4 +15,8 @@ int randint(int min, int max);
 // line length after formatting, the extra characters should be cut off.
 void setTextDisplay(int line, const char * format, ...);
 
+void panic(int line, const char * file, 
+        const char * function, const char * text);
+#define PANIC(text) panic(__LINE__, __FILE__, __func__, text)
+
 #endif
