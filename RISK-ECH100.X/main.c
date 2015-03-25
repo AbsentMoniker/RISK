@@ -138,8 +138,8 @@ void SPIRiskTerritory(int terr)
     };
 
     int color = territories[terr].owner + 1;
-    if((source == terr && TMR2 < T8_MSECS(125)) ||
-            (destination == terr && TMR2 > T8_MSECS(125)))
+    if((source == terr && TMR8 < T8_MSECS(125)) ||
+            (destination == terr && TMR8 > T8_MSECS(125)))
     {
         color = 7;
     }
