@@ -65,6 +65,13 @@ void initInterrupts()
     IPC3bits.T3IP = 3;
     IPC3bits.T3IS = 0;
 
+    // SPI 2 rx interrupt
+    // priority 4.0
+    IFS4bits.SPI2RXIF = 0;
+    IEC4bits.SPI2RXIE = 1;
+    IPC35bits.SPI2RXIP = 4;
+    IPC35bits.SPI2RXIS = 0;
+
     // Port A, D, F change interrupts enabled with priority 7.0
     //IFS3bits.CNAIF = 0;
     //IEC3bits.CNAIE = 1;
@@ -194,12 +201,29 @@ void initTimers()
 void initSPI()
 {
     // Let's configure an SPI!
-    SPI1CON = 0;           // SPI off
-    SPI1BRG = 3;         // baud rate
-    SPI1STATCLR = 0x40;    // clear status
-    RPF1R = 0b0101;        // SPI data out on F1
-    SPI1CONbits.MSTEN = 1; // master mode
-    SPI1CONbits.ON = 1;    // SPI on
+    SPI1CON = 0;
+    SPI1CON2 = 0;
+    SPI1BRG = 3;                // baud rate = 12.5 MHz
+    SPI1STATbits.SPIROV = 0;    // clear status
+    RPF1R = 0b0101;             // SPI data out on F1
+    SPI1CONbits.MODE32 = 0;     // 8-bit mode
+    SPI1CONbits.MODE16 = 0;
+    SPI1CONbits.MSTEN = 1;      // master mode
+    SPI1CONbits.ON = 1;         // SPI on
+
+    // Let's configure another SPI!
+    SPI2CON = 0;
+    SPI2CON2 = 0;
+    SPI2BRG = 3;                // baud rate = 12.5 MHz
+    SPI2STATbits.SPIROV = 0;    // clear status
+    // SDI pin = figure this out
+    // SDO pin = figure this out
+    SPI2CONbits.MODE32 = 0;     // 8-bit mode
+    SPI2CONbits.MODE16 = 0;
+    SPI2CONbits.MSTEN = 0;      // slave mode
+    SPI2CONbits.SRXISEL = 0b01; // interrupt when rbuf not empty
+    //SPI2CONbits.ON = 1;         // SPI on
+
 
 }
 

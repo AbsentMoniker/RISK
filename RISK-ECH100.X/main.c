@@ -15,7 +15,7 @@
 #include "gamelogic.h"
 #include "buttons.h"
 
-// implement stubs for required game logic in io.h
+// implement function required for game logic in io.h
 #ifdef NO_RANDOM
 int randint(int min, int max)
 {
@@ -28,6 +28,10 @@ int randint(int min, int max)
     return min + (random % (max - min + 1));
 }
 #endif
+void panic(int line, const char * file, const char * fun, const char * text)
+{
+    abort();
+}
 
 // Making two different writes to the same port in quick succession can cause
 // problems, so call this macro to make sure both writes get through.
@@ -185,3 +189,9 @@ void __ISR(_TIMER_3_VECTOR, IPL3SRS) timer3isr()
     IFS0bits.T3IF = 0; // clear interrupt flag
 }
 
+void __ISR(_SPI2_RX_VECTOR, IPL4SRS) SPI2RXisr()
+{
+    (void)SPI2BUF;
+
+    IFS4bits.SPI2RXIF = 0; // clear interrupt flag
+}
