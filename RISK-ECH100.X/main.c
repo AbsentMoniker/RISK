@@ -64,26 +64,6 @@ void SPIRiskTerritory(int terr);
 void SPIblank();
 void SPIbyte(unsigned char byte);
 
-int inputflag1, inputflag2, inputflag3;
-
-char stuff[17] = "DEADBEEFdeadbeef";
-char * stuffptr = stuff;
-unsigned char a = 0x10, b = 0xAA, c = 0x0F;
-
-static int digits[10] = {
-        //gfedcba
-        0b01111110, // 0
-        0b00001100, // 1
-        0b10110110, // 2
-        0b10011110, // 3
-        0b11001100, // 4
-        0b11011010, // 5
-        0b11111000, // 6
-        0b00001110, // 7
-        0b11111110, // 8
-        0b11001110, // 9
-    };
-
 unsigned char counter = 0;
 int main(void)
 {
@@ -110,13 +90,9 @@ int main(void)
         SPIblank();
         SPIblank();
 
-        setTextDisplay(0, stuff);
-
-
         if(flagSet_advance())
         {
             static int RNGseeded = 0;
-
             if(!RNGseeded)
             {
                 seedRNG();
