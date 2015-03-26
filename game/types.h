@@ -63,6 +63,7 @@ typedef struct
 {
     CardType type;
     int territory;
+    int index;
 } Card;
 typedef struct
 {

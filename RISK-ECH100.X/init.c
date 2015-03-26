@@ -31,10 +31,6 @@ void initClocks()
     PB7DIV = 0x8000; // CPU clock
     PB8DIV = 0x8001; // not used in this project
 
-    //REFO1CONCLR = 0b1001000000000000;
-    //REFO2CONCLR = 0b1001000000000000;
-    //REFO3CONCLR = 0b1001000000000000;
-    //REFO4CONCLR = 0b1001000000000000;
     REFO1CON = 0;
     REFO2CON = 0;
     REFO3CON = 0;
@@ -53,6 +49,7 @@ void initInterrupts()
 
     // Timer 2 interrupts
     // Interrupt every 2 ms, priority 2.0
+    // ISR in buttons.c
     IFS0bits.T2IF = 0;
     IEC0bits.T2IE = 1;
     IPC2bits.T2IP = 2;
@@ -60,45 +57,19 @@ void initInterrupts()
 
     // Timer 3 interrupts
     // Interrupt every 1 ms, priority 3.0
+    // ISR in main.c
     IFS0bits.T3IF = 0;
     IEC0bits.T3IE = 1;
     IPC3bits.T3IP = 3;
     IPC3bits.T3IS = 0;
 
-    // SPI 2 rx interrupt
+    // SPI 3 rx interrupt
     // priority 4.0
-    IFS4bits.SPI2RXIF = 0;
-    IEC4bits.SPI2RXIE = 1;
-    IPC35bits.SPI2RXIP = 4;
-    IPC35bits.SPI2RXIS = 0;
-
-    // Port A, D, F change interrupts enabled with priority 7.0
-    //IFS3bits.CNAIF = 0;
-    //IEC3bits.CNAIE = 1;
-    //IPC29bits.CNAIP = 7;
-    //IPC29bits.CNAIS = 0;
-
-    //IFS3bits.CNDIF = 0;
-    //IEC3bits.CNDIE = 1;
-    //IPC30bits.CNDIP = 7;
-    //IPC30bits.CNDIS = 0;
-
-    //IFS3bits.CNFIF = 0;
-    //IEC3bits.CNFIE = 1;
-    //IPC30bits.CNFIP = 7;
-    //IPC30bits.CNFIS = 0;
-
-
-    // enable change interrupt on A7, D13, F8
-    //CNCONAbits.ON = 1;
-    //CNENAbits.CNIEA7 = 1;
-    //CNPUAbits.CNPUA7 = 1;
-    //CNCONDbits.ON = 1;
-    //CNENDbits.CNIED13 = 1;
-    //CNPUDbits.CNPUD13 = 1;
-    //CNCONFbits.ON = 1;
-    //CNENFbits.CNIEF8 = 1;
-    //CNPUFbits.CNPUF8 = 1;
+    // ISR in pi.c
+    IFS4bits.SPI3RXIF = 0;
+    IEC4bits.SPI3RXIE = 1;
+    IPC38bits.SPI3RXIP = 4;
+    IPC38bits.SPI3RXIS = 0;
 
     INTCONbits.MVEC = 1;
 
@@ -212,18 +183,22 @@ void initSPI()
     SPI1CONbits.ON = 1;         // SPI on
 
     // Let's configure another SPI!
-    SPI2CON = 0;
-    SPI2CON2 = 0;
-    SPI2BRG = 3;                // baud rate = 12.5 MHz
-    SPI2STATbits.SPIROV = 0;    // clear status
-    // SDI pin = figure this out
-    // SDO pin = figure this out
-    SPI2CONbits.MODE32 = 0;     // 8-bit mode
-    SPI2CONbits.MODE16 = 0;
-    SPI2CONbits.MSTEN = 0;      // slave mode
-    SPI2CONbits.SRXISEL = 0b01; // interrupt when rbuf not empty
-    //SPI2CONbits.ON = 1;         // SPI on
+    SPI3CON = 0;
+    SPI3CON2 = 0;
+    (void) SPI3BUF;             // clear receive buffer
+    SPI3STATbits.SPIROV = 0;    // clear status
 
+    SDI3R = 0b0110;             // SDI on pin B10
+    RPB5R = 0b0111;             // SDO on pin B5
+    SPI3CONbits.MODE32 = 0;     // 8-bit mode
+    SPI3CONbits.MODE16 = 0;
+    SPI3CONbits.MSTEN = 0;      // slave mode
+    SPI3CONbits.CKE = 1;        // output transition on falling clock edge
+    SPI3CONbits.ENHBUF = 1;     // use 128-bit buffer
+    SPI3CONbits.SRXISEL = 0b01; // interrupt when rbuf not empty
+    SPI3CONbits.ON = 1;         // SPI on
+
+    SPI3BUF = 0xFF;             // Load buffer with non-command for pi
 
 }
 

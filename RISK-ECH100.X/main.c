@@ -42,11 +42,32 @@ void msleep(int msecs);
 void usleep(int usecs);
 void SPIRiskTerritory(int terr);
 void SPIblank();
+void SPIbyte(unsigned char byte);
 
 int inputflag1, inputflag2, inputflag3;
 
+char stuff[17] = "DEADBEEFdeadbeef";
+char * stuffptr = stuff;
+unsigned char a = 0x10, b = 0xAA, c = 0x0F;
+
+static int digits[10] = {
+        //gfedcba
+        0b01111110, // 0
+        0b00001100, // 1
+        0b10110110, // 2
+        0b10011110, // 3
+        0b11001100, // 4
+        0b11011010, // 5
+        0b11111000, // 6
+        0b00001110, // 7
+        0b11111110, // 8
+        0b11001110, // 9
+    };
+
+unsigned char counter = 0;
 int main(void)
 {
+    territories[0].troops = 0;
     initClocks();
     initInterrupts();
     initPorts();
@@ -55,7 +76,6 @@ int main(void)
     initRNG();
 
     startLCD();
-
 
     changeState(INIT);
     updateText();
@@ -69,6 +89,9 @@ int main(void)
         usleep(1000);
         SPIblank();
         SPIblank();
+
+        setTextDisplay(0, stuff);
+
 
         if(flagSet_advance())
         {
@@ -93,7 +116,7 @@ int main(void)
             gameInput(NEXT);
             clearFlag_next();
         }
-        msleep(5);
+        msleep(4);
 
     }
 
@@ -184,14 +207,21 @@ void SPIblank()
     PORTFbits.RF2 = 1;
 }
 
+void SPIbyte(unsigned char byte)
+{
+    SPI1BUF = byte;
+    while(SPI1STATbits.SPITBE != 1) {}
+    usleep(1);
+    PORTFbits.RF2 = 0;
+    usleep(1);
+    PORTFbits.RF2 = 1;
+}
+
 void __ISR(_TIMER_3_VECTOR, IPL3SRS) timer3isr()
 {
     IFS0bits.T3IF = 0; // clear interrupt flag
 }
 
-void __ISR(_SPI2_RX_VECTOR, IPL4SRS) SPI2RXisr()
-{
-    (void)SPI2BUF;
 
-    IFS4bits.SPI2RXIF = 0; // clear interrupt flag
-}
+//unsigned int counter = 0;
+

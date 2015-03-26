@@ -40,11 +40,13 @@ void initCards()
         {
             deck[i].territory = i;
             deck[i].type = territories[i].cardtype;
+            deck[i].index = i;
         }
         else
         {
             deck[i].territory = -1;
             deck[i].type = WILD;
+            deck[i].index = i;
         }
     }
     deckSize = NUM_CARDS;
@@ -103,12 +105,29 @@ int cardSetValue(Card c1, Card c2, Card c3)
     return 0;
 }
 
+int exchangeCardIndices(int player, int cardidx1, int cardidx2, int cardidx3)
+{
+    int idx1 = -1, idx2 = -1, idx3 = -1;
+    for(int i = 0; i < hands[player].cards; i++)
+    {
+        if(hands[player].hand[i].index == cardidx1)
+            idx1 = i;
+        if(hands[player].hand[i].index == cardidx2)
+            idx2 = i;
+        if(hands[player].hand[i].index == cardidx3)
+            idx3 = i;
+    }
+    if(idx1 == -1 || idx2 == -1 || idx3 == -1)
+        return 0;
+    return exchangeCards(player, idx1, idx2, idx3);
+}
+
 int exchangeCards(int player, int idx1, int idx2, int idx3)
 {
     int handsize = hands[player].cards;
-    if(idx1 >= handsize || idx2 >= handsize || idx3 >= handsize)
-        return 0;
     if(idx1 == idx2 || idx1 == idx3 || idx2 == idx3)
+        return 0;
+    if(idx1 >= handsize || idx2 >= handsize || idx3 >= handsize)
         return 0;
 
     Card c1 = hands[player].hand[idx1];
