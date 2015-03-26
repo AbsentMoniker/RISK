@@ -9,11 +9,14 @@
 #include <xc.h>
 #include <sys/attribs.h> // __ISR macro here
 
+#include <string.h>
+
 #include "device_config.h"
 #include "init.h"
 #include "lcd.h"
 #include "gamelogic.h"
 #include "buttons.h"
+#include "pi.h"
 
 // implement function required for game logic in io.h
 #ifdef NO_RANDOM
@@ -30,6 +33,23 @@ int randint(int min, int max)
 #endif
 void panic(int line, const char * file, const char * fun, const char * text)
 {
+    static int panicking = 0;
+    if(panicking)
+        abort(); // recursion is bad!
+    panicking = 1;
+    
+    __builtin_disable_interrupts();
+    setTextDisplay(0, "Error %s", fun);
+    setTextDisplay(1, "at %s:%d", file, line);
+    setTextDisplay(2, "%s", text);
+    if(strlen(text) > 16)
+        setTextDisplay(3, "%s", text + 16);
+    else
+        setTextDisplay(3, "");
+    while(1)
+    {
+        // Go into an infinte loop until the micro is reset.
+    }
     abort();
 }
 
@@ -116,6 +136,7 @@ int main(void)
             gameInput(NEXT);
             clearFlag_next();
         }
+        updatePiData();
         msleep(4);
 
     }
