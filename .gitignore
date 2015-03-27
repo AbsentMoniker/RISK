@@ -7,5 +7,6 @@
 game/gui/risk
 # harmony build files
 dist
-# useless mplab stuff
+# unecessary mplab stuff
 **/Makefile-genesis.properties
+**/disassembly/listing.disasm
