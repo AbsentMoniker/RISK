@@ -17,23 +17,24 @@ void usleep(int msecs);
 #define LCDCMD_LINE1   0x80
 #define LCDCMD_LINE2   0xC0
 
-#define LCD_LONG_WAIT_USEC 2000
+#define LCD_POWER_UP_WAIT_MSEC 500
+#define LCD_LONG_WAIT_MSEC 20
 #define LCD_SHORT_WAIT_USEC 40
 
 
 void startLCD()
 {
-    usleep(LCD_LONG_WAIT_USEC); // make sure LCD has a chance to power up
+    msleep(LCD_POWER_UP_WAIT_MSEC); // make sure LCD has a chance to power up
 
     LCD_RW = 0;  // writing
     SHORTWAIT();
     LCD_CLK = 1; // hold clock high
     
-    usleep(LCD_LONG_WAIT_USEC);
+    msleep(LCD_LONG_WAIT_MSEC);
     sendLCDcmd(LCDCMD_ON);
     sendLCDcmd(LCDCMD_TWOLINE);
     sendLCDcmd(LCDCMD_CLR);
-    usleep(LCD_LONG_WAIT_USEC);
+    usleep(LCD_SHORT_WAIT_USEC);
 }
 
 void clearLCD()

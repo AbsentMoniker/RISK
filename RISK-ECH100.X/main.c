@@ -67,15 +67,19 @@ void SPIbyte(unsigned char byte);
 unsigned char counter = 0;
 int main(void)
 {
-    territories[0].troops = 0;
+    // make sure that no stary interrupts happen until they are set up
+    // properly by initInterrupts()
+    __builtin_disable_interrupts();
+    
     initClocks();
-    initInterrupts();
     initPorts();
     initTimers();
     initSPI();
     initRNG();
 
     startLCD();
+
+    initInterrupts();
 
     changeState(INIT);
     updateText();
