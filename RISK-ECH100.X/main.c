@@ -117,6 +117,7 @@ int main(void)
             clearFlag_next();
         }
         updatePiData();
+        //setTextDisplay(0, "%d %d %d %d %d %d", piData[0], piData[1], piData[2], piData[3], piData[4], piData[5]);
         msleep(4);
 
     }
@@ -210,12 +211,10 @@ void SPIblank()
 
 void SPIbyte(unsigned char byte)
 {
+    while(SPI1STATbits.SPITBE != 1) {}
     SPI1BUF = byte;
     while(SPI1STATbits.SPITBE != 1) {}
-    usleep(1);
-    PORTFbits.RF2 = 0;
-    usleep(1);
-    PORTFbits.RF2 = 1;
+
 }
 
 void __ISR(_TIMER_3_VECTOR, IPL3SRS) timer3isr()

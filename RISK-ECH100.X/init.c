@@ -174,7 +174,7 @@ void initSPI()
     // Let's configure an SPI!
     SPI1CON = 0;
     SPI1CON2 = 0;
-    SPI1BRG = 3;                // baud rate = 12.5 MHz
+    SPI1BRG = 1;                // baud rate = 12.5 MHz
     SPI1STATbits.SPIROV = 0;    // clear status
     RPF1R = 0b0101;             // SPI data out on F1
     SPI1CONbits.MODE32 = 0;     // 8-bit mode

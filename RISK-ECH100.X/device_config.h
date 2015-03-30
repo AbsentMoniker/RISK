@@ -25,7 +25,7 @@
 
 #pragma config FNOSC =      SPLL
 #pragma config DMTINTV =    WIN_127_128
-#pragma config FSOSCEN =    ON
+#pragma config FSOSCEN =    ON // OFF ?
 #pragma config IESO =       ON
 #pragma config POSCMOD =    OFF
 #pragma config OSCIOFNC =   OFF
@@ -50,7 +50,7 @@
 
 /*** DEVCFG3 ***/
 
-#pragma config USERID =     0xffff
+#pragma config USERID =     0x4772
 #pragma config FMIIEN =     ON
 #pragma config FETHIO =     ON
 #pragma config PGL1WAY =    OFF
