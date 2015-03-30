@@ -39,6 +39,7 @@ void usleep(int usecs);
 int main(void)
 {
     initClocks();
+#if 0
     initInterrupts();
     initPorts();
     initTimers();
@@ -49,15 +50,25 @@ int main(void)
 
     changeState(INIT);
     updateText();
+#endif
+
+    TRISE = 0;
+    ANSELE = 0;
+
+    unsigned a = 0;
 
     while(1)
     {
-
+        PORTE = a;
+        a += 1;
+        for(int i = 0; i < 10*1000*1000; i++)
+        {}
     }
 
     return EXIT_SUCCESS;
 }
 
+// TODO: switch these to the correct timer and factor
 void msleep(int msecs)
 {
     TMR4 = 0;

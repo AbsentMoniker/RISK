@@ -24,16 +24,16 @@ void initClocks()
     OSCCONbits.FRCDIV = 0;
     PB1DIV = 0x8001;
     PB2DIV = 0x8001;
-    PB3DIV = 0x8000;
+    PB3DIV = 0x8001;
     PB4DIV = 0x8001;
     PB5DIV = 0x8001;
-    PB7DIV = 0x8000;
+    PB7DIV = 0x8001;
     PB8DIV = 0x8001;
 
-    REFO1CONCLR = 0b1001000000000000;
-    REFO2CONCLR = 0b1001000000000000;
-    REFO3CONCLR = 0b1001000000000000;
-    REFO4CONCLR = 0b1001000000000000;
+    REFO1CONCLR = 0;
+    REFO2CONCLR = 0;
+    REFO3CONCLR = 0;
+    REFO4CONCLR = 0;
 
     systemLock();
 }
@@ -78,28 +78,7 @@ void initPorts()
 
 void initTimers()
 {
-    // TODO: rest of the timers
-
-    // Let's configure a timer!
-    T4CON = 0;
-    T5CON = 0;
-    T4CONbits.TCS = 0;       // internal oscillator
-    T4CONbits.T32 = 1;       // 32-bit timer
-    T4CONbits.TCKPS = 0b111; // 1:256 pre-scale
-    PR4 = 0xFFFFFFFF;        // maximum period
-
-    T2CON = 0;
-    T3CON = 0;
-    T2CONbits.TCS = 0;
-    T2CONbits.T32 = 1;
-
-    // TODO: use timer 1 for the RNG, its not doing anything useful
-
-    // timer 2 will be temporarily hijacked to seed the RNG
-    // until the first button press
-    //T2CONbits.TCKPS = 0b111;
-    //PR2 = 390625; 
-    //T2CONbits.ON = 1;
+    // TODO: all of the timers
 
 }
 
