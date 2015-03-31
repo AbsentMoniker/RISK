@@ -27,6 +27,27 @@ int randint(int min, int max)
     return min;
 }
 #endif
+void panic(int line, const char * file, const char * fun, const char * text)
+{
+    static int panicking = 0;
+    if(panicking)
+        abort(); // recursion is bad!
+    panicking = 1;
+
+    __builtin_disable_interrupts();
+    setTextDisplay(0, "Error %s", fun);
+    setTextDisplay(1, "at %s:%d", file, line);
+    setTextDisplay(2, "%s", text);
+    if(strlen(text) > 16)
+        setTextDisplay(3, "%s", text + 16);
+    else
+        setTextDisplay(3, "");
+    while(1)
+    {
+        // Go into an infinte loop until the micro is reset.
+    }
+    abort();
+}
 
 // Making two different writes to the same port in quick succession can cause
 // problems, so call this macro to make sure both writes get through.

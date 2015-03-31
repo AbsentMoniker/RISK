@@ -72,7 +72,7 @@
         </archiverTool>
         <loading>
           <useAlternateLoadableFile>false</useAlternateLoadableFile>
-          <parseOnProdLoad>false</parseOnProdLoad>
+          <parseOnProdLoad>true</parseOnProdLoad>
           <alternateLoadableFile></alternateLoadableFile>
         </loading>
       </compileType>
@@ -113,6 +113,22 @@
         <property key="additional-options-chop-files" value="false"/>
       </C32-AR>
       <C32-AS>
+        <property key="assembler-symbols" value=""/>
+        <property key="enable-symbols" value="true"/>
+        <property key="exclude-floating-point-library" value="false"/>
+        <property key="expand-macros" value="false"/>
+        <property key="extra-include-directories-for-assembler" value=""/>
+        <property key="extra-include-directories-for-preprocessor" value=""/>
+        <property key="false-conditionals" value="false"/>
+        <property key="keep-locals" value="true"/>
+        <property key="list-assembly" value="false"/>
+        <property key="list-source" value="false"/>
+        <property key="list-symbols" value="false"/>
+        <property key="oXC32asm-list-to-file" value="false"/>
+        <property key="omit-debug-dirs" value="false"/>
+        <property key="omit-forms" value="false"/>
+        <property key="preprocessor-macros" value=""/>
+        <property key="warning-level" value=""/>
       </C32-AS>
       <C32-LD>
         <property key="additional-options-use-response-files" value="false"/>
@@ -183,7 +199,6 @@
         <property key="AutoSelectMemRanges" value="auto"/>
         <property key="CAN1" value="true"/>
         <property key="CAN2" value="true"/>
-        <property key="CHANGE NOTICE A" value="true"/>
         <property key="CHANGE NOTICE B" value="true"/>
         <property key="CHANGE NOTICE C" value="true"/>
         <property key="CHANGE NOTICE D" value="true"/>
@@ -223,8 +238,6 @@
         <property key="SPI/I2S 2" value="true"/>
         <property key="SPI/I2S 3" value="true"/>
         <property key="SPI/I2S 4" value="true"/>
-        <property key="SPI/I2S 5" value="true"/>
-        <property key="SPI/I2S 6" value="true"/>
         <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
         <property key="TIMER1" value="true"/>
         <property key="TIMER2" value="true"/>
