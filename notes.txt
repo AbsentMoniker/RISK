@@ -1,0 +1,6 @@
+Programming wires order:
+Green "data" (closest to micro)
+Yellow "clk"
+Purple "GND"
+Grey "vcc"
+White "/mclr" (furthest from micro)
