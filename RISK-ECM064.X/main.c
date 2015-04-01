@@ -117,24 +117,25 @@ int main(void)
     return EXIT_SUCCESS;
 }
 
-// TODO: switch these to the correct timer and factor
+
 void msleep(int msecs)
 {
-    TMR4 = 0;
-    T4CONbits.ON = 1;
-    while(TMR4 < msecs * 782) // timer counts in increments of 1.28 us
-    {}
-    T4CONbits.ON = 0;
+    // The timer has a maximum value of 0xFFFF * 0.64us ~= 41 ms
+    while(msecs > 40)
+    {
+        usleep(40000);
+        msecs -= 40;
+    }
 
+    usleep(msecs * 1000);
 }
 void usleep(int usecs)
 {
-    TMR4 = 0;
-    T4CONbits.ON = 1;
-    while(TMR4 < usecs * 782 / 1000) // timer counts in increments of 1.28 us
+    TMR1 = 0;
+    T1CONbits.ON = 1;
+    while(TMR1 < usecs * 100 / 64) // timer counts in increments of 0.64 us
     {}
-    T4CONbits.ON = 0;
-
+    T1CONbits.ON = 0;
 }
 
 void SPIbyte(unsigned char byte)
