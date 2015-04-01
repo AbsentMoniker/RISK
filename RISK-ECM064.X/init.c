@@ -1,6 +1,13 @@
 #include <p32xxxx.h>
 #include "init.h"
 
+// ***********************************
+// ******                       ******
+// ******        ECM-064        ******
+// ******                       ******
+// ***********************************
+
+
 static inline void systemUnlock()
 {
     __builtin_disable_interrupts();
@@ -78,22 +85,110 @@ void initPorts()
 
 void initTimers()
 {
-    // TODO: all of the timers
+    // ----- TIMER 1 -----
+    // Used to provide short, precise waits for the usleep and msleep functions
+    // which are used mostly in the LCD driver.
+    // Will be started when a wait is called for.
+    T1CON = 0;
+    T1CONbits.TCKPS = 0b10; // 1:64 prescale = 0.64us increments
+                            // 0.64us * 0xFFFF = 41.9ms maximum
+    PR1 = 0xFFFF; // maximum period
+    TMR1 = 0;
+
+    // ----- TIMER 2 -----
+    // Generates interrupts to poll button state.
+    T2CON = 0;
+    T2CONbits.TCKPS = 0b010; // 1:4 prescale = 0.04us increments
+    PR2 = 50000; // 0.04us * 50 000 = 2 ms
+    TMR2 = 0;
+    T2CONbits.ON = 1;
+
+    // ----- TIMER 3 -----
+    // Generates interrupts to start LED SPI shifting.
+    T3CON = 0;
+    T3CONbits.TCKPS = 0b010; // 1:4 prescale = 0.04us increments
+    PR3 = 25000; // 0.04us * 25 000 = 1 ms
+    TMR3 = 0;
+    T3CONbits.ON = 1;
+
+    // ----- TIMER 4 -----
+    // Not used
+    T4CON = 0;
+
+    // ----- TIMER 5 -----
+    // Not used
+    T5CON = 0;
+
+    // ----- TIMER 6/7 -----
+    // Used to provide a random value to seed the RNG.
+    T6CON = 0;
+    T7CON = 0;
+    T6CONbits.T32 = 1;       // 32-bit timer
+    T6CONbits.TCKPS = 0b000; // no prescale
+    PR6 = 0xFFFFFFFF;        // maximum period
+    TMR6 = 0;
+    T6CONbits.ON = 1;
+
+    // ----- TIMER 8/9 -----
+    // Used to flash LEDs of selected territories.
+    T8CON = 0;
+    T9CON = 0;
+    T8CONbits.T32 = 1;       // 32-bit timer
+    T8CONbits.TCKPS = 0b110; // 1:64 prescale
+    PR8 = 390625;            // 0.64us * 390625 = 250 ms
+    TMR8 = 0;
+    T8CONbits.ON = 1;
 
 }
 
 void initSPI()
 {
-    // TODO: 3 spis
-#if 0
-    // Let's configure an SPI!
-    SPI1CON = 0;           // SPI off
-    SPI1BRG = 3;         // baud rate
-    SPI1STATCLR = 0x40;    // clear status
-    RPF1R = 0b0101;        // SPI data out on F1
-    SPI1CONbits.MSTEN = 1; // master mode
-    SPI1CONbits.ON = 1;    // SPI on
-#endif
+    // ----- SPI 1 -----
+    // Used for outputting data to the 43 territory boards, and the
+    // dice displays and continent displays on the main board.
+    SPI1CON = 0;
+    SPI1CON2 = 0;
+    SPI1STATbits.SPIROV = 0;    // clear status
+    
+    SPI1BRG = 1;                // baud rate = 12.5 MHz
+    RPF1R = 0b0101;             // SPI data out on F1
+    SPI1CONbits.DISSDI = 1;     // disable input
+    SPI1CONbits.MODE32 = 0;     // 8-bit mode
+    SPI1CONbits.MODE16 = 0;
+    SPI1CONbits.MSTEN = 1;      // master mode
+    //SPI1CONbits.ON = 1;         // SPI on
+    
+    // ----- SPI 2 -----
+    // Used for communicating with Pi.
+    SPI2CON = 0;
+    SPI2CON2 = 0;
+    SPI2STATbits.SPIROV = 0;    // clear status
+    (void) SPI2BUF;             // clear receive buffer
+    
+    // SDO2 output pin?
+    // SDI2 input pin?
+    SPI2CONbits.MODE32 = 0;     // 8-bit mode
+    SPI2CONbits.MODE16 = 0;
+    SPI2CONbits.MSTEN = 0;      // slave mode
+    //SPI2CONbits.ON = 1;         // SPI on
+
+    // ----- SPI 3 ----
+    // Not used
+    SPI3CON = 0;
+    
+    // ----- SPI 4 -----
+    // Used for shifting data into LCD.
+    SPI4CON = 0;
+    SPI4CON2 = 0;
+    SPI4STATbits.SPIROV = 0;    // clear status
+
+    SPI4BRG = 3;                // baud rate 12.5 MHz
+    // SDO4 output pin?
+    SPI4CONbits.DISSDI = 1;     // disable input
+    SPI4CONbits.MODE32 = 0;     // 8-bit mode
+    SPI4CONbits.MODE16 = 0;
+    SPI4CONbits.MSTEN = 1;      // slave mode
+    //SPI4CONbits.ON = 1;         // SPI on
 
 }
 
@@ -103,23 +198,14 @@ void initRNG()
     RNGPOLY2 = 0x00000000;
     RNGCONbits.PLEN = 42;
 
-    // Set up timer to count really fast so we can use the value as a seed
-    // for the RNG
-    T2CONbits.TCKPS = 0b000;
-    PR2 = 0xFFFFFFFF;
-    T2CONbits.ON = 1;
+    // RNG cannot be used until seedRNG() is called to start it running.
 }
 
 void seedRNG()
 {
-    RNGNUMGEN1 = RNGNUMGEN2 = TMR2;
+    RNGNUMGEN1 = RNGNUMGEN2 = TMR6;
     RNGCONbits.PRNGEN = 1;
 
-    // Put the timer back to the settings it needs to make LEDs blinky
-    T2CONbits.ON = 0;
-    T2CONbits.TCKPS = 0b111;
-    TMR2 = 0;
-    PR2 = 390625;
-    T2CONbits.ON = 1;
-    
+    // Turn off the timer, we don't need it anymore
+    T6CONbits.ON = 0;
 }

@@ -5,6 +5,12 @@
  * Created on February 19, 2015, 6:12 PM
  */
 
+// ***********************************
+// ******                       ******
+// ******        ECH-100        ******
+// ******                       ******
+// ***********************************
+
 #include <p32xxxx.h>
 #include <xc.h>
 #include <sys/attribs.h> // __ISR macro here

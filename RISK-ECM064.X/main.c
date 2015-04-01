@@ -5,6 +5,13 @@
  * Created on February 19, 2015, 6:12 PM
  */
 
+// ***********************************
+// ******                       ******
+// ******        ECM-064        ******
+// ******                       ******
+// ***********************************
+
+
 #include <p32xxxx.h>
 #include <xc.h>
 #include <sys/attribs.h> // __ISR macro here
@@ -59,7 +66,7 @@ void usleep(int usecs);
 
 int main(void)
 {
-    initClocks();
+    //initClocks();
 #if 0
     initInterrupts();
     initPorts();
@@ -73,14 +80,14 @@ int main(void)
     updateText();
 #endif
 
-    TRISE = 0;
-    ANSELE = 0;
+    TRISB = 0x00FF;
+    ANSELB = 0;
 
     unsigned a = 0;
 
     while(1)
     {
-        PORTE = a;
+        PORTB = (a << 8);
         a += 1;
         for(int i = 0; i < 10*1000*1000; i++)
         {}
