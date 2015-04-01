@@ -110,6 +110,10 @@ int main(void)
         SPIbyte(0xAF);
         SPIbyte(0xAA);
         SPIbyte(0xFA);
+        usleep(1);
+        PORTDbits.RD9 = 1;
+        usleep(1);
+        PORTDbits.RD9 = 0;
 #endif
 //        msleep(10);
     }
