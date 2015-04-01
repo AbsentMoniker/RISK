@@ -21,6 +21,7 @@ void usleep(int msecs);
 
 void startLCD()
 {
+#if 0
     msleep(2); // make sure LCD has a chance to power up
 
     LCD_RW = 0;  // writing
@@ -32,6 +33,7 @@ void startLCD()
     sendLCDcmd(LCDCMD_TWOLINE);
     sendLCDcmd(LCDCMD_CLR);
     msleep(2);
+#endif
 }
 
 void clearLCD()

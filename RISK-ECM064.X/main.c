@@ -63,26 +63,36 @@ void panic(int line, const char * file, const char * fun, const char * text)
 
 void msleep(int msecs);
 void usleep(int usecs);
+void SPIbyte(unsigned char byte);
+
+static int digits[10] = {
+        //gfedcba
+        0b01111110, // 0
+        0b00001100, // 1
+        0b10110110, // 2
+        0b10011110, // 3
+        0b11001100, // 4
+        0b11011010, // 5
+        0b11111000, // 6
+        0b00001110, // 7
+        0b11111110, // 8
+        0b11001110, // 9
+    };
 
 int main(void)
 {
-    //initClocks();
-#if 0
+    initClocks();
     initInterrupts();
     initPorts();
     initTimers();
     initSPI();
     initRNG();
 
-    startLCD();
-
+//   startLCD();
+#if 0
     changeState(INIT);
     updateText();
 #endif
-
-    TRISB = 0x00FF;
-    ANSELB = 0;
-
     unsigned a = 0;
 
     while(1)
@@ -91,6 +101,17 @@ int main(void)
         a += 1;
         for(int i = 0; i < 10*1000*1000; i++)
         {}
+#if 1
+        SPIbyte(digits[0]);
+        SPIbyte(digits[1]);
+        SPIbyte(digits[2]);
+        SPIbyte(digits[3]);
+        SPIbyte(digits[4]);
+        SPIbyte(0xAF);
+        SPIbyte(0xAA);
+        SPIbyte(0xFA);
+#endif
+//        msleep(10);
     }
 
     return EXIT_SUCCESS;
@@ -113,5 +134,13 @@ void usleep(int usecs)
     while(TMR4 < usecs * 782 / 1000) // timer counts in increments of 1.28 us
     {}
     T4CONbits.ON = 0;
+
+}
+
+void SPIbyte(unsigned char byte)
+{
+    while(SPI1STATbits.SPITBE != 1) {}
+    SPI1BUF = byte;
+    while(SPI1STATbits.SPITBE != 1) {}
 
 }

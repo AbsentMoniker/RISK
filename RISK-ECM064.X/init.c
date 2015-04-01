@@ -66,9 +66,9 @@ void initPorts()
     //
     //        111111
     //        5432109876543210     pins available
-    TRISB = 0b1111111111111111; // 0 - 15
+    TRISB = 0b0000000111111111; // 0 - 15
     TRISC = 0b1111111111111111; // 12 - 15
-    TRISD = 0b1111111111111111; // 0 - 5, 9 - 11
+    TRISD = 0b1111000111111111; // 0 - 5, 9 - 11
     TRISE = 0b1111111111111111; // 0 - 7
     TRISF = 0b1111111111111111; // 0 - 1, 3 - 5
     TRISG = 0b1111111111111111; // 6 - 9
@@ -183,12 +183,12 @@ void initSPI()
     SPI4STATbits.SPIROV = 0;    // clear status
 
     SPI4BRG = 3;                // baud rate 12.5 MHz
-    // SDO4 output pin?
+    RPD11R = 0b1000;            // SDO4 out on pin D11
     SPI4CONbits.DISSDI = 1;     // disable input
     SPI4CONbits.MODE32 = 0;     // 8-bit mode
     SPI4CONbits.MODE16 = 0;
-    SPI4CONbits.MSTEN = 1;      // slave mode
-    //SPI4CONbits.ON = 1;         // SPI on
+    SPI4CONbits.MSTEN = 1;      // master mode
+    SPI4CONbits.ON = 1;         // SPI on
 
 }
 
