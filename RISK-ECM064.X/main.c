@@ -67,16 +67,16 @@ void SPIbyte(unsigned char byte);
 
 static int digits[10] = {
         //gfedcba
-        0b01111110, // 0
-        0b00001100, // 1
-        0b10110110, // 2
-        0b10011110, // 3
-        0b11001100, // 4
-        0b11011010, // 5
-        0b11111000, // 6
-        0b00001110, // 7
-        0b11111110, // 8
-        0b11001110, // 9
+        0b00111111, // 0
+        0b00000110, // 1
+        0b01011011, // 2
+        0b01001111, // 3
+        0b01100110, // 4
+        0b01101101, // 5
+        0b01111100, // 6
+        0b00000111, // 7
+        0b01111111, // 8
+        0b01100111, // 9
     };
 
 int main(void)
@@ -99,8 +99,8 @@ int main(void)
     {
         PORTB = (a << 8);
         a += 1;
-        for(int i = 0; i < 10*1000*1000; i++)
-        {}
+        //for(int i = 0; i < 10*1000*1000; i++)
+        //{}
 #if 1
         SPIbyte(digits[0]);
         SPIbyte(digits[1]);
@@ -110,12 +110,14 @@ int main(void)
         SPIbyte(0xAF);
         SPIbyte(0xAA);
         SPIbyte(0xFA);
+
+        
         usleep(1);
         PORTDbits.RD9 = 1;
         usleep(1);
         PORTDbits.RD9 = 0;
 #endif
-//        msleep(10);
+        msleep(10);
     }
 
     return EXIT_SUCCESS;
@@ -144,8 +146,8 @@ void usleep(int usecs)
 
 void SPIbyte(unsigned char byte)
 {
-    while(SPI1STATbits.SPITBE != 1) {}
-    SPI1BUF = byte;
-    while(SPI1STATbits.SPITBE != 1) {}
+    while(SPI4STATbits.SPITBE != 1) {}
+    SPI4BUF = byte;
+    while(SPI4STATbits.SPITBE != 1) {}
 
 }

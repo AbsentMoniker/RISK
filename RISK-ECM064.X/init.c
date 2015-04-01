@@ -66,7 +66,7 @@ void initPorts()
     //
     //        111111
     //        5432109876543210     pins available
-    TRISB = 0b0000000111111111; // 0 - 15
+    TRISB = 0b0000000011111111; // 0 - 15
     TRISC = 0b1111111111111111; // 12 - 15
     TRISD = 0b1111000111111111; // 0 - 5, 9 - 11
     TRISE = 0b1111111111111111; // 0 - 7
@@ -144,8 +144,7 @@ void initTimers()
 void initSPI()
 {
     // ----- SPI 1 -----
-    // Used for outputting data to the 43 territory boards, and the
-    // dice displays and continent displays on the main board.
+    // Used for shifting data into LCD.
     SPI1CON = 0;
     SPI1CON2 = 0;
     SPI1STATbits.SPIROV = 0;    // clear status
@@ -177,7 +176,8 @@ void initSPI()
     SPI3CON = 0;
     
     // ----- SPI 4 -----
-    // Used for shifting data into LCD.
+    // Used for outputting data to the 43 territory boards, and the
+    // dice displays and continent displays on the main board.
     SPI4CON = 0;
     SPI4CON2 = 0;
     SPI4STATbits.SPIROV = 0;    // clear status
