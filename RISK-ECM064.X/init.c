@@ -53,7 +53,28 @@ void initInterrupts()
     // why this is configurable is beyond me
     PRISS = 0x76543210;
 
-    // put some interrupts here
+    // Timer 2 interrupt: priority 2.0
+    IFS0bits.T2IF = 0;
+    IEC0bits.T2IE = 1;
+    IPC2bits.T2IP = 2;
+    IPC2bits.T2IS = 0;
+
+    // Timer 3 interrupt: priority 2.0
+    IFS0bits.T3IF = 0;
+    IEC0bits.T3IE = 1;
+    IPC3bits.T3IP = 2;
+    IPC3bits.T3IS = 0;
+
+    // SPI4 transmit buffer interrupt: priority 4.1
+    // This interrupt will only be enabled when there is more data ready to
+    // be stored in the SPI's transmit buffer; after each time the data is
+    // finished shifting, the buffer will sit empty so the interrupt should be
+    // disabled.
+    IFS5bits.SPI4TXIF = 0;
+    IEC5bits.SPI4TXIE = 0;
+    IPC41bits.SPI4TXIP = 4;
+    IPC41bits.SPI4TXIS = 1;
+
 
     INTCONbits.MVEC = 1;
 
@@ -185,9 +206,11 @@ void initSPI()
     SPI4BRG = 3;                // baud rate 12.5 MHz
     RPD11R = 0b1000;            // SDO4 out on pin D11
     SPI4CONbits.DISSDI = 1;     // disable input
+    SPI4CONbits.ENHBUF = 1;     // full 128-bit buffer
     SPI4CONbits.MODE32 = 0;     // 8-bit mode
     SPI4CONbits.MODE16 = 0;
     SPI4CONbits.MSTEN = 1;      // master mode
+    SPI4CONbits.STXISEL = 0b10; // interrupt when buffer half-empty
     SPI4CONbits.ON = 1;         // SPI on
 
 }

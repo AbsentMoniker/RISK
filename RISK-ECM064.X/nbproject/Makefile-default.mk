@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=../game/cards.c ../game/game.c ../game/gamedata.c ../game/log.c ../game/territory.c init.c main.c lcd.c
+SOURCEFILES_QUOTED_IF_SPACED=../game/cards.c ../game/game.c ../game/gamedata.c ../game/log.c ../game/territory.c init.c main.c lcd.c buttons.c pi.c displays.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/760992031/cards.o ${OBJECTDIR}/_ext/760992031/game.o ${OBJECTDIR}/_ext/760992031/gamedata.o ${OBJECTDIR}/_ext/760992031/log.o ${OBJECTDIR}/_ext/760992031/territory.o ${OBJECTDIR}/init.o ${OBJECTDIR}/main.o ${OBJECTDIR}/lcd.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/760992031/cards.o.d ${OBJECTDIR}/_ext/760992031/game.o.d ${OBJECTDIR}/_ext/760992031/gamedata.o.d ${OBJECTDIR}/_ext/760992031/log.o.d ${OBJECTDIR}/_ext/760992031/territory.o.d ${OBJECTDIR}/init.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/lcd.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/760992031/cards.o ${OBJECTDIR}/_ext/760992031/game.o ${OBJECTDIR}/_ext/760992031/gamedata.o ${OBJECTDIR}/_ext/760992031/log.o ${OBJECTDIR}/_ext/760992031/territory.o ${OBJECTDIR}/init.o ${OBJECTDIR}/main.o ${OBJECTDIR}/lcd.o ${OBJECTDIR}/buttons.o ${OBJECTDIR}/pi.o ${OBJECTDIR}/displays.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/760992031/cards.o.d ${OBJECTDIR}/_ext/760992031/game.o.d ${OBJECTDIR}/_ext/760992031/gamedata.o.d ${OBJECTDIR}/_ext/760992031/log.o.d ${OBJECTDIR}/_ext/760992031/territory.o.d ${OBJECTDIR}/init.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/lcd.o.d ${OBJECTDIR}/buttons.o.d ${OBJECTDIR}/pi.o.d ${OBJECTDIR}/displays.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/_ext/760992031/cards.o ${OBJECTDIR}/_ext/760992031/game.o ${OBJECTDIR}/_ext/760992031/gamedata.o ${OBJECTDIR}/_ext/760992031/log.o ${OBJECTDIR}/_ext/760992031/territory.o ${OBJECTDIR}/init.o ${OBJECTDIR}/main.o ${OBJECTDIR}/lcd.o
+OBJECTFILES=${OBJECTDIR}/_ext/760992031/cards.o ${OBJECTDIR}/_ext/760992031/game.o ${OBJECTDIR}/_ext/760992031/gamedata.o ${OBJECTDIR}/_ext/760992031/log.o ${OBJECTDIR}/_ext/760992031/territory.o ${OBJECTDIR}/init.o ${OBJECTDIR}/main.o ${OBJECTDIR}/lcd.o ${OBJECTDIR}/buttons.o ${OBJECTDIR}/pi.o ${OBJECTDIR}/displays.o
 
 # Source Files
-SOURCEFILES=../game/cards.c ../game/game.c ../game/gamedata.c ../game/log.c ../game/territory.c init.c main.c lcd.c
+SOURCEFILES=../game/cards.c ../game/game.c ../game/gamedata.c ../game/log.c ../game/territory.c init.c main.c lcd.c buttons.c pi.c displays.c
 
 
 CFLAGS=
@@ -98,98 +98,134 @@ ${OBJECTDIR}/_ext/760992031/cards.o: ../game/cards.c  nbproject/Makefile-${CND_C
 	@${MKDIR} "${OBJECTDIR}/_ext/760992031" 
 	@${RM} ${OBJECTDIR}/_ext/760992031/cards.o.d 
 	@${RM} ${OBJECTDIR}/_ext/760992031/cards.o 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/760992031/cards.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DUSE_SIMPLE_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/_ext/760992031/cards.o.d" -o ${OBJECTDIR}/_ext/760992031/cards.o ../game/cards.c    -std=gnu99
+	@${FIXDEPS} "${OBJECTDIR}/_ext/760992031/cards.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -O1 -DUSE_FULL_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/_ext/760992031/cards.o.d" -o ${OBJECTDIR}/_ext/760992031/cards.o ../game/cards.c    -std=gnu99
 	
 ${OBJECTDIR}/_ext/760992031/game.o: ../game/game.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/760992031" 
 	@${RM} ${OBJECTDIR}/_ext/760992031/game.o.d 
 	@${RM} ${OBJECTDIR}/_ext/760992031/game.o 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/760992031/game.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DUSE_SIMPLE_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/_ext/760992031/game.o.d" -o ${OBJECTDIR}/_ext/760992031/game.o ../game/game.c    -std=gnu99
+	@${FIXDEPS} "${OBJECTDIR}/_ext/760992031/game.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -O1 -DUSE_FULL_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/_ext/760992031/game.o.d" -o ${OBJECTDIR}/_ext/760992031/game.o ../game/game.c    -std=gnu99
 	
 ${OBJECTDIR}/_ext/760992031/gamedata.o: ../game/gamedata.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/760992031" 
 	@${RM} ${OBJECTDIR}/_ext/760992031/gamedata.o.d 
 	@${RM} ${OBJECTDIR}/_ext/760992031/gamedata.o 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/760992031/gamedata.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DUSE_SIMPLE_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/_ext/760992031/gamedata.o.d" -o ${OBJECTDIR}/_ext/760992031/gamedata.o ../game/gamedata.c    -std=gnu99
+	@${FIXDEPS} "${OBJECTDIR}/_ext/760992031/gamedata.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -O1 -DUSE_FULL_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/_ext/760992031/gamedata.o.d" -o ${OBJECTDIR}/_ext/760992031/gamedata.o ../game/gamedata.c    -std=gnu99
 	
 ${OBJECTDIR}/_ext/760992031/log.o: ../game/log.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/760992031" 
 	@${RM} ${OBJECTDIR}/_ext/760992031/log.o.d 
 	@${RM} ${OBJECTDIR}/_ext/760992031/log.o 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/760992031/log.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DUSE_SIMPLE_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/_ext/760992031/log.o.d" -o ${OBJECTDIR}/_ext/760992031/log.o ../game/log.c    -std=gnu99
+	@${FIXDEPS} "${OBJECTDIR}/_ext/760992031/log.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -O1 -DUSE_FULL_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/_ext/760992031/log.o.d" -o ${OBJECTDIR}/_ext/760992031/log.o ../game/log.c    -std=gnu99
 	
 ${OBJECTDIR}/_ext/760992031/territory.o: ../game/territory.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/760992031" 
 	@${RM} ${OBJECTDIR}/_ext/760992031/territory.o.d 
 	@${RM} ${OBJECTDIR}/_ext/760992031/territory.o 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/760992031/territory.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DUSE_SIMPLE_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/_ext/760992031/territory.o.d" -o ${OBJECTDIR}/_ext/760992031/territory.o ../game/territory.c    -std=gnu99
+	@${FIXDEPS} "${OBJECTDIR}/_ext/760992031/territory.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -O1 -DUSE_FULL_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/_ext/760992031/territory.o.d" -o ${OBJECTDIR}/_ext/760992031/territory.o ../game/territory.c    -std=gnu99
 	
 ${OBJECTDIR}/init.o: init.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/init.o.d 
 	@${RM} ${OBJECTDIR}/init.o 
-	@${FIXDEPS} "${OBJECTDIR}/init.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DUSE_SIMPLE_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/init.o.d" -o ${OBJECTDIR}/init.o init.c    -std=gnu99
+	@${FIXDEPS} "${OBJECTDIR}/init.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -O1 -DUSE_FULL_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/init.o.d" -o ${OBJECTDIR}/init.o init.c    -std=gnu99
 	
 ${OBJECTDIR}/main.o: main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/main.o.d 
 	@${RM} ${OBJECTDIR}/main.o 
-	@${FIXDEPS} "${OBJECTDIR}/main.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DUSE_SIMPLE_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/main.o.d" -o ${OBJECTDIR}/main.o main.c    -std=gnu99
+	@${FIXDEPS} "${OBJECTDIR}/main.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -O1 -DUSE_FULL_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/main.o.d" -o ${OBJECTDIR}/main.o main.c    -std=gnu99
 	
 ${OBJECTDIR}/lcd.o: lcd.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/lcd.o.d 
 	@${RM} ${OBJECTDIR}/lcd.o 
-	@${FIXDEPS} "${OBJECTDIR}/lcd.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DUSE_SIMPLE_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/lcd.o.d" -o ${OBJECTDIR}/lcd.o lcd.c    -std=gnu99
+	@${FIXDEPS} "${OBJECTDIR}/lcd.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -O1 -DUSE_FULL_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/lcd.o.d" -o ${OBJECTDIR}/lcd.o lcd.c    -std=gnu99
+	
+${OBJECTDIR}/buttons.o: buttons.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/buttons.o.d 
+	@${RM} ${OBJECTDIR}/buttons.o 
+	@${FIXDEPS} "${OBJECTDIR}/buttons.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -O1 -DUSE_FULL_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/buttons.o.d" -o ${OBJECTDIR}/buttons.o buttons.c    -std=gnu99
+	
+${OBJECTDIR}/pi.o: pi.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/pi.o.d 
+	@${RM} ${OBJECTDIR}/pi.o 
+	@${FIXDEPS} "${OBJECTDIR}/pi.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -O1 -DUSE_FULL_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/pi.o.d" -o ${OBJECTDIR}/pi.o pi.c    -std=gnu99
+	
+${OBJECTDIR}/displays.o: displays.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/displays.o.d 
+	@${RM} ${OBJECTDIR}/displays.o 
+	@${FIXDEPS} "${OBJECTDIR}/displays.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -O1 -DUSE_FULL_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/displays.o.d" -o ${OBJECTDIR}/displays.o displays.c    -std=gnu99
 	
 else
 ${OBJECTDIR}/_ext/760992031/cards.o: ../game/cards.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/760992031" 
 	@${RM} ${OBJECTDIR}/_ext/760992031/cards.o.d 
 	@${RM} ${OBJECTDIR}/_ext/760992031/cards.o 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/760992031/cards.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DUSE_SIMPLE_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/_ext/760992031/cards.o.d" -o ${OBJECTDIR}/_ext/760992031/cards.o ../game/cards.c    -std=gnu99
+	@${FIXDEPS} "${OBJECTDIR}/_ext/760992031/cards.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -O1 -DUSE_FULL_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/_ext/760992031/cards.o.d" -o ${OBJECTDIR}/_ext/760992031/cards.o ../game/cards.c    -std=gnu99
 	
 ${OBJECTDIR}/_ext/760992031/game.o: ../game/game.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/760992031" 
 	@${RM} ${OBJECTDIR}/_ext/760992031/game.o.d 
 	@${RM} ${OBJECTDIR}/_ext/760992031/game.o 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/760992031/game.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DUSE_SIMPLE_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/_ext/760992031/game.o.d" -o ${OBJECTDIR}/_ext/760992031/game.o ../game/game.c    -std=gnu99
+	@${FIXDEPS} "${OBJECTDIR}/_ext/760992031/game.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -O1 -DUSE_FULL_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/_ext/760992031/game.o.d" -o ${OBJECTDIR}/_ext/760992031/game.o ../game/game.c    -std=gnu99
 	
 ${OBJECTDIR}/_ext/760992031/gamedata.o: ../game/gamedata.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/760992031" 
 	@${RM} ${OBJECTDIR}/_ext/760992031/gamedata.o.d 
 	@${RM} ${OBJECTDIR}/_ext/760992031/gamedata.o 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/760992031/gamedata.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DUSE_SIMPLE_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/_ext/760992031/gamedata.o.d" -o ${OBJECTDIR}/_ext/760992031/gamedata.o ../game/gamedata.c    -std=gnu99
+	@${FIXDEPS} "${OBJECTDIR}/_ext/760992031/gamedata.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -O1 -DUSE_FULL_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/_ext/760992031/gamedata.o.d" -o ${OBJECTDIR}/_ext/760992031/gamedata.o ../game/gamedata.c    -std=gnu99
 	
 ${OBJECTDIR}/_ext/760992031/log.o: ../game/log.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/760992031" 
 	@${RM} ${OBJECTDIR}/_ext/760992031/log.o.d 
 	@${RM} ${OBJECTDIR}/_ext/760992031/log.o 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/760992031/log.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DUSE_SIMPLE_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/_ext/760992031/log.o.d" -o ${OBJECTDIR}/_ext/760992031/log.o ../game/log.c    -std=gnu99
+	@${FIXDEPS} "${OBJECTDIR}/_ext/760992031/log.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -O1 -DUSE_FULL_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/_ext/760992031/log.o.d" -o ${OBJECTDIR}/_ext/760992031/log.o ../game/log.c    -std=gnu99
 	
 ${OBJECTDIR}/_ext/760992031/territory.o: ../game/territory.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/760992031" 
 	@${RM} ${OBJECTDIR}/_ext/760992031/territory.o.d 
 	@${RM} ${OBJECTDIR}/_ext/760992031/territory.o 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/760992031/territory.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DUSE_SIMPLE_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/_ext/760992031/territory.o.d" -o ${OBJECTDIR}/_ext/760992031/territory.o ../game/territory.c    -std=gnu99
+	@${FIXDEPS} "${OBJECTDIR}/_ext/760992031/territory.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -O1 -DUSE_FULL_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/_ext/760992031/territory.o.d" -o ${OBJECTDIR}/_ext/760992031/territory.o ../game/territory.c    -std=gnu99
 	
 ${OBJECTDIR}/init.o: init.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/init.o.d 
 	@${RM} ${OBJECTDIR}/init.o 
-	@${FIXDEPS} "${OBJECTDIR}/init.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DUSE_SIMPLE_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/init.o.d" -o ${OBJECTDIR}/init.o init.c    -std=gnu99
+	@${FIXDEPS} "${OBJECTDIR}/init.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -O1 -DUSE_FULL_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/init.o.d" -o ${OBJECTDIR}/init.o init.c    -std=gnu99
 	
 ${OBJECTDIR}/main.o: main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/main.o.d 
 	@${RM} ${OBJECTDIR}/main.o 
-	@${FIXDEPS} "${OBJECTDIR}/main.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DUSE_SIMPLE_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/main.o.d" -o ${OBJECTDIR}/main.o main.c    -std=gnu99
+	@${FIXDEPS} "${OBJECTDIR}/main.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -O1 -DUSE_FULL_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/main.o.d" -o ${OBJECTDIR}/main.o main.c    -std=gnu99
 	
 ${OBJECTDIR}/lcd.o: lcd.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/lcd.o.d 
 	@${RM} ${OBJECTDIR}/lcd.o 
-	@${FIXDEPS} "${OBJECTDIR}/lcd.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DUSE_SIMPLE_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/lcd.o.d" -o ${OBJECTDIR}/lcd.o lcd.c    -std=gnu99
+	@${FIXDEPS} "${OBJECTDIR}/lcd.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -O1 -DUSE_FULL_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/lcd.o.d" -o ${OBJECTDIR}/lcd.o lcd.c    -std=gnu99
+	
+${OBJECTDIR}/buttons.o: buttons.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/buttons.o.d 
+	@${RM} ${OBJECTDIR}/buttons.o 
+	@${FIXDEPS} "${OBJECTDIR}/buttons.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -O1 -DUSE_FULL_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/buttons.o.d" -o ${OBJECTDIR}/buttons.o buttons.c    -std=gnu99
+	
+${OBJECTDIR}/pi.o: pi.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/pi.o.d 
+	@${RM} ${OBJECTDIR}/pi.o 
+	@${FIXDEPS} "${OBJECTDIR}/pi.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -O1 -DUSE_FULL_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/pi.o.d" -o ${OBJECTDIR}/pi.o pi.c    -std=gnu99
+	
+${OBJECTDIR}/displays.o: displays.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/displays.o.d 
+	@${RM} ${OBJECTDIR}/displays.o 
+	@${FIXDEPS} "${OBJECTDIR}/displays.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -O1 -DUSE_FULL_MAP -DUSE_RANDOM -MMD -MF "${OBJECTDIR}/displays.o.d" -o ${OBJECTDIR}/displays.o displays.c    -std=gnu99
 	
 endif
 

@@ -20,6 +20,8 @@
 #include "init.h"
 #include "lcd.h"
 #include "gamelogic.h"
+#include "displays.h"
+#include "buttons.h"
 
 // implement stubs for required game logic in io.h
 #ifdef USE_RANDOM
@@ -65,20 +67,6 @@ void msleep(int msecs);
 void usleep(int usecs);
 void SPIbyte(unsigned char byte);
 
-static int digits[10] = {
-        //gfedcba
-        0b00111111, // 0
-        0b00000110, // 1
-        0b01011011, // 2
-        0b01001111, // 3
-        0b01100110, // 4
-        0b01101101, // 5
-        0b01111100, // 6
-        0b00000111, // 7
-        0b01111111, // 8
-        0b01100111, // 9
-    };
-
 int main(void)
 {
     initClocks();
@@ -93,31 +81,63 @@ int main(void)
     changeState(INIT);
     updateText();
 #endif
-    unsigned a = 0;
+
+    cardExchangeValue = 51;
+
+    attackerDice[0] = 0;
+    attackerDice[1] = 0;
+    attackerDice[2] = 0;
+    defenderDice[0] = 0;
+    defenderDice[1] = 0;
+    
+
+    continentOwners[0] = -1;
+    continentOwners[1] = -1;
+    continentOwners[2] = -1;
+    continentOwners[3] = -1;
+    continentOwners[4] = -1;
+    continentOwners[5] = -1;
+
+    updateDisplayData();
+
+    IFS0bits.T2IF = 1;
+    clearFlagAdvance();
+    clearFlagCancel();
+    clearFlagNext();
+    clearFlagPrevious();
 
     while(1)
     {
-        PORTB = (a << 8);
-        a += 1;
-        //for(int i = 0; i < 10*1000*1000; i++)
-        //{}
-#if 1
-        SPIbyte(digits[0]);
-        SPIbyte(digits[1]);
-        SPIbyte(digits[2]);
-        SPIbyte(digits[3]);
-        SPIbyte(digits[4]);
-        SPIbyte(0xAF);
-        SPIbyte(0xAA);
-        SPIbyte(0xFA);
+        updateDisplayData();
+        if(flagSetAdvance())
+        {
+            continentOwners[0] = (continentOwners[0] == 0? -1 : 0);
+            clearFlagAdvance();
+        }
 
+        if(flagSetCancel())
+        {
+            continentOwners[1] = (continentOwners[1] == 0? -1 : 0);
+            clearFlagCancel();
+        }
+
+        if(flagSetNext())
+        {
+            attackerDice[0] += 1;
+            if(attackerDice[0] >= 10)
+                attackerDice[0] = 1;
+            clearFlagNext();
+        }
+
+        if(flagSetPrevious())
+        {
+            attackerDice[0] -= 1;
+            if(attackerDice[0] <= 0)
+                attackerDice[0] = 9;
+            clearFlagPrevious();
+        }
         
-        usleep(1);
-        PORTDbits.RD9 = 1;
-        usleep(1);
-        PORTDbits.RD9 = 0;
-#endif
-        msleep(10);
+
     }
 
     return EXIT_SUCCESS;
