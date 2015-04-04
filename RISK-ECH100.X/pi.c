@@ -9,18 +9,21 @@ static unsigned char * cardsPtr = piData + NUM_TERRITORIES;
 
 unsigned char piCommand[PI_COMMAND_LENGTH];
 static unsigned char * cmdPtr = piCommand;
+static int piCommandFlag;
 
 void updatePiData()
 {
     for(int i = 0; i < NUM_TERRITORIES; i++)
     {
-        terrPtr[i] = territories[i].owner;
+        //terrPtr[i] = territories[i].owner;
+        terrPtr[i] = i % 3;
     }
 
     for(int i = 0; i < NUM_CARDS; i++)
     {
         cardsPtr[i] = 0xFF;
     }
+#if 0
     for(int i = 0; i < numPlayers; i++)
     {
         for(int j = 0; j < hands[i].cards; j++)
@@ -28,6 +31,7 @@ void updatePiData()
             cardsPtr[hands[i].hand[j].index] = i;
         }
     }
+#endif
 }
 
 void __ISR(_SPI3_RX_VECTOR, IPL4SRS) SPI3RXisr()
@@ -36,36 +40,62 @@ void __ISR(_SPI3_RX_VECTOR, IPL4SRS) SPI3RXisr()
 
     unsigned char rx = SPI3BUF;
 
-    if(rx == 0xFF)
+    if(rx == 0xFE)
     {
+        // Pi is starting a data request
+        piDataPtr = piData;
+
+        SPI3BUF = *piDataPtr++;
+    }
+    else if(rx == 0xFF)
+    {
+        // Pi needs another byte
+
         if(piDataPtr == NULL)
         {
-            // Pi is starting a data request
-            piDataPtr = piData;
+            SPI3BUF = 0x80;
+            IFS4bits.SPI3RXIF = 0; // clear interrupt flag
+            return;
         }
-
-        if(piDataPtr - piData == PI_DATA_LENGTH)
+        else if(piDataPtr - piData == PI_DATA_LENGTH)
         {
             // End of data
             piDataPtr = NULL;
-            SPI3BUF = 0x01;
+            SPI3BUF = 0xFF;
         }
         else
         {
             // Prepare next byte
-            //SPI3BUF = *piDataPtr++;
-            SPI3BUF = 0x01;
+            SPI3BUF = *piDataPtr++;
         }
+    }
+    else if(rx == 0xFD)
+    {
+        // Pi is starting a command
+        cmdPtr = piCommand;
+        SPI3BUF = 0xFF;
     }
     else
     {
-        if(cmdPtr - piCommand == 4)
+        // PI is continuing a commmand
+        if(cmdPtr != NULL)
         {
-            cmdPtr = piCommand;
+            *cmdPtr++ = rx;
+            if(cmdPtr - piCommand == 4)
+                cmdPtr = NULL;
+
         }
-        *cmdPtr++ = rx;
         SPI3BUF = 0xFF;
     }
 
     IFS4bits.SPI3RXIF = 0; // clear interrupt flag
+}
+
+int flagSetPiCommand()
+{
+
+}
+void clearFlagPiCommand()
+{
+    
 }

@@ -7,8 +7,12 @@
 #define PI_COMMAND_LENGTH 4
 
 extern unsigned char piData[PI_DATA_LENGTH];
+extern unsigned char piCommand[PI_COMMAND_LENGTH];
 
 void updatePiData();
+
+int flagSetPiCommand();
+void clearFlagPiCommand();
 
 #endif	/* PI_H */
 

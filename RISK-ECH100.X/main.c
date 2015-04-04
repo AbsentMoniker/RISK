@@ -83,17 +83,20 @@ int main(void)
     initSPI();
     initRNG();
 
-    startLCD();
+    //startLCD();
 
     initInterrupts();
 
-    changeState(INIT);
-    updateText();
+    //changeState(INIT);
+    //updateText();
 
-    PORTFbits.RF2 = 0;
+    //PORTFbits.RF2 = 0;
 
     while(1)
     {
+        static int a = 0;
+#if 0
+        
         SPIRiskTerritory(0);
         SPIRiskTerritory(1);
         usleep(1000);
@@ -122,9 +125,12 @@ int main(void)
             gameInput(NEXT);
             clearFlag_next();
         }
+#endif
         updatePiData();
+        setTextDisplay(0, "hello pi world");
+        setTextDisplay(1, "%d %d %d %d", piCommand[0], piCommand[1], piCommand[2], piCommand[3]);
         //setTextDisplay(0, "%d %d %d %d %d %d", piData[0], piData[1], piData[2], piData[3], piData[4], piData[5]);
-        msleep(4);
+        msleep(10);
 
     }
 

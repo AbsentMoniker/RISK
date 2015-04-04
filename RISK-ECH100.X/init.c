@@ -58,7 +58,7 @@ void initInterrupts()
     // Interrupt every 2 ms, priority 2.0
     // ISR in buttons.c
     IFS0bits.T2IF = 0;
-    IEC0bits.T2IE = 1;
+    IEC0bits.T2IE = 0;
     IPC2bits.T2IP = 2;
     IPC2bits.T2IS = 0;
 
@@ -66,7 +66,7 @@ void initInterrupts()
     // Interrupt every 1 ms, priority 3.0
     // ISR in main.c
     IFS0bits.T3IF = 0;
-    IEC0bits.T3IE = 1;
+    IEC0bits.T3IE = 0;
     IPC3bits.T3IP = 3;
     IPC3bits.T3IS = 0;
 
