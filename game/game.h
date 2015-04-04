@@ -27,6 +27,7 @@ extern int source;
 extern int destination;
 extern int attackerDice[3];
 extern int defenderDice[2];
+extern int continentOwners[NUM_CONTINENTS];
 
 // gameInput is the main entry point into the game logic; this function calls
 // one of the other functions below it to advance the game state.
@@ -71,6 +72,10 @@ int playerLiving(int player);
 // from territory count and continent bonuses; it does not include card
 // exchanging.
 int computeReinforcements(int player);
+// updateContinents updates the current owner, if any, of each continent. It
+// should be called by computeReinforcements, but may also be called by the I/O
+// whenever.
+void updateContinents();
 
 // Randomly allocate territories to the players, in effect skipping the SELECT
 // state.

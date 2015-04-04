@@ -23,6 +23,7 @@ int source;
 int destination;
 int attackerDice[3];
 int defenderDice[2];
+int continentOwners[NUM_CONTINENTS];
 
 // Game variables that don't need to be exposed to the IO systems
 static State state;
@@ -750,19 +751,34 @@ int computeReinforcements(int player)
         if(territories[i].owner == player)
             territoriesHeld += 1;
 
+    updateContinents();
+
     for(int i = 0; i < NUM_CONTINENTS; i++)
     {
-        int j;
-        for(j = 0; j < continents[i].members; j++)
-        {
-            if(territories[j+continents[i].firstmember].owner != player)
-                break;
-        }
-        if(j == continents[i].members)
+        if(continentOwners[i] == player)
             bonus += continents[i].value;
     }
 
     return bonus + max(3, territoriesHeld / 3);
+}
+
+void updateContinents()
+{
+    for(int i = 0; i < NUM_CONTINENTS; i++)
+    {
+        int firstowner = territories[continents[i].firstmember].owner;
+        
+        int j;
+        for(j = 0; j < continents[i].members; j++)
+        {
+            if(territories[j+continents[i].firstmember].owner != firstowner)
+                break;
+        }
+        if(j == continents[i].members)
+            continentOwners[i] = firstowner;
+        else
+            continentOwners[i] == -1;
+    }
 }
 
 #define SWAP(a,b) do{int tmp = a; a = b; b = tmp;}while(0)
