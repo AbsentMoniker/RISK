@@ -15,16 +15,34 @@
 #define ENCODER_PIN_A       PORTFbits.RF0
 #define ENCODER_PIN_B       PORTFbits.RF1
 
-int flagSetAdvance();
-int flagSetCancel();
-int flagSetNext();
-int flagSetPrevious();
-void clearFlagAdvance();
-void clearFlagCancel();
-void clearFlagNext();
-void clearFlagPrevious();
+#define BUTTON_ADVANCE_SHIFT 4
+#define BUTTON_CANCEL_SHIFT 5
+#define ENCODER_A_SHIFT 0
+#define ENCODER_B_SHIFT 1
 
-void updateEncoderFlagA(unsigned newstate);
-void updateEncoderFlagB(unsigned newstate);
+#define BUTTON_ADVANCE_MASK 0x00000010
+#define BUTTON_CANCEL_MASK 0x00000020
+#define ENCODER_A_MASK 0x00000001
+#define ENCODER_B_MASK 0x00000002
+
+#define BUTTON_ADVANCE_STATE_MASK 0x000003F0
+#define BUTTON_CANCEL_STATE_MASK 0x000007E0
+#define ENCODER_A_STATE_MASK 0x0000003F
+#define ENCODER_B_STATE_MASK 0x0000007E
+
+extern int advanceFlag;
+extern int cancelFlag;
+extern int nextFlag;
+extern int previousFlag;
+
+static inline int flagSetAdvance() { return advanceFlag == 1; }
+static inline int flagSetCancel() { return cancelFlag == 1; }
+static inline int flagSetNext() { return nextFlag == 1; }
+static inline int flagSetPrevious() { return previousFlag == 1; }
+
+static inline void clearFlagAdvance() { advanceFlag = -1; }
+static inline void clearFlagCancel() { cancelFlag = -1; }
+static inline void clearFlagNext() { nextFlag = -1; }
+static inline void clearFlagPrevious() { previousFlag = -1; }
 
 #endif	/* BUTTONS_H */
