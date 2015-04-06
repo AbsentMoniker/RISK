@@ -22,7 +22,7 @@
 
 #define CONTINENT_LED_UPPER_SHIFT 4
 #define CONTINENT_LED_LOWER_SHIFT 1
-#define TERRITORY_LED_SHIFT       2
+#define TERRITORY_LED_SHIFT       1
 
 static const int digits[10] = {
     // gfedcba

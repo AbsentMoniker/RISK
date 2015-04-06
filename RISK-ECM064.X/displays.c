@@ -19,9 +19,9 @@ void updateDisplayData()
     // Territory displays
     for(int i = 0, territory = NUM_TERRITORIES - 1; territory >= 0; i += 3, territory -= 1)
     {
-        displayDataTerritories[i] = PLAYER_COLOR(territories[territory].owner) << TERRITORY_LED_SHIFT;
+        displayDataTerritories[i] = digits[territories[territory].troops % 10];
         displayDataTerritories[i+1] = (territories[territory].troops / 10) % 10 != 0? digits[(territories[territory].troops / 10) % 10] : 0;
-        displayDataTerritories[i+2] = digits[territories[territory].troops % 10];
+        displayDataTerritories[i+2] = PLAYER_COLOR(territories[territory].owner) << TERRITORY_LED_SHIFT;
     }
 
     // Card displays
@@ -37,12 +37,22 @@ void updateDisplayData()
     displayDataDice[4] = attackerDice[0] != 0? digits[attackerDice[0]] : 0;
 
     // Continent displays
-    displayDataContinents[0] = (PLAYER_COLOR(continentOwners[0]) << CONTINENT_LED_UPPER_SHIFT) |
-            (PLAYER_COLOR(continentOwners[1]) << CONTINENT_LED_LOWER_SHIFT);
-    displayDataContinents[1] = (PLAYER_COLOR(continentOwners[2]) << CONTINENT_LED_UPPER_SHIFT) |
-            (PLAYER_COLOR(continentOwners[3]) << CONTINENT_LED_LOWER_SHIFT);
-    displayDataContinents[2] = (PLAYER_COLOR(continentOwners[4]) << CONTINENT_LED_UPPER_SHIFT) |
-            (PLAYER_COLOR(continentOwners[5]) << CONTINENT_LED_LOWER_SHIFT);
+#ifdef USE_SIMPLE_MAP
+    displayDataContinents[0] = 0x00;
+    displayDataContinents[1] = 0x00;
+    displayDataContinents[2] = 0x00;
+    displayDataContinents[3] = 0x00;
+    displayDataContinents[4] = 0x00;
+    displayDataContinents[5] = 0x00;
+    displayDataContinents[6] = 0x00;
+#else
+    displayDataContinents[0] = (PLAYER_COLOR(continentOwners[1]) << CONTINENT_LED_UPPER_SHIFT) |
+            (PLAYER_COLOR(continentOwners[0]) << CONTINENT_LED_LOWER_SHIFT);
+    displayDataContinents[1] = (PLAYER_COLOR(continentOwners[3]) << CONTINENT_LED_UPPER_SHIFT) |
+            (PLAYER_COLOR(continentOwners[2]) << CONTINENT_LED_LOWER_SHIFT);
+    displayDataContinents[2] = (PLAYER_COLOR(continentOwners[5]) << CONTINENT_LED_UPPER_SHIFT) |
+            (PLAYER_COLOR(continentOwners[4]) << CONTINENT_LED_LOWER_SHIFT);
+#endif
 }
 
 static int blankDisplays = 0;
@@ -63,7 +73,7 @@ void __ISR(_TIMER_3_VECTOR, IPL3SRS) startDisplays()
         // display data
         PULSE_RCLK();
         // start shifting blanks
-        //blankDisplays = 1;
+        blankDisplays = 1;
     }
     else
     {

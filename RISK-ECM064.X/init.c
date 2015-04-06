@@ -88,8 +88,8 @@ void initPorts()
     //        111111
     //        5432109876543210     pins available
     TRISB = 0b0000000011111111; // 0 - 15
-    TRISC = 0b1111111111111111; // 12 - 15
-    TRISD = 0b1111000111111111; // 0 - 5, 9 - 11
+    TRISC = 0b1011111111111111; // 12 - 15
+    TRISD = 0b1111000111000001; // 0 - 5, 9 - 11
     TRISE = 0b1111111111111111; // 0 - 7
     TRISF = 0b1111111111111111; // 0 - 1, 3 - 5
     TRISG = 0b1111111111111111; // 6 - 9
@@ -170,13 +170,13 @@ void initSPI()
     SPI1CON2 = 0;
     SPI1STATbits.SPIROV = 0;    // clear status
     
-    SPI1BRG = 1;                // baud rate = 12.5 MHz
-    RPF1R = 0b0101;             // SPI data out on F1
+    SPI1BRG = 3;                // baud rate = 12.5 MHz
+    RPD2R = 0b0101;             // SPI data out on D2
     SPI1CONbits.DISSDI = 1;     // disable input
     SPI1CONbits.MODE32 = 0;     // 8-bit mode
     SPI1CONbits.MODE16 = 0;
     SPI1CONbits.MSTEN = 1;      // master mode
-    //SPI1CONbits.ON = 1;         // SPI on
+    SPI1CONbits.ON = 1;         // SPI on
     
     // ----- SPI 2 -----
     // Used for communicating with Pi.

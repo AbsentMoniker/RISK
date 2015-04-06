@@ -76,27 +76,24 @@ int main(void)
     initSPI();
     initRNG();
 
-//   startLCD();
+#if 0
+#define LCD_RS    PORTDbits.RD4
+#define LCD_RW    PORTDbits.RD3
+#define LCD_CLK   PORTDbits.RD5
+#define LCD_RCLK  PORTCbits.RC14
+#define LCD_DATA  SPI1BUF
+#define LCD_VO    PORTCbits.RC13
+#endif
+
+   startLCD();
 #if 0
     changeState(INIT);
     updateText();
 #endif
 
-    cardExchangeValue = 51;
+    //startLCD();
+    //setTextDisplay(0, "hello world");
 
-    attackerDice[0] = 0;
-    attackerDice[1] = 0;
-    attackerDice[2] = 0;
-    defenderDice[0] = 0;
-    defenderDice[1] = 0;
-    
-
-    continentOwners[0] = -1;
-    continentOwners[1] = -1;
-    continentOwners[2] = -1;
-    continentOwners[3] = -1;
-    continentOwners[4] = -1;
-    continentOwners[5] = -1;
 
     updateDisplayData();
 
@@ -106,8 +103,20 @@ int main(void)
     clearFlagNext();
     clearFlagPrevious();
 
+    int a = 0;
     while(1)
     {
+        
+        for(int i = 0; i < NUM_TERRITORIES; i++)
+        {
+            territories[i].troops = 10;
+            territories[i].owner = a;
+        }
+        a = (a + 1) % 8;
+        cardExchangeValue = a;
+        updateDisplayData();
+        msleep(1000);
+#if 0
         updateDisplayData();
         if(flagSetAdvance())
         {
@@ -136,7 +145,7 @@ int main(void)
                 attackerDice[0] = 9;
             clearFlagPrevious();
         }
-        
+#endif
 
     }
 
