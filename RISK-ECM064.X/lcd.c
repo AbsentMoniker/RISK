@@ -10,12 +10,17 @@ void usleep(int msecs);
 #include <stdarg.h>
 
 
-
-#define LCDCMD_ON      0x0C
-#define LCDCMD_TWOLINE 0x38
-#define LCDCMD_CLR     0x01
-#define LCDCMD_LINE1   0x80
-#define LCDCMD_LINE2   0xC0
+// The on command is 0b00001DCB, with
+// D=1 (display on), C=0 (cursor off), B=0 (blinking off)
+#define LCDCMD_ON      0b00001100
+// Mode is 0b0001DNFxx, with
+// D=1 (8-bit mode), N=1 (2 lines), F=0 (default font)
+#define LCDCMD_TWOLINE 0b00011100
+#define LCDCMD_CLR     0b00000001
+#define LCDCMD_LINE1   0x80 // Set cursor to position 0
+#define LCDCMD_LINE2   0xC0 // Set cursor to position 0x40
+#define LCDCMD_LINE3   0x94 // Set cursor to position 20
+#define LCDCMD_LINE4   0xD8 // Set cursor to position 0x40 + 20
 
 // LCD needs at least 37us between most commands, according to its datasheet.
 #define LCD_SHORT_WAIT() usleep(40) // to be safe
@@ -47,8 +52,8 @@ void startLCD()
     LCD_RS = 0;  // Writing data
 
     LCD_LONG_WAIT();
-    sendLCDcmd(LCDCMD_ON);
     sendLCDcmd(LCDCMD_TWOLINE);
+    sendLCDcmd(LCDCMD_ON);
     sendLCDcmd(LCDCMD_CLR);
     LCD_LONG_WAIT();
 
