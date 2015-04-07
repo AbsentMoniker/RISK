@@ -16,9 +16,8 @@
 #define LCD_RCLK  PORTCbits.RC14
 #define LCD_DATA  SPI1BUF
 #define LCD_VO    PORTCbits.RC13
-//#define LCD_DATA  PORTE // this is not so simple, it needs to go over SPI
 
-void startLCD();
+void startLCD(0);
 void sendLCDcmd(unsigned char cmd);
 void clearLCD();
 

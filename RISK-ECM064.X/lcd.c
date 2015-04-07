@@ -1,7 +1,7 @@
 #include <p32xxxx.h>
 #include "lcd.h"
 
-#define SHORTWAIT() asm volatile ("nop\n nop\n nop\n nop\n nop\n nop")
+
 void msleep(int msecs);
 void usleep(int msecs);
 
@@ -9,7 +9,6 @@ void usleep(int msecs);
 #include <stdlib.h>
 #include <stdarg.h>
 
-// LCD needs 37us between commands, according to its datasheet.
 
 
 #define LCDCMD_ON      0x0C
@@ -18,84 +17,106 @@ void usleep(int msecs);
 #define LCDCMD_LINE1   0x80
 #define LCDCMD_LINE2   0xC0
 
+// LCD needs at least 37us between most commands, according to its datasheet.
+#define LCD_SHORT_WAIT() usleep(40) // to be safe
+// If the LCD was just powered on (meaning the micro was just powered on
+// as well), give it a full second to power up before sending commands.
+// Otherwise it needs 2 ms from the ON command to normal operation.
+#define LCD_LONG_WAIT()  msleep(2)
+#define LCD_POWER_ON_WAIT() msleep(1000)
+// Wait a few cycles between toggling the same micro port multiple times.
+#define PORTWAIT() asm volatile ("nop\n nop\n nop\n nop\n nop\n nop")
 
 void startLCD()
 {
     if(RCONbits.POR)
     {
-        msleep(1000);
+        LCD_POWER_ON_WAIT();
         RCONbits.POR = 0;
     }
     else
-        msleep(2);
+        LCD_SHORT_WAIT();
 
-    LCD_RW = 0;
-    SHORTWAIT();
-    LCD_CLK = 1;
-    SHORTWAIT();
-    LCD_VO = 0;
-    msleep(1);
+    PORTWAIT();
+    LCD_RW = 0;  // Write to LCD
+    PORTWAIT();
+    LCD_CLK = 1; // Idle LCD clock high
+    PORTWAIT();
+    LCD_VO = 0;  // LCD contrast to maximum
+    PORTWAIT();
+    LCD_RS = 0;  // Writing data
+
+    LCD_LONG_WAIT();
     sendLCDcmd(LCDCMD_ON);
     sendLCDcmd(LCDCMD_TWOLINE);
     sendLCDcmd(LCDCMD_CLR);
-    msleep(2);
+    LCD_LONG_WAIT();
 
 }
 
 void clearLCD()
 {
     sendLCDcmd(LCDCMD_CLR);
-    usleep(40);
+    LCD_SHORT_WAIT();
 }
 void sendLCDcmd(unsigned char cmd)
 {
-    SHORTWAIT();
-    LCD_RS = 0;
-    usleep(40);
+    PORTWAIT();
+    LCD_RS = 0;  // Writing commands
+    LCD_SHORT_WAIT();
+
+    // SPI out command
     LCD_DATA = cmd;
     while(SPI1STATbits.SPITBE == 0)
     {}
     LCD_RCLK = 1;
-    SHORTWAIT();
+    PORTWAIT();
     LCD_RCLK = 0;
-    SHORTWAIT();
+    PORTWAIT();
+
+    // Pulse LCD clock
     LCD_CLK = 0;
-    usleep(40);
-    LCD_RS = 1;
-    SHORTWAIT();
+    LCD_SHORT_WAIT();
     LCD_CLK = 1;
-    usleep(40);
+    LCD_SHORT_WAIT();
+    
+    PORTWAIT();
+    LCD_RS = 1; // Back to data
+    PORTWAIT();
+    LCD_SHORT_WAIT();
 }
 
 void setTextDisplay(int line, const char * format, ...)
 {
-
+    // Convert any args that need formatting
     if(line != 0 && line != 1)
         return;
     char text[21] = {0};
     va_list args;
     va_start(args, format);
-    vsnprintf(text, 21, format, args);
+    vsnprintf(text, 21, format, args); // nprintf will put a '\0' in the 21st char
     va_end(args);
 
-    usleep(40);
     if(line == 0)
         sendLCDcmd(LCDCMD_LINE1);
     if(line == 1)
         sendLCDcmd(LCDCMD_LINE2);
     for(int i = 0; i < 20; i++)
     {
+        // SPI out character
         LCD_DATA = text[i]? text[i] : ' ';
         while(SPI1STATbits.SPITBE == 0)
         {}
         LCD_RCLK = 1;
-        SHORTWAIT();
+        PORTWAIT();
         LCD_RCLK = 0;
-        SHORTWAIT();
+        PORTWAIT();
+
+        // Pulse LCD clock
         LCD_CLK = 0;
-        usleep(40);
+        LCD_SHORT_WAIT();
         LCD_CLK = 1;
-        usleep(40);
+        LCD_SHORT_WAIT();
         
     }
 }
