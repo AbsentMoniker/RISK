@@ -71,7 +71,7 @@ void sendLCDcmd(unsigned char cmd)
     PORTWAIT();
     LCD_RS = 0;  // Writing commands
     LCD_SHORT_WAIT();
-
+/*
     for(int i = 0; i < 10; i++)
     {
     LCD_RCLK = 0;
@@ -79,19 +79,19 @@ void sendLCDcmd(unsigned char cmd)
     LCD_RCLK = 1;
     PORTWAIT();
     }
-
+*/
     
     // SPI out command
     LCD_DATA = cmd;
     while(SPI1STATbits.SPITBE == 0)
     {}
-#if 0
+    LCD_SHORT_WAIT();
     LCD_RCLK = 0;
     PORTWAIT();
     LCD_RCLK = 1;
     PORTWAIT();
-#endif
 
+#if 0
 for(int i = 0; i < 10; i++)
     {
     LCD_RCLK = 0;
@@ -99,7 +99,7 @@ for(int i = 0; i < 10; i++)
     LCD_RCLK = 1;
     PORTWAIT();
     }
-
+#endif
 
     // Pulse LCD clock
     LCD_CLK = 0;

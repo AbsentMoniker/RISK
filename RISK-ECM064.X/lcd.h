@@ -13,7 +13,7 @@
 #define LCD_RS    PORTDbits.RD4
 #define LCD_RW    PORTDbits.RD3
 #define LCD_CLK   PORTDbits.RD5
-#define LCD_RCLK  PORTCbits.RC14
+#define LCD_RCLK  PORTBbits.RB15
 #define LCD_DATA  SPI1BUF
 #define LCD_VO    PORTCbits.RC13
 

@@ -100,7 +100,7 @@ void initPorts()
     TRISD = 0b1111000111000001; // 0 - 5, 9 - 11
     TRISE = 0b1111111111111111; // 0 - 7
     TRISF = 0b1111111111111111; // 0 - 1, 3 - 5
-    TRISG = 0b1111111111111111; // 6 - 9
+    TRISG = 0b1111111011111111; // 6 - 9
 
     ANSELB = 0x0000;
     ANSELC = 0x0000;
@@ -173,7 +173,7 @@ void initTimers()
 void initSPI()
 {
 
-#if 0
+#if 1
     // ----- SPI 1 -----
     // Used for shifting data into LCD.
     SPI1CON = 0;
@@ -186,6 +186,7 @@ void initSPI()
     SPI1CONbits.MODE32 = 0;     // 8-bit mode
     SPI1CONbits.MODE16 = 0;
     SPI1CONbits.MSTEN = 1;      // master mode
+    SPI1CONbits.CKE = 1;        // data changes on neg edge
     SPI1CONbits.ON = 1;         // SPI on
 
 #endif

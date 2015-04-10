@@ -81,7 +81,7 @@ int main(void)
 #define LCD_RS    PORTDbits.RD4
 #define LCD_RW    PORTDbits.RD3
 #define LCD_CLK   PORTDbits.RD5
-#define LCD_RCLK  PORTCbits.RC14
+#define LCD_RCLK  PORTBbits.RB15
 #define LCD_DATA  SPI1BUF
 #define LCD_VO    PORTCbits.RC13
 #endif
@@ -116,7 +116,7 @@ int main(void)
 // Wait a few cycles between toggling the same micro port multiple times.
 #define PORTWAIT() asm volatile ("nop\n nop\n nop\n nop\n nop\n nop")
 
-#if 0
+#if 1
     PORTWAIT();
     LCD_RW = 0;  // Write to LCD
     PORTWAIT();
@@ -125,17 +125,24 @@ int main(void)
     LCD_VO = 0;  // LCD contrast to maximum
     PORTWAIT();
     LCD_RS = 1;  // Writing data
-
-    LCD_RCLK = 1;
-
-    //msleep(1000);
-
-    LCD_LONG_WAIT();
+    continentOwners[5] = 4;
+    updateDisplayData();
+    while (0)
+    {
+        LCD_RCLK = 1;
+        LCD_SHORT_WAIT();
+        LCD_RCLK = 0;
+        LCD_SHORT_WAIT();
+    }
+    continentOwners[0] = 1;
+    updateDisplayData();
+    msleep(1000);
+    //LCD_RCLK = 1;
     sendLCDcmd(LCDCMD_TWOLINE);
-    //LCD_LONG_WAIT();
-    //sendLCDcmd(LCDCMD_ON);
-    //LCD_LONG_WAIT();
-    //sendLCDcmd(LCDCMD_CLR);
+    LCD_SHORT_WAIT();
+    sendLCDcmd(LCDCMD_ON);
+    LCD_SHORT_WAIT();
+    sendLCDcmd(LCDCMD_CLR);
 
     //startLCD();
     //setTextDisplay(0, "hello world");

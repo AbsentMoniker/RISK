@@ -57,6 +57,7 @@ void __ISR(_SPI2_RX_VECTOR, IPL4SRS) SPI2RXisr()
         if(piDataPtr == NULL)
         {
             SPI2BUF = 0x80;
+
             IFS4bits.SPI2RXIF = 0; // clear interrupt flag
             return;
         }
