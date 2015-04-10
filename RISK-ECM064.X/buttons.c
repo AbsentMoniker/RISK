@@ -31,9 +31,6 @@ void __ISR(_TIMER_2_VECTOR, IPL2SRS) pollButtons()
     encoderAState = (encoderAState << 1) | (buttonStates & ENCODER_A_MASK);
     encoderBState = (encoderBState << 1) | (buttonStates & ENCODER_B_MASK);
 
-    continentOwners[3] = previousEncoderA - 1;
-    continentOwners[4] = previousEncoderB - 1;
-
     // Button has been pressed if the last six reads were true
     // Button has been released if the last six reads were false
     if(advanceFlag == READY && (buttonAdvanceState & BUTTON_ADVANCE_MASK) == 0)

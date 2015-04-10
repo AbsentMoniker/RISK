@@ -22,6 +22,7 @@
 #include "gamelogic.h"
 #include "displays.h"
 #include "buttons.h"
+#include "pi.h"
 
 // implement stubs for required game logic in io.h
 #ifdef USE_RANDOM
@@ -85,15 +86,60 @@ int main(void)
 #define LCD_VO    PORTCbits.RC13
 #endif
 
-   startLCD();
+   //startLCD();
 #if 0
     changeState(INIT);
     updateText();
 #endif
 
+
+
+    // The on command is 0b00001DCB, with
+// D=1 (display on), C=0 (cursor off), B=0 (blinking off)
+#define LCDCMD_ON      0b00001100
+// Mode is 0b0001DNFxx, with
+// D=1 (8-bit mode), N=1 (2 lines), F=0 (default font)
+#define LCDCMD_TWOLINE 0b00011100
+#define LCDCMD_CLR     0b00000001
+#define LCDCMD_LINE1   0x80 // Set cursor to position 0
+#define LCDCMD_LINE2   0xC0 // Set cursor to position 0x40
+#define LCDCMD_LINE3   0x94 // Set cursor to position 20
+#define LCDCMD_LINE4   0xD8 // Set cursor to position 0x40 + 20
+
+// LCD needs at least 37us between most commands, according to its datasheet.
+#define LCD_SHORT_WAIT() usleep(40) // to be safe
+// If the LCD was just powered on (meaning the micro was just powered on
+// as well), give it a full second to power up before sending commands.
+// Otherwise it needs 2 ms from the ON command to normal operation.
+#define LCD_LONG_WAIT()  msleep(2)
+#define LCD_POWER_ON_WAIT() msleep(1000)
+// Wait a few cycles between toggling the same micro port multiple times.
+#define PORTWAIT() asm volatile ("nop\n nop\n nop\n nop\n nop\n nop")
+
+#if 0
+    PORTWAIT();
+    LCD_RW = 0;  // Write to LCD
+    PORTWAIT();
+    LCD_CLK = 1; // Idle LCD clock high
+    PORTWAIT();
+    LCD_VO = 0;  // LCD contrast to maximum
+    PORTWAIT();
+    LCD_RS = 1;  // Writing data
+
+    LCD_RCLK = 1;
+
+    //msleep(1000);
+
+    LCD_LONG_WAIT();
+    sendLCDcmd(LCDCMD_TWOLINE);
+    //LCD_LONG_WAIT();
+    //sendLCDcmd(LCDCMD_ON);
+    //LCD_LONG_WAIT();
+    //sendLCDcmd(LCDCMD_CLR);
+
     //startLCD();
     //setTextDisplay(0, "hello world");
-
+#endif
 
     updateDisplayData();
 
@@ -103,19 +149,42 @@ int main(void)
     clearFlagNext();
     clearFlagPrevious();
 
+    updatePiData();
+    for(int i = 0; i < 42; i++)
+    {
+        piData[i] = i % 6;
+    }
+    for(int i = 0; i < 44; i++)
+    {
+        if(i < 12)
+            piData[i + 42] = i % 6;
+        else
+            piData[i + 42] = 0xFF;
+    }
+
+    continentOwners[0] = -1;
+        continentOwners[1] = -1;
+        continentOwners[2] = -1;
+        continentOwners[3] = -1;
+        continentOwners[4] = -1;
+        continentOwners[5] = -1;
+
     int a = 0;
     while(1)
     {
         
-        for(int i = 0; i < NUM_TERRITORIES; i++)
-        {
-            territories[i].troops = 10;
-            territories[i].owner = a;
-        }
-        a = (a + 1) % 8;
-        cardExchangeValue = a;
         updateDisplayData();
+
+#if 0
+        PORTDbits.RD1 = a;
+        PORTC = 0xFFFF;
+        PORTB = 0xFFFF;
+        if(a == 0)
+            a = 1;
+        else
+            a = 0;
         msleep(1000);
+#endif
 #if 0
         updateDisplayData();
         if(flagSetAdvance())

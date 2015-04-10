@@ -50,6 +50,8 @@ void startLCD()
     LCD_VO = 0;  // LCD contrast to maximum
     PORTWAIT();
     LCD_RS = 0;  // Writing data
+    PORTWAIT();
+    LCD_RCLK = 1;  // Writing data
 
     LCD_LONG_WAIT();
     sendLCDcmd(LCDCMD_TWOLINE);
@@ -70,14 +72,34 @@ void sendLCDcmd(unsigned char cmd)
     LCD_RS = 0;  // Writing commands
     LCD_SHORT_WAIT();
 
+    for(int i = 0; i < 10; i++)
+    {
+    LCD_RCLK = 0;
+    PORTWAIT();
+    LCD_RCLK = 1;
+    PORTWAIT();
+    }
+
+    
     // SPI out command
     LCD_DATA = cmd;
     while(SPI1STATbits.SPITBE == 0)
     {}
-    LCD_RCLK = 1;
-    PORTWAIT();
+#if 0
     LCD_RCLK = 0;
     PORTWAIT();
+    LCD_RCLK = 1;
+    PORTWAIT();
+#endif
+
+for(int i = 0; i < 10; i++)
+    {
+    LCD_RCLK = 0;
+    PORTWAIT();
+    LCD_RCLK = 1;
+    PORTWAIT();
+    }
+
 
     // Pulse LCD clock
     LCD_CLK = 0;

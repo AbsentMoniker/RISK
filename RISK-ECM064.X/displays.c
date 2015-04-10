@@ -100,7 +100,7 @@ void __ISR(_TIMER_3_VECTOR, IPL3SRS) startDisplays()
     IFS0bits.T3IF = 0;
 }
 
-void __ISR(_SPI4_TX_VECTOR, IPL4SRS) refillDisplayBuffer()
+void __ISR(_SPI4_TX_VECTOR, IPL3SRS) refillDisplayBuffer()
 {
     while(!SPI4STATbits.SPITBF)
     {

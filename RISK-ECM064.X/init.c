@@ -65,15 +65,23 @@ void initInterrupts()
     IPC3bits.T3IP = 2;
     IPC3bits.T3IS = 0;
 
-    // SPI4 transmit buffer interrupt: priority 4.1
+    // SPI4 transmit buffer interrupt: priority 3.1
     // This interrupt will only be enabled when there is more data ready to
     // be stored in the SPI's transmit buffer; after each time the data is
     // finished shifting, the buffer will sit empty so the interrupt should be
     // disabled.
     IFS5bits.SPI4TXIF = 0;
     IEC5bits.SPI4TXIE = 0;
-    IPC41bits.SPI4TXIP = 4;
+    IPC41bits.SPI4TXIP = 3;
     IPC41bits.SPI4TXIS = 1;
+
+    // SPI 2 rx interrupt
+    // priority 4.0
+    // ISR in pi.c
+    IFS4bits.SPI2RXIF = 0;
+    IEC4bits.SPI2RXIE = 1;
+    IPC35bits.SPI2RXIP = 4;
+    IPC35bits.SPI2RXIS = 0;
 
 
     INTCONbits.MVEC = 1;
@@ -92,7 +100,7 @@ void initPorts()
     TRISD = 0b1111000111000001; // 0 - 5, 9 - 11
     TRISE = 0b1111111111111111; // 0 - 7
     TRISF = 0b1111111111111111; // 0 - 1, 3 - 5
-    TRISG = 0b1111111111111111; // 6 - 9
+    TRISG = 0b1111111101111111; // 6 - 9
 
     ANSELB = 0x0000;
     ANSELC = 0x0000;
@@ -164,6 +172,8 @@ void initTimers()
 
 void initSPI()
 {
+
+#if 0
     // ----- SPI 1 -----
     // Used for shifting data into LCD.
     SPI1CON = 0;
@@ -177,6 +187,8 @@ void initSPI()
     SPI1CONbits.MODE16 = 0;
     SPI1CONbits.MSTEN = 1;      // master mode
     SPI1CONbits.ON = 1;         // SPI on
+
+#endif
     
     // ----- SPI 2 -----
     // Used for communicating with Pi.
@@ -185,12 +197,20 @@ void initSPI()
     SPI2STATbits.SPIROV = 0;    // clear status
     (void) SPI2BUF;             // clear receive buffer
     
-    // SDO2 output pin?
-    // SDI2 input pin?
+    // SDO2 output pin? G8
+    RPG8R = 0b0110;
+    // SDI2 input pin? G7
+    SDI2R = 0b0001;
+    SS2R = 0b0001;
     SPI2CONbits.MODE32 = 0;     // 8-bit mode
     SPI2CONbits.MODE16 = 0;
     SPI2CONbits.MSTEN = 0;      // slave mode
-    //SPI2CONbits.ON = 1;         // SPI on
+    SPI2CONbits.SRXISEL = 0b01;
+    SPI2CONbits.CKE = 1;
+    SPI2CONbits.ENHBUF = 1;
+    SPI2CONbits.ON = 1;         // SPI on
+
+    SPI2BUF = 0xFF;
 
     // ----- SPI 3 ----
     // Not used
