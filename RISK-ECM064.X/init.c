@@ -60,11 +60,11 @@ void initInterrupts()
     IPC2bits.T2IP = 2;
     IPC2bits.T2IS = 0;
 
-    // Timer 3 interrupt: priority 2.0
+    // Timer 3 interrupt: priority 3.0
     // ISR in displays.c
     IFS0bits.T3IF = 0;
     IEC0bits.T3IE = 1;
-    IPC3bits.T3IP = 2;
+    IPC3bits.T3IP = 3;
     IPC3bits.T3IS = 0;
 
     // SPI4 transmit buffer interrupt: priority 3.1

@@ -112,6 +112,7 @@ int main(void)
     {
 #if 1
         updateDisplayData();
+        
         if(flagSetAdvance())
         {
             static int RNGseeded = 0;
