@@ -76,86 +76,23 @@ int main(void)
     initTimers();
     initSPI();
     initRNG();
+    
+    startLCD();
 
-#if 0
-#define LCD_RS    PORTDbits.RD4
-#define LCD_RW    PORTDbits.RD3
-#define LCD_CLK   PORTDbits.RD5
-#define LCD_RCLK  PORTBbits.RB15
-#define LCD_DATA  SPI1BUF
-#define LCD_VO    PORTCbits.RC13
-#endif
-
-   //startLCD();
-#if 0
+#if 1
     changeState(INIT);
     updateText();
 #endif
-
-
-
-    // The on command is 0b00001DCB, with
-// D=1 (display on), C=0 (cursor off), B=0 (blinking off)
-#define LCDCMD_ON      0b00001100
-// Mode is 0b0001DNFxx, with
-// D=1 (8-bit mode), N=1 (2 lines), F=0 (default font)
-#define LCDCMD_TWOLINE 0b00011100
-#define LCDCMD_CLR     0b00000001
-#define LCDCMD_LINE1   0x80 // Set cursor to position 0
-#define LCDCMD_LINE2   0xC0 // Set cursor to position 0x40
-#define LCDCMD_LINE3   0x94 // Set cursor to position 20
-#define LCDCMD_LINE4   0xD8 // Set cursor to position 0x40 + 20
-
-// LCD needs at least 37us between most commands, according to its datasheet.
-#define LCD_SHORT_WAIT() usleep(40) // to be safe
-// If the LCD was just powered on (meaning the micro was just powered on
-// as well), give it a full second to power up before sending commands.
-// Otherwise it needs 2 ms from the ON command to normal operation.
-#define LCD_LONG_WAIT()  msleep(2)
-#define LCD_POWER_ON_WAIT() msleep(1000)
-// Wait a few cycles between toggling the same micro port multiple times.
-#define PORTWAIT() asm volatile ("nop\n nop\n nop\n nop\n nop\n nop")
-
-#if 1
-    PORTWAIT();
-    LCD_RW = 0;  // Write to LCD
-    PORTWAIT();
-    LCD_CLK = 1; // Idle LCD clock high
-    PORTWAIT();
-    LCD_VO = 0;  // LCD contrast to maximum
-    PORTWAIT();
-    LCD_RS = 1;  // Writing data
-    continentOwners[5] = 4;
-    updateDisplayData();
-    while (0)
-    {
-        LCD_RCLK = 1;
-        LCD_SHORT_WAIT();
-        LCD_RCLK = 0;
-        LCD_SHORT_WAIT();
-    }
-    continentOwners[0] = 1;
-    updateDisplayData();
-    msleep(1000);
-    //LCD_RCLK = 1;
-    sendLCDcmd(LCDCMD_TWOLINE);
-    LCD_SHORT_WAIT();
-    sendLCDcmd(LCDCMD_ON);
-    LCD_SHORT_WAIT();
-    sendLCDcmd(LCDCMD_CLR);
-
-    //startLCD();
-    //setTextDisplay(0, "hello world");
-#endif
-
-    updateDisplayData();
-
+   
+    // Clear input flags so that the initial positions of the buttons
+    // don't get read as inputs.
     IFS0bits.T2IF = 1;
     clearFlagAdvance();
     clearFlagCancel();
     clearFlagNext();
     clearFlagPrevious();
 
+#if 0
     updatePiData();
     for(int i = 0; i < 42; i++)
     {
@@ -168,57 +105,40 @@ int main(void)
         else
             piData[i + 42] = 0xFF;
     }
+#endif
 
-    continentOwners[0] = -1;
-        continentOwners[1] = -1;
-        continentOwners[2] = -1;
-        continentOwners[3] = -1;
-        continentOwners[4] = -1;
-        continentOwners[5] = -1;
-
-    int a = 0;
+    //int a = 0;
     while(1)
     {
-        
-        updateDisplayData();
-
-#if 0
-        PORTDbits.RD1 = a;
-        PORTC = 0xFFFF;
-        PORTB = 0xFFFF;
-        if(a == 0)
-            a = 1;
-        else
-            a = 0;
-        msleep(1000);
-#endif
-#if 0
+#if 1
         updateDisplayData();
         if(flagSetAdvance())
         {
-            continentOwners[0] = (continentOwners[0] == 0? -1 : 0);
+            static int RNGseeded = 0;
+            if(!RNGseeded)
+            {
+                seedRNG();
+                RNGseeded = 1;
+            }
+            gameInput(ADVANCE);
             clearFlagAdvance();
         }
 
         if(flagSetCancel())
         {
-            continentOwners[1] = (continentOwners[1] == 0? -1 : 0);
+            gameInput(CANCEL);
             clearFlagCancel();
         }
 
         if(flagSetNext())
         {
-            attackerDice[0] += 1;
-            if(attackerDice[0] >= 10)
-                attackerDice[0] = 1;
+            gameInput(NEXT);
             clearFlagNext();
         }
 
         if(flagSetPrevious())
         {
-            attackerDice[0] -= 1;
-            if(attackerDice[0] <= 0)
-                attackerDice[0] = 9;
+            gameInput(PREVIOUS);
             clearFlagPrevious();
         }
 #endif

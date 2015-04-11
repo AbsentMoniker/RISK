@@ -21,7 +21,15 @@ void updateDisplayData()
     {
         displayDataTerritories[i] = digits[territories[territory].troops % 10];
         displayDataTerritories[i+1] = (territories[territory].troops / 10) % 10 != 0? digits[(territories[territory].troops / 10) % 10] : 0;
-        displayDataTerritories[i+2] = PLAYER_COLOR(territories[territory].owner) << TERRITORY_LED_SHIFT;
+        if((source == territory && TMR8 < T8_MSECS(125)) ||
+            (destination == territory && TMR8 > T8_MSECS(125)))
+        {
+            displayDataTerritories[i+2] = COLOR_WHITE << TERRITORY_LED_SHIFT;
+        }
+        else
+        {
+            displayDataTerritories[i+2] = PLAYER_COLOR(territories[territory].owner) << TERRITORY_LED_SHIFT;
+        }
     }
 
     // Card displays
@@ -44,8 +52,9 @@ void updateDisplayData()
     displayDataContinents[3] = 0x00;
     displayDataContinents[4] = 0x00;
     displayDataContinents[5] = 0x00;
-    displayDataContinents[6] = 0x00;
 #else
+    updateContinents();
+    
     displayDataContinents[0] = (PLAYER_COLOR(continentOwners[1]) << CONTINENT_LED_UPPER_SHIFT) |
             (PLAYER_COLOR(continentOwners[0]) << CONTINENT_LED_LOWER_SHIFT);
     displayDataContinents[1] = (PLAYER_COLOR(continentOwners[3]) << CONTINENT_LED_UPPER_SHIFT) |

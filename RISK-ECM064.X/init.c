@@ -54,12 +54,14 @@ void initInterrupts()
     PRISS = 0x76543210;
 
     // Timer 2 interrupt: priority 2.0
+    // ISR in buttons.c
     IFS0bits.T2IF = 0;
     IEC0bits.T2IE = 1;
     IPC2bits.T2IP = 2;
     IPC2bits.T2IS = 0;
 
     // Timer 3 interrupt: priority 2.0
+    // ISR in displays.c
     IFS0bits.T3IF = 0;
     IEC0bits.T3IE = 1;
     IPC3bits.T3IP = 2;
@@ -70,6 +72,7 @@ void initInterrupts()
     // be stored in the SPI's transmit buffer; after each time the data is
     // finished shifting, the buffer will sit empty so the interrupt should be
     // disabled.
+    // ISR in displays.c
     IFS5bits.SPI4TXIF = 0;
     IEC5bits.SPI4TXIE = 0;
     IPC41bits.SPI4TXIP = 3;

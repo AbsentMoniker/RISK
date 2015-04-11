@@ -12,8 +12,10 @@
 // these cover [0, NUM_TERRITORIES), and the continent structures assume that
 // the each continent's members are consecutive numbers.
 #ifdef USE_SIMPLE_MAP
-#define T_BREADBOARDIA 0
-#define T_CIRCUITLAND 1
+#define T_ALPHA 0
+#define T_BETA 1
+#define T_GAMMA 2
+#define T_DELTA 3
 #else
 #define T_ALASKA 0
 #define T_NORTHWEST 1

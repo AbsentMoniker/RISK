@@ -20,6 +20,8 @@
 #define COLOR_WHITE   7
 #define PLAYER_COLOR(player) (player + 1)
 
+#define T8_MSECS(ms) ((ms) * 1562)
+
 #define CONTINENT_LED_UPPER_SHIFT 4
 #define CONTINENT_LED_LOWER_SHIFT 1
 #define TERRITORY_LED_SHIFT       1
