@@ -4,6 +4,7 @@
 
 #include "gamelogic.h"
 
+
 unsigned char displayData[DISPLAY_DATA_LENGTH];
 static unsigned char * displayDataTerritories = displayData;
 static unsigned char * displayDataCards = displayData + (3*NUM_TERRITORIES);
@@ -12,7 +13,6 @@ static unsigned char * displayDataContinents = displayData + 5 + 3 + (3*NUM_TERR
 
 #define SHORTWAIT() asm volatile ("nop\n nop\n nop\n nop\n nop\n nop")
 #define PULSE_RCLK() do{ PORTDbits.RD9 = 1; SHORTWAIT(); PORTDbits.RD9 = 0; }while(0)
-
 
 void updateDisplayData()
 {
@@ -98,13 +98,20 @@ void __ISR(_TIMER_3_VECTOR, IPL3SRS) startDisplays()
     }
 
     displayDataPtr = displayData;
+    
+    IEC5bits.SPI4TXIE = 1;
+
     while(!SPI4STATbits.SPITBF)
     {
         SPI4BUF = blankDisplays? 0x00 : *displayDataPtr;
         displayDataPtr++;
+        if(displayDataPtr - displayData == DISPLAY_DATA_LENGTH)
+        {
+            displayDataPtr = NULL;
+            IEC5bits.SPI4TXIE = 0;
+            break;
+        }
     }
-
-    IEC5bits.SPI4TXIE = 1;
 
     IFS0bits.T3IF = 0;
 }

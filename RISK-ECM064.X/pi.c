@@ -9,7 +9,7 @@ static unsigned char * cardsPtr = piData + NUM_TERRITORIES;
 
 unsigned char piCommand[PI_COMMAND_LENGTH];
 static unsigned char * cmdPtr = piCommand;
-static int piCommandFlag;
+static int piCommandFlag = 0;
 
 void updatePiData()
 {
@@ -22,7 +22,6 @@ void updatePiData()
     {
         cardsPtr[i] = 0xFF;
     }
-#if 0
     for(int i = 0; i < numPlayers; i++)
     {
         for(int j = 0; j < hands[i].cards; j++)
@@ -30,7 +29,6 @@ void updatePiData()
             cardsPtr[hands[i].hand[j].index] = i;
         }
     }
-#endif
 }
 
 void __ISR(_SPI2_RX_VECTOR, IPL4SRS) SPI2RXisr()
@@ -38,28 +36,20 @@ void __ISR(_SPI2_RX_VECTOR, IPL4SRS) SPI2RXisr()
     static unsigned char * piDataPtr = NULL;
 
     unsigned char rx = SPI2BUF;
-    continentOwners[0] = 0;
 
     if(rx == 0xFE)
     {
         // Pi is starting a data request
         piDataPtr = piData;
-        continentOwners[1] = 2;
-
         SPI2BUF = *piDataPtr++;
-        
     }
     else if(rx == 0xFF)
     {
-        continentOwners[2] = 2;
         // Pi needs another byte
 
         if(piDataPtr == NULL)
         {
             SPI2BUF = 0x80;
-
-            IFS4bits.SPI2RXIF = 0; // clear interrupt flag
-            return;
         }
         else if(piDataPtr - piData == PI_DATA_LENGTH)
         {
@@ -75,9 +65,9 @@ void __ISR(_SPI2_RX_VECTOR, IPL4SRS) SPI2RXisr()
     }
     else if(rx == 0xFD)
     {
-        continentOwners[3] = 2;
         // Pi is starting a command
         cmdPtr = piCommand;
+        // No meaningful response
         SPI2BUF = 0xFF;
     }
     else
@@ -87,9 +77,14 @@ void __ISR(_SPI2_RX_VECTOR, IPL4SRS) SPI2RXisr()
         {
             *cmdPtr++ = rx;
             if(cmdPtr - piCommand == 4)
+            {
+                // PI has finished a command
                 cmdPtr = NULL;
-
+                piCommandFlag = 1;
+            }
+            
         }
+        // No meaningful response
         SPI2BUF = 0xFF;
     }
 
@@ -98,9 +93,9 @@ void __ISR(_SPI2_RX_VECTOR, IPL4SRS) SPI2RXisr()
 
 int flagSetPiCommand()
 {
-
+    return piCommandFlag == 1;
 }
 void clearFlagPiCommand()
 {
-
+    piCommandFlag = 0;
 }

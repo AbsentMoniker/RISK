@@ -75,7 +75,7 @@ int cardInput(int card1, int card2, int card3)
 {
     if(state != REINFORCE)
         return 0;
-    int troops = exchangeCards(currentPlayer, card1, card2, card3);
+    int troops = exchangeCardIndices(currentPlayer, card1, card2, card3);
     numTroops += troops;
     if(hands[currentPlayer].cards < 5)
         mustTrade = 0;
@@ -662,7 +662,7 @@ void changeState(State newstate)
         numPlayers = 2;
         cardValueScheme = INCREASING;
         randomTerritories = 1;
-        multipleDeploy = 1;
+        multipleDeploy = 5;
         currentOption = OPTION_NUM_PLAYERS; 
 
         currentPlayer = -1;

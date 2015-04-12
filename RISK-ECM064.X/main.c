@@ -45,7 +45,7 @@ void panic(int line, const char * file, const char * fun, const char * text)
     panicking = 1;
 
     __builtin_disable_interrupts();
-    setTextDisplay(0, "Error %s", fun);
+    setTextDisplay(0, "Error in %s()", fun);
     setTextDisplay(1, "at %s:%d", file, line);
     setTextDisplay(2, "%s", text);
     if(strlen(text) > 16)
@@ -79,39 +79,23 @@ int main(void)
     
     startLCD();
 
-#if 1
+    // Start the game!
     changeState(INIT);
     updateText();
-#endif
+
    
-    // Clear input flags so that the initial positions of the buttons
-    // don't get read as inputs.
+    // Clear input flags so that the initial positions of the buttons and
+    // especially the encoder don't get read as inputs.
     IFS0bits.T2IF = 1;
     clearFlagAdvance();
     clearFlagCancel();
     clearFlagNext();
     clearFlagPrevious();
 
-#if 0
-    updatePiData();
-    for(int i = 0; i < 42; i++)
-    {
-        piData[i] = i % 6;
-    }
-    for(int i = 0; i < 44; i++)
-    {
-        if(i < 12)
-            piData[i + 42] = i % 6;
-        else
-            piData[i + 42] = 0xFF;
-    }
-#endif
-
-    //int a = 0;
     while(1)
     {
-#if 1
         updateDisplayData();
+        updatePiData();
         
         if(flagSetAdvance())
         {
@@ -128,6 +112,7 @@ int main(void)
         if(flagSetCancel())
         {
             gameInput(CANCEL);
+            
             clearFlagCancel();
         }
 
@@ -142,7 +127,32 @@ int main(void)
             gameInput(PREVIOUS);
             clearFlagPrevious();
         }
-#endif
+
+        if(flagSetPiCommand())
+        {
+            
+            if(piCommand[0] >= 6 && piCommand[0] < 12)
+                drawCard(piCommand[0] - 6);
+            else if(piCommand[0] < 6 && piCommand[0] == currentPlayer)
+                cardInput(piCommand[1], piCommand[2], piCommand[3]);
+            updatePiData();
+
+            setTextDisplay(3, "Pi: %d %d %d %d", piCommand[0], piCommand[1], piCommand[2], piCommand[3]);
+            setTextDisplay(2, "%c%c%c%c %c%c%c%c%c%c",
+                    piData[0]>=0? piData[0] + '0' : '-',
+                    piData[1]>=0? piData[1] + '0' : '-',
+                    piData[2]>=0? piData[2] + '0' : '-',
+                    piData[3]>=0? piData[3] + '0' : '-',
+                    piData[4]>=0? piData[4] + '0' : '-',
+                    piData[5]>=0? piData[5] + '0' : '-',
+                    piData[6]>=0? piData[6] + '0' : '-',
+                    piData[7]>=0? piData[7] + '0' : '-',
+                    piData[8]>=0? piData[8] + '0' : '-',
+                    piData[9]>=0? piData[9] + '0' : '-');
+            
+
+            clearFlagPiCommand();
+        }
 
     }
 
@@ -170,6 +180,7 @@ void usleep(int usecs)
     T1CONbits.ON = 0;
 }
 
+// SPIs one byte out to the LEDs / 7-segs
 void SPIbyte(unsigned char byte)
 {
     while(SPI4STATbits.SPITBE != 1) {}

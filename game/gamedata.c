@@ -80,7 +80,7 @@ const int cardExchangeValues[NUM_EXCHANGE_VALUES] =
 
 #ifdef USE_SIMPLE_MAP
 const int initialTroops[MAX_PLAYERS + 1] =
-{ 0, 0, 8};
+{ 0, 0, 7};
 #else
 const int initialTroops[MAX_PLAYERS + 1] = 
 { 0, 0, 40, 35, 30, 25, 20};
