@@ -174,7 +174,7 @@ void updateText()
             }
             else
             {
-                setTextDisplay(0, "Reinforcements");
+                setTextDisplay(0, "Reinforcements (p%d)", currentPlayer);
                 setTextDisplay(1, "%d troops left", numTroops);
                 setTextDisplay(2, "A: Place troop");
                 setTextDisplay(3, "B: Other options");
@@ -766,15 +766,15 @@ void updateContinents()
 {
     for(int i = 0; i < NUM_CONTINENTS; i++)
     {
-        int firstowner = territories[continents[i].firstmember].owner;
+        int firstowner = territories[continents[i].members[0]].owner;
         
         int j;
-        for(j = 0; j < continents[i].members; j++)
+        for(j = 1; j < continents[i].memberCount; j++)
         {
-            if(territories[j+continents[i].firstmember].owner != firstowner)
+            if(territories[continents[i].members[j]].owner != firstowner)
                 break;
         }
-        if(j == continents[i].members)
+        if(j == continents[i].memberCount)
             continentOwners[i] = firstowner;
         else
             continentOwners[i] == -1;

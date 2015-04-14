@@ -21,8 +21,8 @@ void updateDisplayData()
     {
         displayDataTerritories[i] = digits[territories[territory].troops % 10];
         displayDataTerritories[i+1] = (territories[territory].troops / 10) % 10 != 0? digits[(territories[territory].troops / 10) % 10] : 0;
-        if((source == territory && TMR8 < T8_MSECS(125)) ||
-            (destination == territory && TMR8 > T8_MSECS(125)))
+        if((source == territory && TMR8 < T8_MSECS(250)) ||
+            (destination == territory && TMR8 > T8_MSECS(250)))
         {
             displayDataTerritories[i+2] = COLOR_WHITE << TERRITORY_LED_SHIFT;
         }

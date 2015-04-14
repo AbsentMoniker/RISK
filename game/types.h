@@ -53,8 +53,8 @@ typedef struct
 typedef struct
 {
     const char * name;
-    const int firstmember;
-    const int members;
+    const int memberCount;
+    const int members[MAX_CONTINENT_MEMBERS];
     const int value;
 } Continent;
 

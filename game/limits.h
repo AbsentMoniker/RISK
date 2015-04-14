@@ -34,6 +34,9 @@
 #define NUM_CONTINENTS 6
 #endif
 
+// Most territories in any one continent
+#define MAX_CONTINENT_MEMBERS 12
+
 // Number of exchange values supported in the "increasing" sequence, before the
 // value simply increases by 5 each time.
 #define NUM_EXCHANGE_VALUES 6

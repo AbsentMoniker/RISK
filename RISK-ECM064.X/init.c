@@ -167,7 +167,7 @@ void initTimers()
     T9CON = 0;
     T8CONbits.T32 = 1;       // 32-bit timer
     T8CONbits.TCKPS = 0b110; // 1:64 prescale
-    PR8 = 390625;            // 0.64us * 390625 = 250 ms
+    PR8 = 781250;            // 0.64us * 781250 = 500 ms
     TMR8 = 0;
     T8CONbits.ON = 1;
 
