@@ -14,7 +14,7 @@
 #include "log.h"
 // Global variables
 int numPlayers;
-int randomTerritories;
+int randomDeploy;
 int multipleDeploy;
 // cardValueScheme is handled by cards.c
 
@@ -103,13 +103,15 @@ void updateText()
                 else if(cardValueScheme == SET_VALUE)
                     setTextDisplay(1, "Set Value");
             }
-            else if(currentOption == OPTION_RANDOM_TERRITORIES)
+            else if(currentOption == OPTION_RANDOM_DEPLOY)
             {
-                setTextDisplay(0, "Territory allocation");
-                if(randomTerritories)
-                    setTextDisplay(1, "Random");
-                else
-                    setTextDisplay(1, "Select");
+                setTextDisplay(0, "Random Game Set-up");
+                if(randomDeploy == RANDOM_DEPLOY_FULL)
+                    setTextDisplay(1, "Random Deployment");
+                else if(randomDeploy == RANDOM_DEPLOY_TERRITORIES)
+                    setTextDisplay(1, "Random Territories");
+                else if(randomDeploy == RANDOM_DEPLOY_NO)
+                    setTextDisplay(1, "Select Territories");
             }
             else if(currentOption == OPTION_MULTIPLE_DEPLOY)
             {
@@ -258,10 +260,13 @@ void chooseOptions(Input input)
     if(input == ADVANCE)
     {
         changeState(SELECT);
-        if(randomTerritories)
+        if(randomDeploy != RANDOM_DEPLOY_NO)
         {
             allocateRandomTerritories();
+            if(randomDeploy == RANDOM_DEPLOY_FULL)
+                deployRandom();
             changeState(DEPLOY);
+            confirm = 1; // skip to asking for game start
         }
         return;
     }
@@ -272,12 +277,14 @@ void chooseOptions(Input input)
         else if(input == PREVIOUS && numPlayers > 2)
             numPlayers -= 1;
         else if(input == CANCEL)
-            currentOption = OPTION_RANDOM_TERRITORIES;
+            currentOption = OPTION_RANDOM_DEPLOY;
     }
-    else if(currentOption == OPTION_RANDOM_TERRITORIES)
+    else if(currentOption == OPTION_RANDOM_DEPLOY)
     {
-        if(input == NEXT || input == PREVIOUS)
-            randomTerritories = !randomTerritories;
+        if(input == NEXT)
+            randomDeploy = (randomDeploy == 2? 0 : randomDeploy + 1);
+        else if(input == PREVIOUS)
+            randomDeploy = (randomDeploy == 0? 2 : randomDeploy - 1);
         else if(input == CANCEL)
             currentOption = OPTION_MULTIPLE_DEPLOY;
     }
@@ -323,10 +330,9 @@ void selectTerritories(Input input)
 
         territoriesRemaining -= 1;
 
-        // Changing the state here after random allocation would cause
-        // recursion, so the function for the INIT state handles the state
-        // change instead right after the random deployment. 
-        if(territoriesRemaining == 0 && !randomTerritories)
+        // Random allocation bypasses the logic of the deploy state, so the
+        // state will be changed in the init state function instead.
+        if(territoriesRemaining == 0 && randomDeploy == RANDOM_DEPLOY_NO)
             changeState(DEPLOY);
     }
 }
@@ -661,7 +667,7 @@ void changeState(State newstate)
         resetGame();
         numPlayers = 2;
         cardValueScheme = INCREASING;
-        randomTerritories = 1;
+        randomDeploy = 0;
         multipleDeploy = 5;
         currentOption = OPTION_NUM_PLAYERS; 
 
@@ -777,7 +783,7 @@ void updateContinents()
         if(j == continents[i].memberCount)
             continentOwners[i] = firstowner;
         else
-            continentOwners[i] == -1;
+            continentOwners[i] = -1;
     }
 }
 
@@ -799,5 +805,30 @@ void allocateRandomTerritories()
     {
         destination = list[i];
         selectTerritories(ADVANCE);
+    }
+}
+
+void deployRandom()
+{
+    for(int i = 0; i < numPlayers; i++)
+    {
+        // Make a list of territories owned by each player
+        int owned[NUM_TERRITORIES];
+        int numOwned = 0;
+        for(int terr = 0; terr < NUM_TERRITORIES; terr++)
+        {
+            if(territories[terr].owner == i)
+            {
+                owned[numOwned] = terr;
+                numOwned++;
+            }
+        }
+
+        // Put each troop in one of those territories
+        while(deployTroopsLeft[i] > 0)
+        {
+            territories[owned[randint(0, numOwned - 1)]].troops += 1;
+            deployTroopsLeft[i] -= 1;
+        }
     }
 }

@@ -10,14 +10,18 @@
 
 // Game options. These are determined by setting options during game startup
 // and do not change during the course of a game.
-extern int randomTerritories;
+extern int randomDeploy;
 extern int numPlayers;
 extern int multipleDeploy;
 extern CardValueScheme cardValueScheme;
 #define OPTION_NUM_PLAYERS 0
 #define OPTION_CARD_SCHEME 1
-#define OPTION_RANDOM_TERRITORIES 2
+#define OPTION_RANDOM_DEPLOY 2
 #define OPTION_MULTIPLE_DEPLOY 3
+
+#define RANDOM_DEPLOY_NO 2
+#define RANDOM_DEPLOY_TERRITORIES 1
+#define RANDOM_DEPLOY_FULL 0
 
 // Global variables holding the current gamestate. These are all things that
 // the display routines need to know about to output information to the LEDs,
@@ -80,5 +84,9 @@ void updateContinents();
 // Randomly allocate territories to the players, in effect skipping the SELECT
 // state.
 void allocateRandomTerritories();
+
+// Randomly deploy troops, in effect skipping the DEPLOY state (except the
+// final confirmation of game start).
+void deployRandom();
 
 #endif
