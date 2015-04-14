@@ -2,10 +2,13 @@
 #include <p32xxxx.h>
 #include <sys/attribs.h>
 #include "gamelogic.h"
+#include <string.h>
+
 
 unsigned char piData[PI_DATA_LENGTH];
-static unsigned char * terrPtr = piData;
-static unsigned char * cardsPtr = piData + NUM_TERRITORIES;
+unsigned char piDataBuffer[PI_DATA_LENGTH];
+static unsigned char * terrPtr = piDataBuffer;
+static unsigned char * cardsPtr = piDataBuffer + NUM_TERRITORIES;
 
 unsigned char piCommand[PI_COMMAND_LENGTH];
 static unsigned char * cmdPtr = piCommand;
@@ -29,6 +32,7 @@ void updatePiData()
             cardsPtr[hands[i].hand[j].index] = i;
         }
     }
+    memcpy(piData, piDataBuffer, PI_DATA_LENGTH);
 }
 
 void __ISR(_SPI2_RX_VECTOR, IPL4SRS) SPI2RXisr()
