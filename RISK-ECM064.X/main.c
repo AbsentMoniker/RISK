@@ -105,7 +105,7 @@ int main(void)
                 seedRNG();
                 RNGseeded = 1;
             }
-            gameInput(ADVANCE);
+            gameInput(ADVANCE);;
             clearFlagAdvance();
         }
 

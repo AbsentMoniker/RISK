@@ -260,11 +260,15 @@ void chooseOptions(Input input)
     if(input == ADVANCE)
     {
         changeState(SELECT);
-        if(randomDeploy != RANDOM_DEPLOY_NO)
+        if(randomDeploy == RANDOM_DEPLOY_TERRITORIES)
         {
             allocateRandomTerritories();
-            if(randomDeploy == RANDOM_DEPLOY_FULL)
-                deployRandom();
+            changeState(DEPLOY);
+        }
+        else if(randomDeploy == RANDOM_DEPLOY_FULL)
+        {
+            allocateRandomTerritories();
+            deployRandom();
             changeState(DEPLOY);
             confirm = 1; // skip to asking for game start
         }

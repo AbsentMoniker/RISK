@@ -15,9 +15,9 @@ LogEntry * gamelog;
 int gamelogCapacity;
 int gamelogSize;
 #else
-LogEntry stLog[4000];
+LogEntry stLog[40000];
 LogEntry * gamelog = stLog;
-int gamelogCapacity = 4000;
+int gamelogCapacity = 40000;
 int gamelogSize;
 #endif
 

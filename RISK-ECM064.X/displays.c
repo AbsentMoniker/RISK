@@ -103,8 +103,13 @@ void __ISR(_TIMER_3_VECTOR, IPL3SRS) startDisplays()
 
     while(!SPI4STATbits.SPITBF)
     {
-        SPI4BUF = blankDisplays? 0x00 : *displayDataPtr;
+        // We want the dice to be displayed at full brightness, everything else at reduced brightness.
+        if(blankDisplays && !(displayDataPtr >= displayDataDice && displayDataPtr < displayDataDice + 5))
+            SPI4BUF = 0x00;
+        else
+            SPI4BUF = *displayDataPtr;
         displayDataPtr++;
+        
         if(displayDataPtr - displayData == DISPLAY_DATA_LENGTH)
         {
             displayDataPtr = NULL;
