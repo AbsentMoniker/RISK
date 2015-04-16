@@ -104,10 +104,10 @@ sf::Vector2f terPositions[NUM_TERRITORIES] =
 sf::Color playerColors[MAX_PLAYERS] =
 {
     sf::Color::Red,
-    sf::Color::Blue,
-#ifndef USE_SIMPLE_MAP
     sf::Color::Green,
     sf::Color::Yellow,
+#ifndef USE_SIMPLE_MAP
+    sf::Color::Blue,
     sf::Color::Magenta,
     sf::Color::Cyan,
 #endif

@@ -44,6 +44,20 @@ int main()
                         if(lcdtextpos >= 80)
                             lcdtextpos = 0;
                     }
+                    if(ch == 8)
+                    {
+                        lcdtextpos -= 1;
+                        if(lcdtextpos < 0)
+                            lcdtextpos = 79;
+                        lcdtext[lcdtextpos] = ' ';
+                    }
+                    if(ch == 1)
+                    {
+                        lcdtext[lcdtextpos] = 1;
+                        lcdtextpos += 1;
+                        if(lcdtextpos >= 80)
+                            lcdtextpos = 0;
+                    }
                 }
                 else
                 {

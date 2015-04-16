@@ -24,6 +24,14 @@ int destination;
 int attackerDice[3];
 int defenderDice[2];
 int continentOwners[NUM_CONTINENTS];
+const char * playerNames[MAX_PLAYERS] = {
+    "Red",
+    "Green",
+    "Yellow",
+    "Blue",
+    "Purple",
+    "Cyan",
+};
 
 // Game variables that don't need to be exposed to the IO systems
 static State state;
@@ -122,7 +130,7 @@ void updateText()
             setTextDisplay(3, "B: Next option");
             break;
         case SELECT:
-            setTextDisplay(0, "Player %d:", currentPlayer);
+            setTextDisplay(0, "%s Player:", playerNames[currentPlayer]);
             setTextDisplay(1, "Pick territory");
             setTextDisplay(2, "A: Select");
             setTextDisplay(3, "%d available", territoriesRemaining);
@@ -130,7 +138,7 @@ void updateText()
         case DEPLOY:
             if(!confirm)
             {
-                setTextDisplay(0, "Player %d:", currentPlayer);
+                setTextDisplay(0, "%s Player:", playerNames[currentPlayer]);
                 if(multipleDeploy > 1)
                 {
                     setTextDisplay(1, "Deploy %d troop%s",
@@ -176,7 +184,8 @@ void updateText()
             }
             else
             {
-                setTextDisplay(0, "Reinforcements (p%d)", currentPlayer);
+                setTextDisplay(0, "%s Reinforcement", 
+                        playerNames[currentPlayer]);
                 setTextDisplay(1, "%d troops left", numTroops);
                 setTextDisplay(2, "A: Place troop");
                 setTextDisplay(3, "B: Other options");
@@ -185,8 +194,8 @@ void updateText()
         case ATTACK1:
             if(!confirm)
             {
-                setTextDisplay(0, "Declare attacks");
-                setTextDisplay(1, "");
+                setTextDisplay(0, "%s Player:", playerNames[currentPlayer]);
+                setTextDisplay(1, "Declare attacks");
                 setTextDisplay(2, "A: Choose attacker");
                 setTextDisplay(3, "B: Stop attacking");
             }
@@ -245,7 +254,7 @@ void updateText()
             setTextDisplay(3, "B: Back");
             break;
         case GAMEOVER:
-            setTextDisplay(0, "Player %d wins!", currentPlayer);
+            setTextDisplay(0, "%s Player wins!", playerNames[currentPlayer]);
             setTextDisplay(1, "   R   I   S   K    ");
             setTextDisplay(2, "  C H A M P I O N   ");
             setTextDisplay(3, "B: Start new game");
