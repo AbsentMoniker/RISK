@@ -101,7 +101,7 @@ void updateText()
                 else if(cardValueScheme == INCREASING_ONE)
                     setTextDisplay(1, "Increasing by 1");
                 else if(cardValueScheme == SET_VALUE)
-                    setTextDisplay(1, "Set Value");
+                    setTextDisplay(1, "Fixed Value");
             }
             else if(currentOption == OPTION_RANDOM_DEPLOY)
             {
@@ -556,12 +556,14 @@ void moveTroops(Input input)
     {
         if(confirm)
         {
+            int prevPlayer = currentPlayer;
             do
             {
                 currentPlayer += 1;
                 if(currentPlayer == numPlayers)
                     currentPlayer = 0;
             } while(!playerLiving(currentPlayer));
+            logTurnEnd(prevPlayer, currentPlayer, currentPlayer == firstPlayer);
 
             changeState(REINFORCE);
             return;
@@ -616,12 +618,14 @@ void moveTroopsNumber(Input input)
         logMove(currentPlayer, source, destination, 
                 numTroops - territories[source].troops);
 
+        int prevPlayer = currentPlayer;
         do
         {
             currentPlayer += 1;
             if(currentPlayer == numPlayers)
                 currentPlayer = 0;
         } while(!playerLiving(currentPlayer));
+        logTurnEnd(prevPlayer, currentPlayer, currentPlayer == firstPlayer);
         
         changeState(REINFORCE);
     }

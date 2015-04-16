@@ -80,6 +80,7 @@ typedef uint8_t LogType;
 #define LOG_MOVE 4
 #define LOG_CARD_GIVEN 5
 #define LOG_CARD_EXCHANGE 6
+#define LOG_TURN_END 7
 
 typedef struct
 {
@@ -145,6 +146,14 @@ typedef struct
     unsigned troops : 12;
 } LogCardExchange;
 
+typedef struct
+{
+    LogType type;
+    unsigned player : 3;
+    unsigned nextPlayer : 3;
+    unsigned roundEnd : 1;
+} LogTurnEnd;
+
 typedef union
 {
     LogType type;
@@ -155,6 +164,7 @@ typedef union
     LogMove move;
     LogCardGiven cardgiven;
     LogCardExchange exchange;
+    LogTurnEnd turnend;
 } LogEntry;
  
 #endif

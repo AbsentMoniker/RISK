@@ -93,6 +93,13 @@ void logExchange(int player, CardType type1, CardType type2, CardType type3,
     };
     addLogEntry(le);
 }
+void logTurnEnd(int player, int nextPlayer, int roundEnd)
+{
+    LogEntry le = {
+        .turnend = {LOG_TURN_END, player, nextPlayer, roundEnd}
+    };
+    addLogEntry(le);
+}
 
 
 static int loggingPlayer = 0;
@@ -128,3 +135,5 @@ void logReinforce(int player, int territory, int troops)
     loggingPlayer = player;
     loggedTroops[territory] += troops;
 }
+
+
