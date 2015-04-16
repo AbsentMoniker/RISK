@@ -5,6 +5,7 @@
 *.d
 # binary
 game/gui/risk
+lcd/lcdemu
 # harmony build files
 dist
 # unecessary mplab stuff
