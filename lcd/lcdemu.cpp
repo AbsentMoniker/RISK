@@ -12,10 +12,10 @@ bool filenameSelected = false;
 sf::String filename;
 sf::String lcdtext;
 
-#define PX 4
-#define SP 4
-#define WIDTH (20*(PX*5+SP) + 100)
-#define HEIGHT (4*(PX*7+SP*2) + 60)
+#define PX 3
+#define SP 3
+#define WIDTH (20*(PX*5+SP) + 50)
+#define HEIGHT (4*(PX*7+SP*2) + 30)
 
 int main()
 {
@@ -97,8 +97,8 @@ int main()
                     if(characters[(int)ch][y*5 + x])
                     {
                         dot.setPosition(sf::Vector2f(
-                                50 + (i % 20)*(5*(PX)+SP) + x*(PX),
-                                30 + (i / 20)*(7*(PX)+2*SP) + y*(PX)));
+                                25 + (i % 20)*(5*(PX)+SP) + x*(PX),
+                                15 + (i / 20)*(7*(PX)+2*SP) + y*(PX)));
                         window.draw(dot);
                     }
                 }
