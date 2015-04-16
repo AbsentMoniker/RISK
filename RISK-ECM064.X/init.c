@@ -227,7 +227,7 @@ void initSPI()
     SPI4CON2 = 0;
     SPI4STATbits.SPIROV = 0;    // clear status
 
-    SPI4BRG = 3;                // baud rate 12.5 MHz
+    SPI4BRG = 7;                // baud rate 12.5 MHz
     RPD11R = 0b1000;            // SDO4 out on pin D11
     SPI4CONbits.DISSDI = 1;     // disable input
     SPI4CONbits.ENHBUF = 1;     // full 128-bit buffer
