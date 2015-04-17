@@ -21,10 +21,6 @@
 #define MAX_NEIGHBORS 6
 #endif
 
-// The largest possible hand size (based on starting a turn with 4, then
-// killing another player with 4)).
-#define MAX_HAND_SIZE 8
-
 // Number of territories/continents on the standard board.
 #ifdef USE_SIMPLE_MAP
 #define NUM_TERRITORIES 4
@@ -44,5 +40,7 @@
 // Number of cards in the risk deck
 #define NUM_WILD_CARDS 2
 #define NUM_CARDS (NUM_TERRITORIES + NUM_WILD_CARDS)
+
+#define MAX_HAND_SIZE NUM_CARDS
 
 #endif

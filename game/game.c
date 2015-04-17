@@ -527,7 +527,7 @@ void resolveBattle(Input input)
             if(!playerLiving(defeatedPlayer))
             {
                 takeHand(currentPlayer, defeatedPlayer);
-                if(hands[currentPlayer].cards >= 5)
+                if(hands[currentPlayer].cards >= 6)
                     mustTrade = 1;
             }
             changeState(CONQUER);
@@ -754,6 +754,11 @@ void changeState(State newstate)
     // numTroops is also used by CONQUER, but it needs to be set earlier than
     // this function is called
 
+    // If the reinforce state has been entered in the middle of a turn, 
+    // mustTrade will be set, so we should not reset needing of a card.
+    if(state == REINFORCE && !mustTrade)
+        needCard = 0;
+    
     if(state == REINFORCE)
     {
         reinforceMenu = 0;
@@ -762,9 +767,6 @@ void changeState(State newstate)
     }
     else if(state != CONQUER)
         mustTrade = 0;
-
-    if(state == REINFORCE && !mustTrade)
-        needCard = 0;
 
     confirm = 0;
 }
