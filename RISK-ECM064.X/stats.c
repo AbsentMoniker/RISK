@@ -1,5 +1,7 @@
 #include "stats.h"
 
+#include <stddef.h>
+
 int totalDiceRolls[MAX_PLAYERS] = {0};
 int diceRolls[MAX_PLAYERS][6] = {0};
 
@@ -24,7 +26,9 @@ int territoryTakenCounts[NUM_TERRITORIES] = {0};
 // too much processor time away from more important things.
 void processStats()
 {
-    static LogEntry * statsLogPtr = 0;
+    static LogEntry * statsLogPtr = NULL;
+    if(!statsLogPtr)
+        statsLogPtr = gamelog;
 
     if(statsLogPtr - gamelog == gamelogSize)
     {
