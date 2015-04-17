@@ -18,10 +18,13 @@ extern CardValueScheme cardValueScheme;
 #define OPTION_CARD_SCHEME 1
 #define OPTION_RANDOM_DEPLOY 2
 #define OPTION_MULTIPLE_DEPLOY 3
+#define OPTION_USE_NEUTRALS 4
 
 #define RANDOM_DEPLOY_NO 2
 #define RANDOM_DEPLOY_TERRITORIES 1
 #define RANDOM_DEPLOY_FULL 0
+
+#define NEUTRAL_PLAYER 2
 
 // Global variables holding the current gamestate. These are all things that
 // the display routines need to know about to output information to the LEDs,
@@ -88,5 +91,8 @@ void allocateRandomTerritories();
 // Randomly deploy troops, in effect skipping the DEPLOY state (except the
 // final confirmation of game start).
 void deployRandom();
+
+// Select a currently unoccupied territory for the neutral armies.
+void selectNeutralTerritory();
 
 #endif

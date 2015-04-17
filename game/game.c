@@ -13,11 +13,14 @@
 #include "cards.h"
 #include "log.h"
 // Global variables
+// options
 int numPlayers;
 int randomDeploy;
 int multipleDeploy;
+int useNeutrals;
 // cardValueScheme is handled by cards.c
 
+// others
 int currentPlayer;
 int source;
 int destination;
@@ -113,7 +116,7 @@ void updateText()
             }
             else if(currentOption == OPTION_RANDOM_DEPLOY)
             {
-                setTextDisplay(0, "Random Game Set-up");
+                setTextDisplay(0, "Random game set-up");
                 if(randomDeploy == RANDOM_DEPLOY_FULL)
                     setTextDisplay(1, "Random Deployment");
                 else if(randomDeploy == RANDOM_DEPLOY_TERRITORIES)
@@ -125,6 +128,14 @@ void updateText()
             {
                 setTextDisplay(0, "Troop deployment");
                 setTextDisplay(1, "%d at a time", multipleDeploy);
+            }
+            else if(currentOption == OPTION_USE_NEUTRALS)
+            {
+                setTextDisplay(0, "2-player neutrals");
+                if(useNeutrals)
+                    setTextDisplay(1, "Use neutral armies");
+                else
+                    setTextDisplay(1, "No neutral armies");
             }
             setTextDisplay(2, "A: Start game");
             setTextDisplay(3, "B: Next option");
@@ -317,6 +328,13 @@ void chooseOptions(Input input)
         else if(input == PREVIOUS)
             cardValueScheme = (cardValueScheme == 0? 2 : cardValueScheme - 1);
         else if(input == CANCEL)
+            currentOption = OPTION_USE_NEUTRALS;
+    }
+    else if(currentOption == OPTION_USE_NEUTRALS)
+    {
+        if(input == NEXT || input == PREVIOUS)
+            useNeutrals = !useNeutrals;
+        else if(input == CANCEL)
             currentOption = OPTION_NUM_PLAYERS;
     }
 }
@@ -336,12 +354,15 @@ void selectTerritories(Input input)
         territories[destination].troops = 1;
         destination = -1;
         deployTroopsLeft[currentPlayer] -= 1;
+        territoriesRemaining -= 1;
 
         currentPlayer += 1;
         if(currentPlayer == numPlayers)
             currentPlayer = 0;
-
-        territoriesRemaining -= 1;
+        // Pick a territory for the neutrals if that option applies.
+        // If random territories are being used, the neutrals will be handled by that function instead.
+        if(useNeutrals && currentPlayer == firstPlayer && numPlayers == 2 && randomDeploy == RANDOM_DEPLOY_NO)
+            selectNeutralTerritory();
 
         // Random allocation bypasses the logic of the deploy state, so the
         // state will be changed in the init state function instead.
@@ -686,6 +707,7 @@ void changeState(State newstate)
         cardValueScheme = INCREASING;
         randomDeploy = 0;
         multipleDeploy = 5;
+        useNeutrals = 0;
         currentOption = OPTION_NUM_PLAYERS; 
 
         currentPlayer = -1;
@@ -755,6 +777,7 @@ void resetGame()
         territories[i].troops = 0;
     }
     initCards();
+    clearLog();
 }
 
 int playerLiving(int player)
@@ -821,7 +844,15 @@ void allocateRandomTerritories()
     for(int i = 0; i < NUM_TERRITORIES; i++)
     {
         destination = list[i];
-        selectTerritories(ADVANCE);
+        if(useNeutrals && numPlayers == 2 && i % 3 == 2)
+        {
+            // Make a neutral territory
+            territories[destination].owner = NEUTRAL_PLAYER;
+            territories[destination].troops = 3;
+            territoriesRemaining -= 1;
+        }
+        else
+            selectTerritories(ADVANCE);
     }
 }
 
@@ -848,4 +879,22 @@ void deployRandom()
             deployTroopsLeft[i] -= 1;
         }
     }
+}
+
+void selectNeutralTerritory()
+{
+    // Figure out what territories are avaiable
+    int numAvailable = 0;
+    int terrsAvailable[NUM_TERRITORIES];
+    for(int i = 0; i < NUM_TERRITORIES; i++)
+    {
+        if(territories[i].owner != -1)
+            continue;
+        terrsAvailable[numAvailable] = i;
+        numAvailable += 1;
+    }
+    int chosenTerritory = terrsAvailable[randint(0, numAvailable - 1)];
+    territories[chosenTerritory].owner = NEUTRAL_PLAYER;
+    territories[chosenTerritory].troops = 3;
+    territoriesRemaining -= 1;
 }
