@@ -25,18 +25,7 @@
 #include "pi.h"
 
 // implement stubs for required game logic in io.h
-#ifdef USE_RANDOM
-int randint(int min, int max)
-{
-    unsigned random = RNGNUMGEN1;
-    return min + (random % (max - min + 1));
-}
-#else
-int randint(int min, int max)
-{
-    return min;
-}
-#endif
+
 void panic(int line, const char * file, const char * fun, const char * text)
 {
     static int panicking = 0;

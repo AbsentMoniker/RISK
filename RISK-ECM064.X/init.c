@@ -239,6 +239,34 @@ void initSPI()
 
 }
 
+// Public domain code from
+// http://www.lomont.org/Math/Papers/2008/Lomont_PRNG_2008.pdf
+//
+// The built-in hardware PRNG is used to provide the seed
+// (ie the 16 initial 32-bit value of state), then calls to randint
+// will advance this RNG.
+
+/* initialize state to random bits */
+static unsigned long rngstate[16];
+/* init should also reset this to 0 */
+static unsigned int rngindex = 0;
+/* return 32 bit random number */
+unsigned long nextrandom(void)
+{
+    unsigned long a, b, c, d;
+    a  = rngstate[rngindex];
+    c  = rngstate[(rngindex+13)&15];
+    b  = a^c^(a<<16)^(c<<15);
+    c  = rngstate[(rngindex+9)&15];
+    c ^= (c>>11);
+    a  = rngstate[rngindex] = b^c;
+    d  = a^((a<<5)&0xDA442D24UL);
+    rngindex = (rngindex + 15)&15;
+    a  = rngstate[rngindex];
+    rngstate[rngindex] = a^b^d^(a<<2)^(b<<18)^(c<<28);
+    return rngstate[rngindex];
+}
+
 void initRNG()
 {
     RNGPOLY1 = 0x00C00003;
@@ -255,4 +283,36 @@ void seedRNG()
 
     // Turn off the timer, we don't need it anymore
     T6CONbits.ON = 0;
+    for(int i = 0; i < 16; i++)
+    {
+        rngstate[i] = RNGNUMGEN1;
+        // Wait 42 cycles for the next number to be available
+        asm volatile("nop\n nop\n nop\n nop\n nop\n nop\n"
+                     "nop\n nop\n nop\n nop\n nop\n nop\n"
+                     "nop\n nop\n nop\n nop\n nop\n nop\n"
+                     "nop\n nop\n nop\n nop\n nop\n nop\n"
+                     "nop\n nop\n nop\n nop\n nop\n nop\n"
+                     "nop\n nop\n nop\n nop\n nop\n nop\n"
+                     "nop\n nop\n nop\n nop\n nop\n nop\n");
+    }
+    rngindex = 0;
+    RNGCONbits.PRNGEN = 0;
 }
+
+#ifdef USE_RANDOM
+int randint(int min, int max)
+{
+    return min + (nextrandom() % (max - min + 1));
+}
+#else
+int randint(int min, int max)
+{
+    return min;
+}
+#endif
+
+
+
+
+
+
