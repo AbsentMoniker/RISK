@@ -24,7 +24,8 @@ int territoryTakenCounts[NUM_TERRITORIES] = {0};
 
 // This function will process a single log each time through, to avoid taking
 // too much processor time away from more important things.
-void processStats()
+// Returns true if a log was processed
+int processStats()
 {
     static LogEntry * statsLogPtr = NULL;
     if(!statsLogPtr)
@@ -33,7 +34,7 @@ void processStats()
     if(statsLogPtr - gamelog == gamelogSize)
     {
         // Nothing to do
-        return;
+        return 0;
     }
 
     LogEntry log = *statsLogPtr++;
@@ -92,6 +93,7 @@ void processStats()
             PANIC("unknown log type encountered");
             break;
     }
+    return 1;
 }
 
 void processBattleLog(LogBattle log)

@@ -26,7 +26,7 @@ extern TerritoryRecord longestHeldTerritory[MAX_PLAYERS];
 
 extern TerritoryRecord mostTakenTerritory;
 
-void processStats();
+int processStats();
 void processBattleLog(LogBattle log);
 
 #endif	/* STATS_H */
