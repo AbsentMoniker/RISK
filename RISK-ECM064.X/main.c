@@ -84,6 +84,9 @@ int main(void)
     {
         updateDisplayData();
         updatePiData();
+        processStats();
+        updatePiStats();
+
         
         if(flagSetAdvance())
         {
