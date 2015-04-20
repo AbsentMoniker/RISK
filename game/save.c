@@ -1,19 +1,24 @@
 #include "save.h"
-#include "gamelogic.h"
 #include "stats.h"
+#include "game.h"
+#include "types.h"
+#include "gamedata.h"
+#include "log.h"
+#include "cards.h"
 
-#include <p32xxxx.h>
+#include <stddef.h> // for NULL
 
-unsigned char saveData[0x800]; // size of one flash row, 2 kB
+unsigned char saveData[0x800]; // size of one PIC32 flash row, 2 kB
 
 void saveGame()
 {
-    // Ensure that logs and stats are up to date so that the log can safely be discarded.
+    // Ensure that logs and stats are up to date so that the log can safely 
+    // be discarded.
     writeReinforceLogs();
     while(processStats())
     {}
 
-    saveData[0] = 0; // save valid
+    saveData[0] = 1; // save valid
 
     // basic
     saveData[1] = numPlayers;
@@ -40,40 +45,26 @@ void saveGame()
     saveData[SAVE_STATS_OFFSET + 1] = mostTakenTerritory.count;
     for(int p = 0; p < MAX_PLAYERS; p++)
     {
-        saveData[SAVE_STATS_OFFSET + 2 + 0*MAX_PLAYERS + p*2] =
-                totalDiceRolls[p] >> 8;
-        saveData[SAVE_STATS_OFFSET + 2 + 0*MAX_PLAYERS + p*2 + 1] =
-                totalDiceRolls[p] & 0xFF;
+        saveData[SAVE_STATS_OFFSET + 2 + 0*MAX_PLAYERS + p*2] = totalDiceRolls[p] >> 8;
+        saveData[SAVE_STATS_OFFSET + 2 + 0*MAX_PLAYERS + p*2 + 1] = totalDiceRolls[p] & 0xFF;
         for(int d = 0; d < 6; d++)
         {
-            saveData[SAVE_STATS_OFFSET + 2 + 2*MAX_PLAYERS + p*12 + d*2] =
-                    diceRolls[p][d] >> 8;
-            saveData[SAVE_STATS_OFFSET + 2 + 2*MAX_PLAYERS + p*12 + d*2 + 1] =
-                    diceRolls[p][d] & 0xFF;
+            saveData[SAVE_STATS_OFFSET + 2 + 2*MAX_PLAYERS + p*12 + d*2] = diceRolls[p][d] >> 8;
+            saveData[SAVE_STATS_OFFSET + 2 + 2*MAX_PLAYERS + p*12 + d*2 + 1] = diceRolls[p][d] & 0xFF;
         }
-        saveData[SAVE_STATS_OFFSET + 2 + 14*MAX_PLAYERS + p*2] =
-                reinforcementCount[p] >> 8;
-        saveData[SAVE_STATS_OFFSET + 2 + 14*MAX_PLAYERS + p*2 + 1] =
-                reinforcementCount[p] & 0xFF;
-        saveData[SAVE_STATS_OFFSET + 2 + 16*MAX_PLAYERS + p*2] =
-                killCount[p] >> 8;
-        saveData[SAVE_STATS_OFFSET + 2 + 16*MAX_PLAYERS + p*2 + 1] =
-                killCount[p] & 0xFF;
-        saveData[SAVE_STATS_OFFSET + 2 + 18*MAX_PLAYERS + p*2] =
-                deathCount[p] >> 8;
-        saveData[SAVE_STATS_OFFSET + 2 + 18*MAX_PLAYERS + p*2 + 1] =
-                deathCount[p] & 0xFF;
-        saveData[SAVE_STATS_OFFSET + 2 + 20*MAX_PLAYERS + p*2] =
-                longestHeldTerritory[p].territory;
-        saveData[SAVE_STATS_OFFSET + 2 + 20*MAX_PLAYERS + p*2 + 1] =
-                longestHeldTerritory[p].count;
+        saveData[SAVE_STATS_OFFSET + 2 + 14*MAX_PLAYERS + p*2] = reinforcementCount[p] >> 8;
+        saveData[SAVE_STATS_OFFSET + 2 + 14*MAX_PLAYERS + p*2 + 1] = reinforcementCount[p] & 0xFF;
+        saveData[SAVE_STATS_OFFSET + 2 + 16*MAX_PLAYERS + p*2] = killCount[p] >> 8;
+        saveData[SAVE_STATS_OFFSET + 2 + 16*MAX_PLAYERS + p*2 + 1] = killCount[p] & 0xFF;
+        saveData[SAVE_STATS_OFFSET + 2 + 18*MAX_PLAYERS + p*2] = deathCount[p] >> 8;
+        saveData[SAVE_STATS_OFFSET + 2 + 18*MAX_PLAYERS + p*2 + 1] = deathCount[p] & 0xFF;
+        saveData[SAVE_STATS_OFFSET + 2 + 20*MAX_PLAYERS + p*2] = longestHeldTerritory[p].territory;
+        saveData[SAVE_STATS_OFFSET + 2 + 20*MAX_PLAYERS + p*2 + 1] = longestHeldTerritory[p].count;
     }
     for(int t = 0; t < NUM_TERRITORIES; t++)
-        saveData[SAVE_STATS_OFFSET + 2 + 22*MAX_PLAYERS + t] =
-                territoryHoldTimes[t];
+        saveData[SAVE_STATS_OFFSET + 2 + 22*MAX_PLAYERS + t] = territoryHoldTimes[t];
     for(int t = 0; t < NUM_TERRITORIES; t++)
-        saveData[SAVE_STATS_OFFSET + 2 + 22*MAX_PLAYERS + 1*NUM_TERRITORIES + t] =
-                territoryTakenCounts[t];
+        saveData[SAVE_STATS_OFFSET + 2 + 22*MAX_PLAYERS + 1*NUM_TERRITORIES + t] = territoryTakenCounts[t];
 
     // territories
     for(int t = 0; t < NUM_TERRITORIES; t++)
@@ -103,12 +94,9 @@ void saveGame()
         saveData[SAVE_CARDS_OFFSET + 2 + 6*(NUM_TERRITORIES + 2) + 91*p + 0] = hands[p].cards;
         for(int c = 0; c < MAX_HAND_SIZE; c++)
         {
-            saveData[SAVE_CARDS_OFFSET + 2 + 6*(NUM_TERRITORIES + 2) + 91*p + 1 + 3*c + 0] =
-                    hands[p].hand[c].index;
-            saveData[SAVE_CARDS_OFFSET + 2 + 6*(NUM_TERRITORIES + 2) + 91*p + 1 + 3*c + 1] =
-                    hands[p].hand[c].territory;
-            saveData[SAVE_CARDS_OFFSET + 2 + 6*(NUM_TERRITORIES + 2) + 91*p + 1 + 3*c + 2] =
-                    hands[p].hand[c].type;
+            saveData[SAVE_CARDS_OFFSET + 2 + 6*(NUM_TERRITORIES + 2) + 91*p + 1 + 3*c + 0] = hands[p].hand[c].index;
+            saveData[SAVE_CARDS_OFFSET + 2 + 6*(NUM_TERRITORIES + 2) + 91*p + 1 + 3*c + 1] = hands[p].hand[c].territory;
+            saveData[SAVE_CARDS_OFFSET + 2 + 6*(NUM_TERRITORIES + 2) + 91*p + 1 + 3*c + 2] = hands[p].hand[c].type;
         }
     }
 }
@@ -204,16 +192,17 @@ void restoreGame()
     confirm = 0;
     updateText();
     updateContinents();
+    writeReinforceLogs();
     clearLog();
     statsLogPtr = NULL;
 }
 
 void deleteSavedGame()
 {
-    saveData[0] = 1; // save invalid
+    saveData[0] = 0; // save invalid
 }
 
 int isSavedGame()
 {
-    return !saveData[0];
+    return saveData[0];
 }

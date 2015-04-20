@@ -8,7 +8,11 @@
 #ifndef STATS_H
 #define	STATS_H
 
-#include "gamelogic.h"
+#include "types.h"
+#include "log.h"
+#include "limits.h"
+#include "gamedata.h"
+#include "io.h"
 
 extern int totalDiceRolls[MAX_PLAYERS];
 extern int diceRolls[MAX_PLAYERS][6];
@@ -16,11 +20,6 @@ extern int diceRolls[MAX_PLAYERS][6];
 extern int reinforcementCount[MAX_PLAYERS];
 extern int killCount[MAX_PLAYERS];
 extern int deathCount[MAX_PLAYERS];
-
-typedef struct {
-    int territory;
-    int count;
-} TerritoryRecord;
 
 extern TerritoryRecord longestHeldTerritory[MAX_PLAYERS];
 extern int territoryHoldTimes[NUM_TERRITORIES];

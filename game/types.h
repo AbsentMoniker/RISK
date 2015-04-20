@@ -71,6 +71,14 @@ typedef struct
     int cards;
 } Hand;
 
+// Structure for calculating statistics about territories.
+typedef struct {
+    int territory;
+    int count;
+} TerritoryRecord;
+
+
+
 // Log structure for various game events.
 typedef uint8_t LogType;
 #define LOG_REINFORCE 0

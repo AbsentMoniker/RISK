@@ -17,6 +17,7 @@
 #include "../game/territory.h"
 #include "../game/types.h"
 #include "../game/util.h"
+#include "../game/stats.h"
 
 #endif	/* GAMELOGIC_H */
 

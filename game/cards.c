@@ -69,11 +69,10 @@ Card drawCard(int player)
         shuffleDeck();
     }
 
-    logCard(player, deck[deckSize].type, deck[deckSize].territory);
-
     deckSize -= 1;
     hands[player].hand[hands[player].cards] = deck[deckSize];
     hands[player].cards += 1;
+    logCard(player, deck[deckSize].type, deck[deckSize].territory);
     return deck[deckSize];
 }
 

@@ -3,7 +3,7 @@
 #include <stddef.h>
 
 int totalDiceRolls[MAX_PLAYERS] = {0};
-int diceRolls[MAX_PLAYERS][6] = {0};
+int diceRolls[MAX_PLAYERS][6] = {{0}};
 
 int reinforcementCount[MAX_PLAYERS] = {0};
 int killCount[MAX_PLAYERS] = {0};

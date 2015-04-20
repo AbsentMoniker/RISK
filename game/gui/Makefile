@@ -1,6 +1,7 @@
 CFLAGS=-std=c99 -Wall -g -MMD -DUSE_FULL_MAP
 CXXFLAGS=-std=c++11 -Wall -g -MMD -DUSE_FULL_MAP
-OBJ= gui.o ../game.o ../gamedata.o ../territory.o ../cards.o ../log.o
+OBJ=gui.o ../game.o ../gamedata.o ../territory.o ../cards.o ../log.o \
+	 ../stats.o ../save.o
 DEPS=$(OBJ:.o=.d)
 
 risk: $(OBJ)
