@@ -7,6 +7,8 @@ extern "C" {
 #include "../io.h"
 #include "../cards.h"
 #include "../log.h"
+#include "../save.h"
+#include "../stats.h"
 }
 
 #include <cstdio>
@@ -194,7 +196,7 @@ void dumpLog()
         }
         else if(gamelog[i].type == LOG_ATTACK)
         {
-            printf("%s (%d) attacks (%s) %d\n",
+            printf("%s (%d) attacks %s (%d)\n",
                     territories[gamelog[i].attack.attackingTerritory].name,
                     gamelog[i].attack.attackingPlayer,
                     territories[gamelog[i].attack.defendingTerritory].name,
@@ -390,13 +392,34 @@ int main()
                             hands[currentPlayer].cards);
                     for(int i = 0; i < hands[currentPlayer].cards; i++)
                     {
-                        printf("%d (%s)\n", hands[currentPlayer].hand[i].type,
-                                hands[currentPlayer].hand[i].type != WILD?  territories[hands[currentPlayer].hand[i].territory].name : "Wild");
+                        printf("%d (%s, %d)\n", hands[currentPlayer].hand[i].type,
+                                hands[currentPlayer].hand[i].type != WILD?  territories[hands[currentPlayer].hand[i].territory].name : "Wild",
+                                hands[currentPlayer].hand[i].index);
                     }
                     printf("\n");
                 }
                 if(ev.key.code == sf::Keyboard::L)
                     dumpLog();
+                //if(ev.key.code == sf::Keyboard::P)
+                //    dumpStats();
+                if(ev.key.code == sf::Keyboard::S)
+                {
+                    saveGame();
+                    FILE * savefile = fopen("risk.save", "wb");
+                    if(savefile)
+                        fwrite(saveData, 1, 0x800, savefile);
+                    fclose(savefile);
+                }
+                if(ev.key.code == sf::Keyboard::A)
+                {
+                    FILE * savefile = fopen("risk.save", "rb");
+                    if(savefile)
+                    {
+                        fread(saveData, 1, 0x800, savefile);
+                        fclose(savefile);
+                        restoreGame();
+                    }
+                }
                 
             }
         }
@@ -409,6 +432,7 @@ int main()
         drawDie(window, defenderDice[0], 340, 450);
         drawDie(window, defenderDice[1], 340, 490);
         window.display(); 
+        processStats();
 
         if(blinkclock.getElapsedTime() > sf::milliseconds(250))
             blinkclock.restart();
