@@ -71,7 +71,6 @@ int main(void)
     // Start the game!
     changeState(INIT);
     updateText();
-
    
     // Clear input flags so that the initial positions of the buttons and
     // especially the encoder don't get read as inputs.

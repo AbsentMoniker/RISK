@@ -59,48 +59,48 @@ sf::Vector2f terPositions[NUM_TERRITORIES] =
     {10,10},
     {10,60},
 #else
-    {10,10}, // T_ALASKA 0
-    {60,10}, // T_NORTHWEST 1
-    {140,10}, // T_GREENLAND 2
-    {60,60}, // T_ALBERTA 3
-    {110,60}, // T_ONTARIO 4
-    {160,60}, // T_QUEBEC 5
-    {70,110}, // T_WESTERN_US 6
-    {120,110}, // T_EASTERN_US 7
-    {90,160}, // T_MEXICO 8
-    {120,250}, // T_VENEZUELA 9
-    {100,300}, // T_PERU 10
-    {120,350}, // T_ARGENTINA 11
-    {150,300}, // T_BRAZIL 12
-    {250,10}, // T_ICELAND 13
-    {320,10}, // T_SCANDINAVIA 14
-    {270,60}, // T_GREAT_BRITAIN 15
-    {320,60}, // T_NORTHERN_EUROPE 16
-    {280,120}, // T_WESTERN_EUROPE 17
-    {340,120}, // T_SOUTHERN_EUROPE 18
-    {380,70}, // T_UKRAINE 19
-    {280,220}, // T_NORTHERN_AFRICA 20
-    {330,210}, // T_EGYPT 21
-    {330,260}, // T_CONGO 22
-    {380,250}, // T_EASTERN_AFRICA 23
-    {330,310}, // T_SOUTH_AFRICA 24
-    {380,310}, // T_MADAGASCAR 25
-    {440,50}, // T_URALS 26
-    {490,50}, // T_SIBERIA 27
-    {540,20}, // T_YAKUTSK 28
-    {600,20}, // T_KAMCHATKA 29
-    {540,70}, // T_IRKUSTK 30
-    {470,130}, // T_AFGHANISTAN 31
-    {620,130}, // T_JAPAN 32
-    {560,130}, // T_MONGOLIA 33
-    {460,180}, // T_MIDDLE_EAST 34
-    {560,180}, // T_CHINA 35
-    {540,230}, // T_INDIA 36
-    {590,230}, // T_SIAM 37
-    {580,340}, // T_INDONESIA 38
-    {640,340}, // T_NEW_GUINEA 39
-    {590,400}, // T_WESTERN_AUSTRAILIA 40
-    {640,400}, // T_EASTERN_AUSTRAILIA 41
+    {280,220},//[T_NORTHERN_AFRICA]  0
+    {150,300},//[T_BRAZIL]  1
+    {120,350},//[T_ARGENTINA]  2
+    {100,300},//[T_PERU]  3
+    {120,250},//[T_VENEZUELA]  4
+    {90,160},//[T_MEXICO]  5
+    {120,110},//[T_EASTERN_UNITED_STATES]  6
+    {70,110},//[T_WESTERN_UNITED_STATES]  7
+    {10,10},//[T_ALASKA]  8
+    {60,10},//[T_NORTHWEST]  9
+    {60,60},//[T_ALBERTA]  10
+    {110,60},//[T_ONTARIO]  11
+    {160,60},//[T_QUEBEC]  12
+    {140,10},//[T_GREENLAND]  13
+    {250,10},//[T_ICELAND]  14
+    {320,10},//[T_SCANDINAVIA]  15
+    {380,70},//[T_UKRAINE]  16
+    {320,60},//[T_NORTHERN_EUROPE] 17
+    {270,60},//[T_GREAT_BRITAIN]  18
+    {280,120},//[T_WESTERN_EUROPE]  19
+    {340,120},//[T_SOUTHERN_EUROPE]  20
+    {330,210},//[T_EGYPT]  21
+    {330,260},//[T_CONGO]  22
+    {330,310},//[T_SOUTH_AFRICA]  23
+    {380,310},//[T_MADAGASCAR]  24
+    {620,130},//[T_JAPAN]  24
+    {380,250},//[T_EASTERN_AFRICA]  25
+    {460,180},//[T_MIDDLE_EAST]  26
+    {470,130},//[T_AFGHANISTAN]  27
+    {440,50},//[T_URALS]  28
+    {490,50},//[T_SIBERIA]  29
+    {540,20},//[T_YAKUTSK]  30
+    {600,20},//[T_KAMCHATKA]  31
+    {540,70},//[T_IRKUTSK]  32
+    {560,130},//[T_MONGOLIA]  33
+    {560,180},//[T_CHINA]  35
+    {540,230},//[T_INDIA]  36
+    {590,230},//[T_SIAM]  37
+    {580,340},//[T_INDONESIA]  38
+    {640,340},//[T_NEW_GUINEA]  39
+    {590,400},//[T_WESTERN_AUSTRALIA]  40
+    {640,400},//[T_EASTERN_AUSTRALIA]  41
 #endif
 };
 sf::Color playerColors[MAX_PLAYERS] =
@@ -200,7 +200,7 @@ void dumpLog()
                     territories[gamelog[i].attack.attackingTerritory].name,
                     gamelog[i].attack.attackingPlayer,
                     territories[gamelog[i].attack.defendingTerritory].name,
-                    gamelog[i].attack.defendingTerritory);
+                    gamelog[i].attack.defendingPlayer);
         }
         else if(gamelog[i].type == LOG_BATTLE)
         {
@@ -275,6 +275,38 @@ void dumpLog()
 
 }
 
+void dumpStats()
+{
+    for(int i = 0; i < numPlayers; i++)
+    {
+        printf("-----\nPlayer %d:\n", i);
+        printf("%d dice rolled\n", totalDiceRolls[i]);
+        for(int j = 0; j < 6; j++)
+            printf("    %d %ds\n", diceRolls[i][j], j+1);
+        printf("%d reinforcements\n", reinforcementCount[i]);
+        printf("%d kills\n", killCount[i]);
+        printf("%d deaths\n", deathCount[i]);
+        printf("\nLongest held: %d (%s), %d turns\n", 
+                longestHeldTerritory[i].territory, 
+                territories[longestHeldTerritory[i].territory].name,
+                longestHeldTerritory[i].count);
+    }
+
+    printf("\n\nMost taken: %d (%s), %d times\n",
+                mostTakenTerritory.territory, 
+                territories[mostTakenTerritory.territory].name,
+                mostTakenTerritory.count);
+    printf("\nHolds\n");
+    for(int i = 0; i < NUM_TERRITORIES; i++)
+        printf("%d (%s): %d turns\n", i, territories[i].name, 
+                territoryHoldTimes[i]);
+    printf("Takens\n");
+    for(int i = 0; i < NUM_TERRITORIES; i++)
+        printf("%d (%s): %d times\n", i, territories[i].name,
+                territoryTakenCounts[i]);
+}
+
+#define TRADE(a,b,c) cardInput(hands[currentPlayer].hand[a].index, hands[currentPlayer].hand[b].index, hands[currentPlayer].hand[c].index)
 int main()
 {
     int card1, card2;
@@ -327,7 +359,7 @@ int main()
                     else if(card2 != 0 && card1 != 0)
                     {
                         printf("traded for %d troops\n", 
-                                cardInput(card1, card2, 0));
+                                TRADE(card1, card2, 0));
                         card1 = card2  = -1;
                     }
                 }
@@ -340,7 +372,7 @@ int main()
                     else if(card2 != 1 && card1 != 1)
                     {
                         printf("traded for %d troops\n", 
-                                cardInput(card1, card2, 1));
+                                TRADE(card1, card2, 1));
                         card1 = card2  = -1;
                     }
                 }
@@ -354,7 +386,7 @@ int main()
                     else if(card2 != 2 && card1 != 2)
                     {
                         printf("traded for %d troops\n", 
-                                cardInput(card1, card2, 2));
+                                TRADE(card1, card2, 2));
                         card1 = card2  = -1;
                     }
                 }
@@ -368,7 +400,7 @@ int main()
                     else if(card2 != 3 && card1 != 3)
                     {
                         printf("traded for %d troops\n", 
-                                cardInput(card1, card2, 3));
+                                TRADE(card1, card2, 3));
                         card1 = card2  = -1;
                     }
                 }
@@ -382,7 +414,7 @@ int main()
                     else if(card2 != 4 && card1 != 4)
                     {
                         printf("traded for %d troops\n", 
-                                cardInput(card1, card2, 4));
+                                TRADE(card1, card2, 4));
                         card1 = card2  = -1;
                     }
                 }
@@ -400,8 +432,8 @@ int main()
                 }
                 if(ev.key.code == sf::Keyboard::L)
                     dumpLog();
-                //if(ev.key.code == sf::Keyboard::P)
-                //    dumpStats();
+                if(ev.key.code == sf::Keyboard::P)
+                    dumpStats();
                 if(ev.key.code == sf::Keyboard::S)
                 {
                     saveGame();
