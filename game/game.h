@@ -13,6 +13,7 @@
 extern int randomDeploy;
 extern int numPlayers;
 extern int multipleDeploy;
+extern int useNeutrals;
 extern CardValueScheme cardValueScheme;
 #define OPTION_NUM_PLAYERS 0
 #define OPTION_CARD_SCHEME 1
@@ -35,6 +36,19 @@ extern int destination;
 extern int attackerDice[3];
 extern int defenderDice[2];
 extern int continentOwners[NUM_CONTINENTS];
+
+// More gamestate. These do not need to be displayed in any way, but to need to
+// be read/written when a game is restored or saved.
+extern State state;
+extern int firstPlayer;
+extern int territoriesRemaining;
+extern int numTroops;
+extern int deployTroopsLeft[MAX_PLAYERS];
+extern int mustTrade;
+extern int needCard;
+extern int currentOption;
+extern int reinforceMenu;
+extern int confirm;
 
 // gameInput is the main entry point into the game logic; this function calls
 // one of the other functions below it to advance the game state.

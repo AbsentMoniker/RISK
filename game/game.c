@@ -37,16 +37,16 @@ const char * playerNames[MAX_PLAYERS] = {
 };
 
 // Game variables that don't need to be exposed to the IO systems
-static State state;
-static int firstPlayer;
-static int territoriesRemaining;
-static int numTroops;
-static int deployTroopsLeft[MAX_PLAYERS];
-static int mustTrade;
-static int needCard;
-static int currentOption;
-static int reinforceMenu;
-static int confirm;
+State state;
+int firstPlayer;
+int territoriesRemaining;
+int numTroops;
+int deployTroopsLeft[MAX_PLAYERS];
+int mustTrade;
+int needCard;
+int currentOption;
+int reinforceMenu;
+int confirm;
 
 void gameInput(Input input)
 {

@@ -23,6 +23,7 @@
       <itemPath>pi.h</itemPath>
       <itemPath>displays.h</itemPath>
       <itemPath>stats.h</itemPath>
+      <itemPath>save.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -45,6 +46,7 @@
       <itemPath>pi.c</itemPath>
       <itemPath>displays.c</itemPath>
       <itemPath>stats.c</itemPath>
+      <itemPath>save.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

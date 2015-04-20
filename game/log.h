@@ -26,6 +26,9 @@ void logExchange(int player, CardType type1, CardType type2, CardType type3,
         int troops);
 void logTurnEnd(int player, int nextPlayer, int roundEnd);
 
+// Forces cached reinforce logs to be written immediately.
+void writeReinforceLogs();
+
 // Empties the entire log.
 void clearLog();
 

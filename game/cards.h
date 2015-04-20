@@ -14,6 +14,14 @@
 extern Hand hands[MAX_PLAYERS];
 // Number of troops for the next exchange.
 extern int cardExchangeValue;
+// Index into array of fixed values for increasing mode.
+extern int cardValueIndex;
+
+// Current deck and discards of cards.
+extern Card deck[NUM_CARDS];
+extern int deckSize;
+extern Card discards[NUM_CARDS];
+extern int discardsSize;
 
 // Initializes the cards system by emptying each player's hand, creating a new
 // deck of cards, and shuffling the deck.

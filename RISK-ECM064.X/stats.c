@@ -25,9 +25,9 @@ int territoryTakenCounts[NUM_TERRITORIES] = {0};
 // This function will process a single log each time through, to avoid taking
 // too much processor time away from more important things.
 // Returns true if a log was processed
+LogEntry * statsLogPtr = NULL;
 int processStats()
 {
-    static LogEntry * statsLogPtr = NULL;
     if(!statsLogPtr)
         statsLogPtr = gamelog;
 

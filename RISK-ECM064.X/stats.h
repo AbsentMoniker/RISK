@@ -23,11 +23,14 @@ typedef struct {
 } TerritoryRecord;
 
 extern TerritoryRecord longestHeldTerritory[MAX_PLAYERS];
+extern int territoryHoldTimes[NUM_TERRITORIES];
 
 extern TerritoryRecord mostTakenTerritory;
+extern int territoryTakenCounts[NUM_TERRITORIES];
 
 int processStats();
 void processBattleLog(LogBattle log);
+extern LogEntry * statsLogPtr;
 
 #endif	/* STATS_H */
 
