@@ -18,6 +18,7 @@
 #include "../game/types.h"
 #include "../game/util.h"
 #include "../game/stats.h"
+#include "../game/save.h"
 
 #endif	/* GAMELOGIC_H */
 
