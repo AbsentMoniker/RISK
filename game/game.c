@@ -780,6 +780,7 @@ void resetGame()
     }
     initCards();
     clearLog();
+    resetStats();
 }
 
 int playerLiving(int player)

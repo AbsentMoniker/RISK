@@ -30,6 +30,7 @@ extern int territoryTakenCounts[NUM_TERRITORIES];
 int processStats();
 void processBattleLog(LogBattle log);
 extern LogEntry * statsLogPtr;
+void resetStats();
 
 #endif	/* STATS_H */
 

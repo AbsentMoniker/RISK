@@ -149,3 +149,25 @@ void processBattleLog(LogBattle log)
     }
 
 }
+
+resetStats()
+{
+    for(int i = 0; i < MAX_PLAYERS; i++)
+    {
+        totalDiceRolls[i] = 0;
+        reinforcementCount[i] = 0;
+        killCount[i] = 0;
+        deathCount[i] = 0;
+        longestHeldTerritory[i].territory = -1;
+        longestHeldTerritory[i].count = 0;
+        for(int d = 0; d < 6; d++)
+            diceRolls[i][d] = 0;
+    }
+    for(int i = 0; i < NUM_TERRITORIES; i++)
+    {
+        territoryHoldTimes[i] = 0;
+        territoryTakenCounts[i] = 0;
+    }
+    mostTakenTerritory.territory = -1;
+    mostTakenTerritory.count = 0;
+}
