@@ -21,6 +21,7 @@
 #include "lcd.h"
 
 
+unsigned char dummy[40000];
 // implement stubs for required game logic in io.h
 
 void panic(int line, const char * file, const char * fun, const char * text)
@@ -54,6 +55,34 @@ void msleep(int msecs);
 void usleep(int usecs);
 void SPIbyte(unsigned char byte);
 
+#define MY_FLASH_ADDR ((void *) 0xBD1FC000)
+
+void writeflash()
+{
+
+    // Set up Address and Data Registers
+    NVMADDR  = (unsigned int)MY_FLASH_ADDR & 0x1FFFFFFF;     // physical address
+    NVMDATA0 = 0x12345678;     // value
+    // set the operation, assumes WREN = 0
+    NVMCONbits.NVMOP = 0x1;   // NVMOP for Word programming
+    // Enable Flash for write operation and set the NVMOP
+    NVMCONbits.WREN = 1;
+
+    // Start programming
+    __builtin_disable_interrupts();
+    NVMKEY = 0x0;
+    NVMKEY = 0xAA996655;
+    NVMKEY = 0x556699AA;
+    NVMCONSET = _NVMCON_WR_MASK;
+    __builtin_enable_interrupts();
+
+    // Wait for WR bit to clear
+    while(NVMCON & _NVMCON_WR_MASK)
+    {}
+    // Disable future Flash Write/Erase operations
+    NVMCONbits.WREN = 0;
+}
+
 int main(void)
 {
     initClocks();
@@ -62,12 +91,29 @@ int main(void)
     initTimers();
     initSPI();
     initRNG();
+
+    volatile unsigned char * mymemory = MY_FLASH_ADDR;
     
     startLCD();
+    //setTextDisplay(0, "%p", MY_FLASH_ADDR);
+    if(RCONbits.POR)
+        setTextDisplay(1, "powered on");
+    setTextDisplay(2, "%x", mymemory[0]);
+    setTextDisplay(3, "%x", mymemory[0]);
 
+    RCONbits.POR = 0;
+    int a = 0;
     while(1)
     {
-
+        if(a == 50)
+        {
+            setTextDisplay(1, "writing flash");
+            writeflash();
+        }
+        msleep(1000);
+        setTextDisplay(0, "%d", a);
+        setTextDisplay(3, "%x", mymemory[a % 4]);
+        a += 1;
     }
 
     return EXIT_SUCCESS;

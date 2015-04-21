@@ -10,7 +10,7 @@ void startLCD()
     if(RCONbits.POR)
     {
         LCD_POWER_ON_WAIT();
-        RCONbits.POR = 0;
+        //RCONbits.POR = 0;
     }
     else
         LCD_LONG_WAIT();
