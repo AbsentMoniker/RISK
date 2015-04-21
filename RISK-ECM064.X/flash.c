@@ -43,6 +43,12 @@ void eraseFlash()
         PANIC("failed to erase save game");
     }
 }
+void eraseSaveFile() {}
+
+int flashIsErased()
+{
+    return flashPtr[0] == 0xFF;
+}
 
 void initiateFlashOp()
 {

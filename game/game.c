@@ -781,6 +781,8 @@ void resetGame()
     initCards();
     clearLog();
     resetStats();
+    eraseSaveFile();
+    deleteSaveGame();
 }
 
 int playerLiving(int player)

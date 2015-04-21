@@ -204,5 +204,5 @@ void deleteSavedGame()
 
 int isSavedGame()
 {
-    return saveData[0];
+    return saveData[0] == 0x01;
 }

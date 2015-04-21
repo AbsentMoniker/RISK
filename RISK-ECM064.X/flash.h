@@ -12,6 +12,7 @@ void readSaveFromFlash();
 void writeSaveToFlash();
 void eraseFlash();
 void initiateFlashOp();
+int flashIsErased();
 
 #endif	/* FLASH_H */
 
