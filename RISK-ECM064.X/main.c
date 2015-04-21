@@ -23,6 +23,7 @@
 #include "displays.h"
 #include "buttons.h"
 #include "pi.h"
+#include "flash.h"
 
 // implement stubs for required game logic in io.h
 
@@ -68,9 +69,18 @@ int main(void)
     
     startLCD();
 
-    // Start the game!
-    changeState(INIT);
-    updateText();
+    // Maybe restore a game
+//    readSaveFromFlash();
+//    if(isSavedGame())
+//    {
+//        restoreGame();
+//    }
+//    else
+    {
+        // Start a new game
+        changeState(INIT);
+        updateText();
+    }
    
     // Clear input flags so that the initial positions of the buttons and
     // especially the encoder don't get read as inputs.

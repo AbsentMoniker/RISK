@@ -13,7 +13,9 @@ void restoreGame();
 void deleteSavedGame();
 int isSavedGame();
 
-extern unsigned char saveData[0x800]; // size of one PIC32 flash row, 2 kB
+#define FLASH_ROW_SIZE 0x800
+
+extern unsigned char saveData[FLASH_ROW_SIZE]; // size of one PIC32 flash row, 2 kB
 
 // ----------------
 // Data to be saved
