@@ -187,6 +187,7 @@ void dumpLog()
     int count[numPlayers][7] = {0};
     for(int i = 0; i < gamelogSize; i++)
     {
+        printf("%08x    ", ((unsigned *)gamelog)[i]);
         if(gamelog[i].type == LOG_REINFORCE)
         {
             printf("Player %d: %d troops placed in %s\n",
@@ -257,8 +258,12 @@ void dumpLog()
                     gamelog[i].exchange.cardtype3,
                     gamelog[i].exchange.troops);
         }
-
-        
+        else if(gamelog[i].type == LOG_TURN_END)
+        {
+            printf("Player %d ends turn.%s\n",
+                    gamelog[i].turnend.player,
+                    gamelog[i].turnend.roundEnd? " End of round." : "");
+        }
     }
 
     for(int i = 0; i < numPlayers; i++)
