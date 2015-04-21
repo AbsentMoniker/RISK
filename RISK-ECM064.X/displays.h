@@ -51,6 +51,9 @@ extern unsigned char displayData[DISPLAY_DATA_LENGTH];
 
 void updateDisplayData();
 
+void disableDisplays();
+void enableDisplays();
+
 
 #endif	/* DISPLAYS_H */
 

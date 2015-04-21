@@ -25,6 +25,11 @@ static unsigned buttonPowerState = 0;
 static unsigned previousEncoderA = 0;
 static unsigned previousEncoderB = 0;
 
+int powerOn()
+{
+    return (buttonPowerState & BUTTON_POWER_MASK) == 0;
+}
+
 // Timer 2 interrupt: poll the buttons
 void __ISR(_TIMER_2_VECTOR, IPL2SRS) pollButtons()
 {

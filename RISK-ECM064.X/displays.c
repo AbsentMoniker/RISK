@@ -14,6 +14,8 @@ static unsigned char * displayDataContinents = displayData + 5 + 3 + (3*NUM_TERR
 #define SHORTWAIT() asm volatile ("nop\n nop\n nop\n nop\n nop\n nop")
 #define PULSE_RCLK() do{ PORTDbits.RD9 = 1; SHORTWAIT(); PORTDbits.RD9 = 0; }while(0)
 
+static int displaysEnabled = 1;
+
 void updateDisplayData()
 {
     // Territory displays
@@ -74,8 +76,11 @@ void __ISR(_TIMER_3_VECTOR, IPL3SRS) startDisplays()
     counter++;
     if(counter % 5 == 0)
     {
-        // start shifting data
-        blankDisplays = 0;
+        // start shifting data if the power switch allows it
+        if(powerOn() && displaysEnabled)
+            blankDisplays = 0;
+        else
+            blankDisplays = 1;
     }
     else if(counter % 5 == 1)
     {
@@ -120,6 +125,10 @@ void __ISR(_TIMER_3_VECTOR, IPL3SRS) startDisplays()
 
     IFS0bits.T3IF = 0;
 }
+
+void disableDisplays() { displaysEnabled = 0; }
+void enableDisplays() { displaysEnabled = 1; }
+
 
 void __ISR(_SPI4_TX_VECTOR, IPL3SRS) refillDisplayBuffer()
 {

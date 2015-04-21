@@ -55,4 +55,6 @@ static inline void clearFlagPrevious() { previousFlag = -1; }
 static inline void clearFlagPowerOff() { powerOffFlag = -1; }
 static inline void clearFlagPowerOn() { powerOnFlag = -1; }
 
+int powerOn();
+
 #endif	/* BUTTONS_H */

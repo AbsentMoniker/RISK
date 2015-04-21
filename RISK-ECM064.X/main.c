@@ -85,10 +85,13 @@ int main(void)
     // Clear input flags so that the initial positions of the buttons and
     // especially the encoder don't get read as inputs.
     IFS0bits.T2IF = 1;
+    usleep(1); // make sure the interrupt has time to fire
     clearFlagAdvance();
     clearFlagCancel();
     clearFlagNext();
     clearFlagPrevious();
+    clearFlagPowerOn();
+    clearFlagPowerOff();
 
     while(1)
     {
@@ -136,25 +139,25 @@ int main(void)
                 drawCard(piCommand[0] - 6);
             else if(piCommand[0] < 6 && piCommand[0] == currentPlayer)
                 cardInput(piCommand[1], piCommand[2], piCommand[3]);
-            updatePiData();
-
-            setTextDisplay(3, "Pi: %d %d %d %d", piCommand[0], piCommand[1], piCommand[2], piCommand[3]);
-            setTextDisplay(2, "%c%c%c%c %c%c%c%c%c%c",
-                    piData[0]>=0? piData[0] + '0' : '-',
-                    piData[1]>=0? piData[1] + '0' : '-',
-                    piData[2]>=0? piData[2] + '0' : '-',
-                    piData[3]>=0? piData[3] + '0' : '-',
-                    piData[4]>=0? piData[4] + '0' : '-',
-                    piData[5]>=0? piData[5] + '0' : '-',
-                    piData[6]>=0? piData[6] + '0' : '-',
-                    piData[7]>=0? piData[7] + '0' : '-',
-                    piData[8]>=0? piData[8] + '0' : '-',
-                    piData[9]>=0? piData[9] + '0' : '-');
-            
-
             clearFlagPiCommand();
         }
 
+        if(flagSetPowerOn())
+        {
+            enableDisplays();
+            clearFlagPowerOn();
+        }
+        if(flagSetPowerOff())
+        {
+            // wait until displays are off, then save game
+            // disableDisplays();
+            // msleep(10);
+            // saveGame();
+            // if(!flashIserased())
+            //      eraseFlash();
+            // writeSaveToFlash();
+            clearFlagPowerOff();
+        }
     }
 
     return EXIT_SUCCESS;

@@ -782,7 +782,7 @@ void resetGame()
     clearLog();
     resetStats();
     eraseSaveFile();
-    deleteSaveGame();
+    deleteSavedGame();
 }
 
 int playerLiving(int player)
