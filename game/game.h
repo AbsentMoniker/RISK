@@ -21,6 +21,9 @@ extern CardValueScheme cardValueScheme;
 #define OPTION_MULTIPLE_DEPLOY 3
 #define OPTION_USE_NEUTRALS 4
 
+#define OPTION_END_GAME 5
+#define OPTION_MAKE_TRADE 6
+
 #define RANDOM_DEPLOY_NO 2
 #define RANDOM_DEPLOY_TERRITORIES 1
 #define RANDOM_DEPLOY_FULL 0
@@ -57,6 +60,7 @@ void gameInput(Input input);
 // the current player wishes to exchange cards. Returns false if for some
 // reason the exchange could not actually happen.
 int cardInput(int card1, int card2, int card3);
+int cardInputHand(int card1, int card2, int card3);
 // updateText is called after every game update to update the text displayed on
 // the LCD
 void updateText();
@@ -85,6 +89,9 @@ void changeState(State state);
 // Reset the game state (territories, cards, etc.) to their initial values, in
 // preparation for starting a new game.
 void resetGame();
+
+// Attempts to make a trade using the cards the player has in hand.
+void attemptTrade();
 
 // playerLiving is true if player owns at least one territory; dead players do
 // not get turns

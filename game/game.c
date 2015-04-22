@@ -96,6 +96,18 @@ int cardInput(int card1, int card2, int card3)
     return troops;
 }
 
+int cardInputHand(int card1, int card2, int card3)
+{
+    if(state != REINFORCE)
+        return 0;
+    int troops = exchangeCardsHand(currentPlayer, card1, card2, card3);
+    numTroops += troops;
+    if(hands[currentPlayer].cards < 5)
+        mustTrade = 0;
+    updateText();
+    return troops;
+}
+
 void updateText()
 {
     switch(state)
@@ -175,10 +187,20 @@ void updateText()
         case REINFORCE:
             if(reinforceMenu && !confirm)
             {
-                setTextDisplay(0, "Options:");
-                setTextDisplay(1, "End game?");
-                setTextDisplay(2, "A: End game");
-                setTextDisplay(3, "B: Cancel");
+                if(currentOption == OPTION_END_GAME)
+                {
+                    setTextDisplay(0, "Options:");
+                    setTextDisplay(1, "End game?");
+                    setTextDisplay(2, "A: End game");
+                    setTextDisplay(3, "B: Next Option");
+                }
+                else if(currentOption == OPTION_MAKE_TRADE)
+                {
+                    setTextDisplay(0, "Options:");
+                    setTextDisplay(1, "Exchange Cards?");
+                    setTextDisplay(2, "A: Exchange");
+                    setTextDisplay(3, "B: Cancel");
+                }
             }
             else if(reinforceMenu && confirm)
             {
@@ -431,11 +453,20 @@ void reinforce(Input input)
     {
         if(reinforceMenu)
         {
-            if(!confirm)
-                confirm = 1;
-            else
-                changeState(INIT);
-            return;
+            if(currentOption == OPTION_END_GAME)
+            {
+                if(!confirm)
+                    confirm = 1;
+                else
+                    changeState(INIT);
+                return;
+            }
+            else if(currentOption == OPTION_MAKE_TRADE)
+            {
+                attemptTrade();
+                reinforceMenu = 0;
+                return;
+            }
         }
 
         if(destination == -1)
@@ -456,12 +487,20 @@ void reinforce(Input input)
     }
     else if(input == CANCEL)
     {
-        if(reinforceMenu && confirm)
-            confirm = 0;
-        else if(reinforceMenu)
-            reinforceMenu = 0;
+        if(reinforceMenu)
+        {
+            if(confirm)
+                confirm = 0;
+            else if(currentOption == OPTION_END_GAME)
+                currentOption = OPTION_MAKE_TRADE;
+            else
+                reinforceMenu = 0;
+        }
         else
+        {
             reinforceMenu = 1;
+            currentOption = OPTION_END_GAME;
+        }
     }
 }
 
@@ -767,6 +806,7 @@ void changeState(State newstate)
     }
     else if(state == REINFORCE)
     {
+        currentOption = OPTION_END_GAME;
         if(mustTrade)
             numTroops = 0;
         else
@@ -806,6 +846,31 @@ void resetGame()
     resetStats();
     eraseSaveFile();
     deleteSavedGame();
+}
+
+void attemptTrade()
+{
+    // Try trades until one works
+    if(cardInputHand(0, 1, 2) > 0)
+        return;
+    if(cardInputHand(0, 1, 3) > 0)
+        return;
+    if(cardInputHand(0, 2, 3) > 0)
+        return;
+    if(cardInputHand(1, 2, 3) > 0)
+        return;
+    if(cardInputHand(0, 1, 4) > 0)
+        return;
+    if(cardInputHand(0, 2, 4) > 0)
+        return;
+    if(cardInputHand(0, 3, 4) > 0)
+        return;
+    if(cardInputHand(1, 2, 4) > 0)
+        return;
+    if(cardInputHand(1, 3, 4) > 0)
+        return;
+    if(cardInputHand(2, 3, 4) > 0)
+        return;
 }
 
 int playerLiving(int player)

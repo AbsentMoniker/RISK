@@ -35,7 +35,7 @@ Card drawCard(int player);
 // was an invalid set or the player doesn't actually have the cards specified.
 // exchangeCards expects card positions in the player's hand (0-7).
 // exchangeCardIndicies expects global card indicies (0-43).
-int exchangeCards(int player, int card1, int card2, int card3);
+int exchangeCardsHand(int player, int card1, int card2, int card3);
 int exchangeCardIndices(int player, int cardidx1, int cardidx2, int cardidx3);
 
 // Gives all the cards in an eliminated player's hand to another player.

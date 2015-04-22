@@ -118,10 +118,10 @@ int exchangeCardIndices(int player, int cardidx1, int cardidx2, int cardidx3)
     }
     if(idx1 == -1 || idx2 == -1 || idx3 == -1)
         return 0;
-    return exchangeCards(player, idx1, idx2, idx3);
+    return exchangeCardsHand(player, idx1, idx2, idx3);
 }
 
-int exchangeCards(int player, int idx1, int idx2, int idx3)
+int exchangeCardsHand(int player, int idx1, int idx2, int idx3)
 {
     int handsize = hands[player].cards;
     if(idx1 == idx2 || idx1 == idx3 || idx2 == idx3)
