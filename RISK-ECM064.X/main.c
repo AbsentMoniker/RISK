@@ -116,7 +116,7 @@ int main(void)
         if(flagSetCancel())
         {
             gameInput(CANCEL);
-            
+            setTextDisplay(1, "port f3 is %d", PORTFbits.RF3);
             clearFlagCancel();
         }
 
@@ -144,13 +144,15 @@ int main(void)
 
         if(flagSetPowerOn())
         {
-            enableDisplays();
+            setTextDisplay(0, "power switch on");
+            //enableDisplays();
             clearFlagPowerOn();
         }
         if(flagSetPowerOff())
         {
+            setTextDisplay(0, "power switch off");
             // wait until displays are off, then save game
-            // disableDisplays();
+             //disableDisplays();
             // msleep(10);
             // saveGame();
             // if(!flashIserased())
@@ -158,6 +160,8 @@ int main(void)
             // writeSaveToFlash();
             clearFlagPowerOff();
         }
+
+
     }
 
     return EXIT_SUCCESS;

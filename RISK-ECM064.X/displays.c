@@ -3,6 +3,7 @@
 #include <p32xxxx.h>
 
 #include "gamelogic.h"
+#include "buttons.h"
 
 
 unsigned char displayData[DISPLAY_DATA_LENGTH];

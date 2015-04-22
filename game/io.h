@@ -17,7 +17,7 @@ void setTextDisplay(int line, const char * format, ...);
 
 void panic(int line, const char * file, 
         const char * function, const char * text);
-#define PANIC(text) panic(__LINE__, __FILE__, __func__, text)
+#define PANIC(text) panic(__LINE__, __BASE_FILE__, __func__, text)
 
 void eraseSaveFile();
 

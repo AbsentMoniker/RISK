@@ -1,6 +1,9 @@
 #include "flash.h"
 #include <p32xxxx.h>
 #include "gamelogic.h"
+#include "displays.h"
+#include "buttons.h"
+
 #include <string.h>
 
 #define FLASH_VIRTUAL_ADDR 0xBD1FC000
