@@ -150,8 +150,9 @@ void processBattleLog(LogBattle log)
 
 }
 
-resetStats()
+void resetStats()
 {
+    statsLogPtr = NULL;
     for(int i = 0; i < MAX_PLAYERS; i++)
     {
         totalDiceRolls[i] = 0;
