@@ -15,9 +15,16 @@ Territory territories[NUM_TERRITORIES] =
     {  .name="Alpha",          .neighbors={ T_BETA, T_DELTA},  .cardtype=INFANTRY,  .owner=-1,  .troops=0 },
     {  .name="Beta",           .neighbors={ T_GAMMA, T_ALPHA}, .cardtype=INFANTRY,  .owner=-1,  .troops=0 },
     {  .name="Gamma",          .neighbors={ T_DELTA, T_BETA},  .cardtype=INFANTRY,  .owner=-1,  .troops=0 },
-    {  .name="Delta",          .neighbors={ T_ALPHA, T_DELTA}, .cardtype=INFANTRY,  .owner=-1,  .troops=0 },
+    {  .name="Delta",          .neighbors={ T_ALPHA, T_GAMMA}, .cardtype=INFANTRY,  .owner=-1,  .troops=0 },
 };
 Continent continents[NUM_CONTINENTS] = {};
+int territoryScrollOrder[NUM_TERRITORIES] =
+{
+    T_ALPHA,
+    T_BETA,
+    T_GAMMA,
+    T_DELTA,
+};
 #else
 Territory territories[NUM_TERRITORIES] =
 {
@@ -72,6 +79,51 @@ Continent continents[NUM_CONTINENTS] =
     { .name="Africa",        .memberCount=6,  .members={T_NORTHERN_AFRICA, T_EGYPT, T_EASTERN_AFRICA, T_CONGO, T_SOUTH_AFRICA, T_MADAGASCAR, -1, -1, -1, -1, -1, -1}, .value=3 },
     { .name="Asia",          .memberCount=12, .members={T_URALS, T_SIBERIA, T_IRKUTSK, T_KAMCHATKA, T_YAKUTSK, T_MONGOLIA, T_AFGHANISTAN, T_MIDDLE_EAST, T_INDIA, T_CHINA, T_SIAM, T_JAPAN}, .value=7 },
     { .name="Australia",     .memberCount=4,  .members={T_INDONESIA, T_NEW_GUINEA, T_WESTERN_AUSTRALIA, T_EASTERN_AUSTRALIA, -1, -1, -1, -1, -1, -1, -1, -1}, .value=2 },
+};
+int territoryScrollOrder[NUM_TERRITORIES] =
+{
+    T_ALASKA,
+    T_NORTHWEST,
+    T_GREENLAND,
+    T_ALBERTA,
+    T_ONTARIO,
+    T_QUEBEC,
+    T_WESTERN_UNITED_STATES,
+    T_EASTERN_UNITED_STATES,
+    T_MEXICO,
+    T_VENEZUELA,
+    T_PERU,
+    T_BRAZIL,
+    T_ARGENTINA,
+    T_ICELAND,
+    T_SCANDINAVIA,
+    T_GREAT_BRITAIN,
+    T_NORTHERN_EUROPE,
+    T_WESTERN_EUROPE,
+    T_SOUTHERN_EUROPE,
+    T_UKRAINE,
+    T_NORTHERN_AFRICA,
+    T_EGYPT,
+    T_CONGO,
+    T_EASTERN_AFRICA,
+    T_SOUTH_AFRICA,
+    T_MADAGASCAR,
+    T_URALS,
+    T_SIBERIA,
+    T_YAKUTSK,
+    T_KAMCHATKA,
+    T_IRKUTSK,
+    T_AFGHANISTAN,
+    T_JAPAN,
+    T_MONGOLIA,
+    T_MIDDLE_EAST,
+    T_CHINA,
+    T_INDIA,
+    T_SIAM,
+    T_INDONESIA,
+    T_NEW_GUINEA,
+    T_WESTERN_AUSTRALIA,
+    T_EASTERN_AUSTRALIA,
 };
 #endif
 

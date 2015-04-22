@@ -12,6 +12,8 @@
 #include "util.h"
 #include "cards.h"
 #include "log.h"
+#include "stats.h"
+#include "save.h"
 // Global variables
 // options
 int numPlayers;
@@ -678,19 +680,32 @@ void gameOver(Input input)
 void moveSelection(int movesource, int direction, int (*predicate)(int))
 {
     int * p = (movesource? &source : &destination);
+    int scrollpos = -1;
+    for(int i = 0; i < NUM_TERRITORIES; i++)
+    {
+        if(territoryScrollOrder[i] == *p)
+        {
+            scrollpos = i;
+            break;
+        }
+    }
+
 
     int tries = 0;
     while(tries < NUM_TERRITORIES)
     {
-        *p += direction;
-        if(*p < 0)
-            *p = NUM_TERRITORIES - 1;
-        else if(*p >= NUM_TERRITORIES)
-            *p = 0;
+        scrollpos += direction;
+        if(scrollpos < 0)
+            scrollpos = NUM_TERRITORIES - 1;
+        else if(scrollpos >= NUM_TERRITORIES)
+            scrollpos = 0;
 
         tries++;
-        if(predicate(*p))
+        if(predicate(territoryScrollOrder[scrollpos]))
+        {
+            *p = territoryScrollOrder[scrollpos];
             return;
+        }
     }
     // Couldn't find a valid territory, so make sure nothing is selected
     *p = -1; 

@@ -17,50 +17,54 @@
 #define T_GAMMA 2
 #define T_DELTA 3
 #else
-#define T_ALASKA 8
-#define T_NORTHWEST 9
-#define T_GREENLAND 13
-#define T_ALBERTA 10
-#define T_ONTARIO 11
-#define T_QUEBEC 12
-#define T_WESTERN_UNITED_STATES 7
-#define T_EASTERN_UNITED_STATES 6
-#define T_MEXICO 5
-#define T_VENEZUELA 4
-#define T_PERU 3
-#define T_ARGENTINA 2
+#define T_ALASKA 6
+#define T_NORTHWEST 7
+#define T_GREENLAND 10
+#define T_ALBERTA 8
+#define T_ONTARIO 9
+#define T_QUEBEC 11
+#define T_WESTERN_UNITED_STATES 5
+#define T_EASTERN_UNITED_STATES 12
+#define T_MEXICO 4
+#define T_VENEZUELA 3
+#define T_PERU 2
+#define T_ARGENTINA 0
 #define T_BRAZIL 1
-#define T_ICELAND 14
-#define T_SCANDINAVIA 15
-#define T_GREAT_BRITAIN 18
-#define T_NORTHERN_EUROPE 17
-#define T_WESTERN_EUROPE 19
-#define T_SOUTHERN_EUROPE 20
-#define T_UKRAINE 16
-#define T_NORTHERN_AFRICA 0
-#define T_EGYPT 21
-#define T_CONGO 22
-#define T_EASTERN_AFRICA 25
-#define T_SOUTH_AFRICA 23
-#define T_MADAGASCAR 24
-#define T_URALS 28
-#define T_SIBERIA 29
-#define T_YAKUTSK 30
-#define T_KAMCHATKA 31
-#define T_IRKUTSK 32
-#define T_AFGHANISTAN 27
-#define T_JAPAN 34
-#define T_MONGOLIA 33
-#define T_MIDDLE_EAST 26
-#define T_CHINA 35
-#define T_INDIA 36
-#define T_SIAM 37
-#define T_INDONESIA 38
-#define T_NEW_GUINEA 39
-#define T_WESTERN_AUSTRALIA 40
-#define T_EASTERN_AUSTRALIA 41
+#define T_ICELAND 15
+#define T_SCANDINAVIA 16
+#define T_GREAT_BRITAIN 13
+#define T_NORTHERN_EUROPE 14
+#define T_WESTERN_EUROPE 40
+#define T_SOUTHERN_EUROPE 39
+#define T_UKRAINE 17
+#define T_NORTHERN_AFRICA 41
+#define T_EGYPT 37
+#define T_CONGO 35
+#define T_EASTERN_AFRICA 36
+#define T_SOUTH_AFRICA 34
+#define T_MADAGASCAR 33
+#define T_URALS 18
+#define T_SIBERIA 19
+#define T_YAKUTSK 20
+#define T_KAMCHATKA 21
+#define T_IRKUTSK 22
+#define T_AFGHANISTAN 25
+#define T_JAPAN 23
+#define T_MONGOLIA 24
+#define T_MIDDLE_EAST 38
+#define T_CHINA 27
+#define T_INDIA 26
+#define T_SIAM 28
+#define T_INDONESIA 29
+#define T_NEW_GUINEA 30
+#define T_WESTERN_AUSTRALIA 32
+#define T_EASTERN_AUSTRALIA 31
 
 #endif
+
+// Order in which territories should scroll through when a player is turning the
+// selection knob.
+extern int territoryScrollOrder[NUM_TERRITORIES];
 
 // Array of every territory, including its current state. This can be thought
 // of as a graph, since every territory knows it neighbors, but we never need
