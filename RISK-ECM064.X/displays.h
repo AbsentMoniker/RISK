@@ -18,7 +18,8 @@
 #define COLOR_MAGENTA 5
 #define COLOR_CYAN    6
 #define COLOR_WHITE   7
-#define PLAYER_COLOR(player) (player + 1)
+
+const int playerColors[MAX_PLAYERS];
 
 #define T8_MSECS(ms) ((ms) * 1562)
 
@@ -54,6 +55,8 @@ void updateDisplayData();
 void disableDisplays();
 void enableDisplays();
 
+void startNewFrame();
+void startCardsColor(int player);
 
 #endif	/* DISPLAYS_H */
 

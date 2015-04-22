@@ -32,8 +32,8 @@ int continentOwners[NUM_CONTINENTS];
 const char * playerNames[MAX_PLAYERS] = {
     "Red",
     "Green",
-    "Yellow",
     "Blue",
+    "Yellow",
     "Purple",
     "Cyan",
 };
@@ -569,7 +569,15 @@ void conquerTerritory(Input input)
                 if(mustTrade)
                     changeState(REINFORCE);
                 else
-                    changeState(ATTACK1);
+                {
+                    if(predAttackSource(destination))
+                    {
+                        source = destination;
+                        changeState(ATTACK2);
+                    }
+                    else
+                        changeState(ATTACK1);
+                }
                 return;
             }
         }

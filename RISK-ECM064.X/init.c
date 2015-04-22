@@ -144,8 +144,12 @@ void initTimers()
     T3CONbits.ON = 1;
 
     // ----- TIMER 4 -----
-    // Not used
+    // Used to time length of color display on cards
     T4CON = 0;
+    T4CONbits.TCKPS = 0b111; // 1:256 prescale = 2.56us
+    PR4 = 0xFFFF;
+    TMR4 = 0;
+    T4CONbits.ON = 1;
 
     // ----- TIMER 5 -----
     // Not used

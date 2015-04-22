@@ -15,7 +15,45 @@ static unsigned char * displayDataContinents = displayData + 5 + 3 + (3*NUM_TERR
 #define SHORTWAIT() asm volatile ("nop\n nop\n nop\n nop\n nop\n nop")
 #define PULSE_RCLK() do{ PORTDbits.RD9 = 1; SHORTWAIT(); PORTDbits.RD9 = 0; }while(0)
 
+const int playerColors[MAX_PLAYERS] =
+{
+    COLOR_RED,
+    COLOR_GREEN,
+    COLOR_BLUE,
+    COLOR_YELLOW,
+    COLOR_MAGENTA,
+    COLOR_CYAN,
+};
+
 static int displaysEnabled = 1;
+
+int cardsPlayer = -1;
+int cardsTimeMillis = -1;
+
+
+void startNewFrame()
+{
+    int time = TMR4 / 390;
+    if(time < 10)
+        return;
+    
+    T4CONbits.ON = 0;
+    TMR4 = 0;
+    T4CONbits.ON = 1;
+
+    if(cardsTimeMillis >= 0)
+    {
+        cardsTimeMillis -= time;
+        if(cardsTimeMillis < 0)
+            cardsPlayer = -1;
+    }
+}
+
+void startCardsColor(int player)
+{
+    cardsPlayer = player;
+    cardsTimeMillis = 2000;
+}
 
 void updateDisplayData()
 {
@@ -31,14 +69,14 @@ void updateDisplayData()
         }
         else
         {
-            displayDataTerritories[i+2] = PLAYER_COLOR(territories[territory].owner) << TERRITORY_LED_SHIFT;
+            displayDataTerritories[i+2] = playerColors[territories[territory].owner] << TERRITORY_LED_SHIFT;
         }
     }
 
     // Card displays
     displayDataCards[0] = digits[cardExchangeValue % 10];
     displayDataCards[1] = (cardExchangeValue / 10) % 10 != 0? digits[(cardExchangeValue / 10) % 10] : 0;
-    displayDataCards[2] = COLOR_BLACK; // cards have no LEDs
+    displayDataCards[2] = playerColors[cardsPlayer]; // cards have no LEDs
 
     // Dice displays
     displayDataDice[0] = defenderDice[1] != 0? digits[defenderDice[1]] : 0;
@@ -58,12 +96,12 @@ void updateDisplayData()
 #else
     updateContinents();
     
-    displayDataContinents[0] = (PLAYER_COLOR(continentOwners[1]) << CONTINENT_LED_UPPER_SHIFT) |
-            (PLAYER_COLOR(continentOwners[0]) << CONTINENT_LED_LOWER_SHIFT);
-    displayDataContinents[1] = (PLAYER_COLOR(continentOwners[3]) << CONTINENT_LED_UPPER_SHIFT) |
-            (PLAYER_COLOR(continentOwners[2]) << CONTINENT_LED_LOWER_SHIFT);
-    displayDataContinents[2] = (PLAYER_COLOR(continentOwners[5]) << CONTINENT_LED_UPPER_SHIFT) |
-            (PLAYER_COLOR(continentOwners[4]) << CONTINENT_LED_LOWER_SHIFT);
+    displayDataContinents[0] = (playerColors[continentOwners[1]] << CONTINENT_LED_UPPER_SHIFT) |
+            (playerColors[continentOwners[0]] << CONTINENT_LED_LOWER_SHIFT);
+    displayDataContinents[1] = (playerColors[continentOwners[3]] << CONTINENT_LED_UPPER_SHIFT) |
+            (playerColors[continentOwners[2]] << CONTINENT_LED_LOWER_SHIFT);
+    displayDataContinents[2] = (playerColors[continentOwners[5]] << CONTINENT_LED_UPPER_SHIFT) |
+            (playerColors[continentOwners[4]] << CONTINENT_LED_LOWER_SHIFT);
 #endif
 }
 

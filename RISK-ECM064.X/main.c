@@ -95,12 +95,12 @@ int main(void)
 
     while(1)
     {
+        startNewFrame();
         updateDisplayData();
         updatePiData();
         processStats();
         updatePiStats();
-
-        
+    
         if(flagSetAdvance())
         {
             static int RNGseeded = 0;
@@ -116,7 +116,7 @@ int main(void)
         if(flagSetCancel())
         {
             gameInput(CANCEL);
-            setTextDisplay(1, "port f3 is %d", PORTFbits.RF3);
+            //setTextDisplay(1, "port f3 is %d", PORTFbits.RF3);
             clearFlagCancel();
         }
 
@@ -138,7 +138,10 @@ int main(void)
             if(piCommand[0] >= 6 && piCommand[0] < 12)
                 drawCard(piCommand[0] - 6);
             else if(piCommand[0] < 6 && piCommand[0] == currentPlayer)
-                cardInput(piCommand[1], piCommand[2], piCommand[3]);
+            {
+                if(cardInput(piCommand[1], piCommand[2], piCommand[3]) > 0)
+                    startCardsColor(currentPlayer);
+            }
             clearFlagPiCommand();
         }
 
@@ -160,8 +163,7 @@ int main(void)
             // writeSaveToFlash();
             clearFlagPowerOff();
         }
-
-
+        
     }
 
     return EXIT_SUCCESS;
