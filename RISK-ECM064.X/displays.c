@@ -60,8 +60,17 @@ void updateDisplayData()
     // Territory displays
     for(int i = 0, territory = NUM_TERRITORIES - 1; territory >= 0; i += 3, territory -= 1)
     {
-        displayDataTerritories[i] = digits[territories[territory].troops % 10];
-        displayDataTerritories[i+1] = (territories[territory].troops / 10) % 10 != 0? digits[(territories[territory].troops / 10) % 10] : 0;
+        int troops = territories[territory].troops;
+        if(troops < 100)
+        {
+            displayDataTerritories[i] = digits[troops % 10]; // ones
+            displayDataTerritories[i+1] = troops >= 10? digits[(troops / 10) % 10] : 0; // tens
+        }
+        else
+        {
+            displayDataTerritories[i] = 0b01110100; // 'h'
+            displayDataTerritories[i+1] = digits[(troops / 100) % 10]; // hundreds
+        }
         if((source == territory && TMR8 < T8_MSECS(250)) ||
             (destination == territory && TMR8 > T8_MSECS(250)))
         {
@@ -74,8 +83,16 @@ void updateDisplayData()
     }
 
     // Card displays
-    displayDataCards[0] = digits[cardExchangeValue % 10];
-    displayDataCards[1] = (cardExchangeValue / 10) % 10 != 0? digits[(cardExchangeValue / 10) % 10] : 0;
+    if(cardExchangeValue < 100)
+    {
+        displayDataCards[0] = digits[cardExchangeValue % 10];
+        displayDataCards[1] = cardExchangeValue >= 10? digits[(cardExchangeValue / 10) % 10] : 0;
+    }
+    else
+    {
+        displayDataCards[0] = digits[(cardExchangeValue / 100) % 10];
+        displayDataCards[1] = 0b01110100; // 'h'
+    }
     displayDataCards[2] = playerColors[cardsPlayer]; // cards have no LEDs
 
     // Dice displays
