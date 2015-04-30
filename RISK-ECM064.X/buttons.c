@@ -15,6 +15,7 @@ int nextFlag = READY;
 int previousFlag = READY;
 int powerOffFlag = READY;
 int powerOnFlag = READY;
+int holdTurnFlag = READY;
 
 static unsigned buttonAdvanceState = 0;
 static unsigned buttonCancelState = 0;
@@ -69,12 +70,20 @@ void __ISR(_TIMER_2_VECTOR, IPL2SRS) pollButtons()
         previousEncoderA = 0;
     else if((encoderAState & ENCODER_A_STATE_MASK) == ENCODER_A_STATE_MASK)
     {
-        if(previousEncoderA == 0)
+        // special case: set a different flag if A is being held down
+        if(advanceFlag == READY && (buttonAdvanceState & BUTTON_ADVANCE_STATE_MASK) == 0)
         {
-            if(previousEncoderB == 0)
-                previousFlag = SET;
-            else
-                nextFlag = SET;
+            holdTurnFlag = SET;
+        }
+        else
+        {
+            if(previousEncoderA == 0)
+            {
+                if(previousEncoderB == 0)
+                    previousFlag = SET;
+                else
+                    nextFlag = SET;
+            }
         }
         previousEncoderA = 1;
     }

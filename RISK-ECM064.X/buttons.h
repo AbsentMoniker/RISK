@@ -40,6 +40,7 @@ extern int nextFlag;
 extern int previousFlag;
 extern int powerOffFlag;
 extern int powerOnFlag;
+extern int holdTurnFlag;
 
 static inline int flagSetAdvance() { return advanceFlag == 1; }
 static inline int flagSetCancel() { return cancelFlag == 1; }
@@ -47,6 +48,7 @@ static inline int flagSetNext() { return nextFlag == 1; }
 static inline int flagSetPrevious() { return previousFlag == 1; }
 static inline int flagSetPowerOff() { return powerOffFlag == 1; }
 static inline int flagSetPowerOn() { return powerOnFlag == 1; }
+static inline int flagSetHoldTurn() { return holdTurnFlag == 1; }
 
 static inline void clearFlagAdvance() { advanceFlag = -1; }
 static inline void clearFlagCancel() { cancelFlag = -1; }
@@ -54,6 +56,7 @@ static inline void clearFlagNext() { nextFlag = -1; }
 static inline void clearFlagPrevious() { previousFlag = -1; }
 static inline void clearFlagPowerOff() { powerOffFlag = -1; }
 static inline void clearFlagPowerOn() { powerOnFlag = -1; }
+static inline void clearFlagHoldTurn() { holdTurnFlag = -1; }
 
 int powerOn();
 
