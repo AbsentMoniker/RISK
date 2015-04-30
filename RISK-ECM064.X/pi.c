@@ -50,7 +50,7 @@ void updatePiStats()
         for(int d = 0; d < 6; d++)
         {
             statDicePtr[14*i + 2 + d*2] = diceRolls[i][d] >> 8;
-            statDicePtr[14*i + 2 + d*2] = diceRolls[i][d] & 0xFF;
+            statDicePtr[14*i + 2 + d*2 + 1] = diceRolls[i][d] & 0xFF;
         }
     }
     for(int i = 0; i < MAX_PLAYERS; i++)
@@ -72,10 +72,18 @@ void updatePiStats()
     statTakenPtr[1] = mostTakenTerritory.count;
 }
 
+void resetPiSPI()
+{
+    //SPI2CONbits.ON = 0;
+    //asm("nop");
+    //SPI2CONbits.ON = 1;
+}
+
+unsigned char * piDataPtr = NULL;
+unsigned char * piStatsPtr = NULL;
 void __ISR(_SPI2_RX_VECTOR, IPL4SRS) SPI2RXisr()
 {
-    static unsigned char * piDataPtr = NULL;
-    static unsigned char * piStatsPtr = NULL;
+
     static int sendingStats = 0;
 
     unsigned char rx = SPI2BUF;
@@ -108,6 +116,7 @@ void __ISR(_SPI2_RX_VECTOR, IPL4SRS) SPI2RXisr()
                 // End of data
                 piStatsPtr = NULL;
                 SPI2BUF = 0xFF;
+                resetPiSPI();
             }
             else
             {
@@ -124,8 +133,9 @@ void __ISR(_SPI2_RX_VECTOR, IPL4SRS) SPI2RXisr()
             else if(piDataPtr - piData == PI_DATA_LENGTH)
             {
                 // End of data
-                piDataPtr = NULL;
+                //piDataPtr = NULL;
                 SPI2BUF = 0xFF;
+                resetPiSPI();
             }
             else
             {
@@ -133,6 +143,10 @@ void __ISR(_SPI2_RX_VECTOR, IPL4SRS) SPI2RXisr()
                 SPI2BUF = *piDataPtr++;
             }
         }
+        if(piDataPtr != NULL && piDataPtr - piData > PI_DATA_LENGTH)
+            PANIC("pi data ptr escaped");
+        if(piStatsPtr != NULL && piStatsPtr - piStats > PI_STATS_LENGTH)
+            PANIC("pi stats ptr escaped");
     }
     else if(rx == 0xFD)
     {
@@ -152,6 +166,7 @@ void __ISR(_SPI2_RX_VECTOR, IPL4SRS) SPI2RXisr()
                 // PI has finished a command
                 cmdPtr = NULL;
                 piCommandFlag = 1;
+                resetPiSPI();
             }
             
         }

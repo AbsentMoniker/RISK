@@ -27,6 +27,9 @@ extern int discardsSize;
 // deck of cards, and shuffling the deck.
 void initCards();
 
+// Shuffles the deck
+void shuffleDeck();
+
 // Take the top card from the deck and places it in the specified player's hand.
 Card drawCard(int player);
 

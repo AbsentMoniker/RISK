@@ -58,6 +58,9 @@ void msleep(int msecs);
 void usleep(int usecs);
 void SPIbyte(unsigned char byte);
 
+    extern unsigned char * piDataPtr ;
+//    extern unsigned char * piStatsPtr = NULL;
+
 int main(void)
 {
     initClocks();
@@ -69,18 +72,10 @@ int main(void)
     
     startLCD();
 
-    // Maybe restore a game
-//    readSaveFromFlash();
-//    if(isSavedGame())
-//    {
-//        restoreGame();
-//    }
-//    else
-    {
-        // Start a new game
-        changeState(INIT);
-        updateText();
-    }
+
+    // Start a new game
+    changeState(INIT);
+    updateText();
    
     // Clear input flags so that the initial positions of the buttons and
     // especially the encoder don't get read as inputs.
@@ -107,6 +102,7 @@ int main(void)
             if(!RNGseeded)
             {
                 seedRNG();
+                shuffleDeck(); // the deck was generated before the RNG got seeded, so do it again.
                 RNGseeded = 1;
             }
             gameInput(ADVANCE);;
@@ -117,6 +113,7 @@ int main(void)
         {
             gameInput(CANCEL);
             //setTextDisplay(1, "port f3 is %d", PORTFbits.RF3);
+            //setTextDisplay(0, "%p", piDataPtr);
             clearFlagCancel();
         }
 
@@ -142,18 +139,20 @@ int main(void)
                 if(cardInput(piCommand[1], piCommand[2], piCommand[3]) > 0)
                     startCardsColor(currentPlayer);
             }
+            //setTextDisplay(3, "Pi: %d %d %d %d", piCommand[0], piCommand[1], piCommand[2], piCommand[3]);
             clearFlagPiCommand();
         }
 
+        // The power switch doesn't actually work :(
         if(flagSetPowerOn())
         {
-            setTextDisplay(0, "power switch on");
+            //setTextDisplay(0, "power switch on");
             //enableDisplays();
             clearFlagPowerOn();
         }
         if(flagSetPowerOff())
         {
-            setTextDisplay(0, "power switch off");
+            //setTextDisplay(0, "power switch off");
             // wait until displays are off, then save game
              //disableDisplays();
             // msleep(10);
