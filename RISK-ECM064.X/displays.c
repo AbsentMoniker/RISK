@@ -51,7 +51,7 @@ void startNewFrame()
 
 void startCardsColor(int player)
 {
-    cardsPlayer = player;
+    cardsPlayer = player + 1;
     cardsTimeMillis = 2000;
 }
 
