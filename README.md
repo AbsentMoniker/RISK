@@ -2,6 +2,7 @@
 
 ### In this folder
 - *eagle*: zip archives of PCB schematics and layouts
+- *flash-text.X*: MPLAB project for testing writing to and readinfg from flash memory
 - *game*: game logic code
 - *game/gui*: test GUI code
 - *PCBTest.X*: MPLAB project for testing PCBs without risk code
