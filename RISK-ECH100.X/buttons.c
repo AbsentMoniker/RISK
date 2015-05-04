@@ -1,3 +1,6 @@
+// This file is part of R.I.S.K.
+// Copyright 2015 Jacob Varnau, Cameron Young, Colin Graber, Jason Kohl
+// See "COPYING" for details.
 #include "buttons.h"
 #include <p32xxxx.h>
 #include <sys/attribs.h> // __ISR macro here

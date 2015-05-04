@@ -1,9 +1,6 @@
-/* 
- * File:   gamelogic.h
- * Author: cgraber
- *
- * Created on February 21, 2015, 3:11 PM
- */
+// This file is part of R.I.S.K.
+// Copyright 2015 Jacob Varnau, Cameron Young, Colin Graber, Jason Kohl
+// See "COPYING" for details.
 
 #ifndef GAMELOGIC_H
 #define	GAMELOGIC_H

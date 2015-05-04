@@ -1,9 +1,6 @@
-/* 
- * File:   stats.h
- * Author: jacob
- *
- * Created on April 15, 2015, 11:57 AM
- */
+// This file is part of R.I.S.K.
+// Copyright 2015 Jacob Varnau, Cameron Young, Colin Graber, Jason Kohl
+// See "COPYING" for details.
 
 #ifndef STATS_H
 #define	STATS_H

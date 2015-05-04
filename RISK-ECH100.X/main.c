@@ -1,9 +1,6 @@
-/*
- * File:   main.c
- * Author: jacob
- *
- * Created on February 19, 2015, 6:12 PM
- */
+// This file is part of R.I.S.K.
+// Copyright 2015 Jacob Varnau, Cameron Young, Colin Graber, Jason Kohl
+// See "COPYING" for details.
 
 // ***********************************
 // ******                       ******

@@ -1,9 +1,6 @@
-/* 
- * File:   displays.h
- * Author: jacob
- *
- * Created on April 3, 2015, 1:01 PM
- */
+// This file is part of R.I.S.K.
+// Copyright 2015 Jacob Varnau, Cameron Young, Colin Graber, Jason Kohl
+// See "COPYING" for details.
 
 #ifndef DISPLAYS_H
 #define	DISPLAYS_H
