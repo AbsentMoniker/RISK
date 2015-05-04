@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <title>R.I.S.K.</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <link rel="stylesheet" type="text/css" href="style/style.css">
+    <script type="text/javascript" src="src/jquery/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="src/jquery/jquery.mobile-1.4.5.min.js"></script>
+
+    <script type="text/javascript" src="build/iscroll.js"></script>
+    <script type="text/javascript" src="src/risk.js"></script>
+  </head>
+  <body onload="loaded()">
+  <p style="text-align: center">Welcome to R.I.S.K.</p>
+  <div id="colorpicker" style="overflow: hidden;">
+    <center><p>Select your color:</p></center>
+    <div id="red" style="position: relative; left: 50%; margin-left: -96px; float: left; width: 32px; height: 32px; background-color: red" onclick="player=0; $('#colorpicker').css('visibility', 'hidden'); toggleMode();"></div>
+    <div id="green" style="position: relative; left: 50%; margin-left: -64px; float: left; width: 32px; height: 32px; background-color: green" onclick="player=1; $('#colorpicker').css('visibility', 'hidden'); toggleMode();"></div>
+    <div id="blue" style="position: relative; left: 50%; margin-left: -32px; float: left; width: 32px; height: 32px; background-color: blue" onclick="player=2; $('#colorpicker').css('visibility', 'hidden'); toggleMode();"></div>
+    <div id="yellow" style="position: relative; left: 50%; margin-left: 0px; float: left; width: 32px; height: 32px; background-color: yellow" onclick="player=3; $('#colorpicker').css('visibility', 'hidden'); toggleMode();"></div>
+    <div id="magenta" style="position: relative; left: 50%; margin-left: 0px; float: left; width: 32px; height: 32px; background-color: magenta" onclick="player=4; $('#colorpicker').css('visibility', 'hidden'); toggleMode();"></div>
+    <div id="cyan" style="position: relative; left: 50%; margin-left: 0px; float: left; width: 32px; height: 32px; background-color: cyan" onclick="player=5; $('#colorpicker').css('visibility', 'hidden'); toggleMode();"></div>
+  </div>
+  <button id="switch" style="position: absolute; top: 20px; right: 10px; visibility: hidden;" onclick="toggleMode();">Show Statistics</button>
+  <div id="statistics" style="visibility: hidden">
+    <p id="totalDice"></p>
+    <div style="margin: 20px">
+      <p id="ones"</p>
+      <p id="twos"</p>
+      <p id="threes"</p>
+      <p id="fours"</p>
+      <p id="fives"</p>
+      <p id="sixes"</p>
+    </div>
+    <p id="territory"</p>
+    <p id="troops"</p>
+    <p id="kills"</p>
+    <p id="deaths"</p>
+    <p id="gameterritory"></p>
+  </div>
+  <div id="wrapper" style="visibility: hidden">
+    <div id="scroller">
+      <ul id="cardList">
+      </ul>
+    </div>
+  </div>
+  </body>
+</html>
