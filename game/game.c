@@ -1,8 +1,6 @@
-// game.c:
-// Main game loop, game initialization, and game flow.
-//
-// Part of R.I.S.K
-// ECE 477 Group 2, Spring 2015
+// This file is part of R.I.S.K.
+// Copyright 2015 Jacob Varnau, Cameron Young, Colin Graber, Jason Kohl
+// See "COPYING" for details.
 
 #include "game.h"
 #include "types.h"

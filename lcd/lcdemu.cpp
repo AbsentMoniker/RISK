@@ -1,3 +1,6 @@
+// This file is part of R.I.S.K.
+// Copyright 2015 Jacob Varnau, Cameron Young, Colin Garber, Jason Kohl
+// See "COPYING" for details
 #include <SFML/Graphics.hpp>
 
 #include <cstdio>

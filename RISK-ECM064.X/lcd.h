@@ -1,9 +1,6 @@
-/* 
- * File:   lcd.h
- * Author: jacob
- *
- * Created on February 24, 2015, 1:00 PM
- */
+// This file is part of R.I.S.K.
+// Copyright 2015 Jacob Varnau, Cameron Young, Colin Graber, Jason Kohl
+// See "COPYING" for details.
 
 #include <p32xxxx.h>
 

@@ -1,9 +1,6 @@
-/* 
- * File:   buttons.h
- * Author: jacob
- *
- * Created on March 23, 2015, 4:47 PM
- */
+// This file is part of R.I.S.K.
+// Copyright 2015 Jacob Varnau, Cameron Young, Colin Graber, Jason Kohl
+// See "COPYING" for details.
 
 #ifndef BUTTONS_H
 #define	BUTTONS_H

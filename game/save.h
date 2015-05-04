@@ -1,10 +1,6 @@
-/* 
- * File:   save.h
- * Author: jacob
- *
- * Created on April 19, 2015, 7:17 PM
- */
-
+// This file is part of R.I.S.K.
+// Copyright 2015 Jacob Varnau, Cameron Young, Colin Graber, Jason Kohl
+// See "COPYING" for details.
 #ifndef SAVE_H
 #define	SAVE_H
 
